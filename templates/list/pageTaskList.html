@@ -1,0 +1,115 @@
+<div class="tracker">
+  <div class="head">
+    <div class="timetotal">
+      {{timeTotal(activeTask)}}
+      <span class="glyphicon glyphicon-play-circle" style="font-size: 17px" ng-if="activeTask.active"></span>
+    </div>
+    <div class="info">
+      <div class="issue">
+        {{activeTask.issue}}
+      </div>
+      <div class="description">
+        {{activeTask.task}}
+        {{activeTask.description}}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="filter">
+  <span class="btn btn-sm " ng-click="editDates = !editDates"><span class="glyphicon glyphicon-filter"></span></span>
+</div>
+<div class="pop-up" ng-show="editDates">
+  <span class="btn btn-sm " ng-click="editDates = !editDates" style="    position: absolute;
+    right: 0px;
+    top: 0px;"><span class="glyphicon glyphicon-remove"></span></span>
+  <a class="btn btn-sm btn-default" ng-click="resetDate()" style="display: block; height: 22px">Today</a>
+  <div style="display:inline-block;">
+  <b>From</b>
+      <datepicker ng-model="dateFrom" datepicker-options="dateOptions" show-weeks="true" class="well well-sm"></datepicker>
+  </div>
+  <div style="display:inline-block;">
+  <b>To</b>
+      <datepicker ng-model="dateTo" show-weeks="true" class="well well-sm"></datepicker>
+  </div>
+  <label>
+    <input ng-model="alwaysIncludeUnregistered" type="checkbox">Always include all unregistered
+  </label>
+</div>
+
+<table class="worklogs table table-condensed">
+  <thead>
+    <th>Time</th>
+    <th>Actions</th>
+    <th>Task / description</th>
+    <th>Issue</th>
+  </thead>
+  <tr ng-repeat-start="task in tasks | object2Array | orderBy:'id':true" class="active date-row">
+    <td colspan="4" ng-if="showDate(task)"><small><i>{{rowDate}}</i></small></td>
+  </tr>
+  <tr ng-repeat-end ng-class="task.active ? 'success' : '';">
+    <td>
+      <b>{{timeTotal(task)}}</b>
+    </td>
+    <td class="col-actions">
+      <div class="">
+        <!-- start -->
+        <span ng-if="task.register_info" class="btn btn-disabled btn-xs">
+          <span class="glyphicon glyphicon-time"></span>
+        </span>
+        <span ng-show="task.active" class="btn btn-warning btn-xs" ng-click="stopTask(task.id)">
+          <span class="glyphicon glyphicon-pause"></span>
+        </span>
+        <span ng-hide="task.active || task.register_info" class="btn btn-success btn-start-task btn-xs" ng-click="startTask(task.id)">
+          <span class="glyphicon glyphicon-play"></span>
+        </span>
+        <!-- /start -->
+
+        <!-- edit -->
+        <span class="btn btn-default btn-xs" ng-click="editTask(task)">
+          <span class="glyphicon glyphicon-edit"></span>
+        </span>
+        <!-- /edit -->
+
+        <!-- register -->
+        <span ng-hide="task.active || task.register_info || task.saving_log" class="btn btn-primary btn-xs" ng-click="registerTask(task)">
+          <span class="glyphicon glyphicon-floppy-disk"></span>
+        </span>
+        <span ng-show="task.active" class="btn btn-disabled btn-xs">
+          <span class="glyphicon glyphicon-floppy-disk"></span>
+        </span>
+        <span ng-show="task.register_info" class="btn btn-success btn-xs" ng-click="editTask(task)">
+          <span class="glyphicon glyphicon-floppy-saved"></span>
+        </span>
+
+        <span ng-show="task.saving_log" class="btn btn-xs"><span class="glyphicon glyphicon-cloud-upload"></span></span>
+        <!-- /register -->
+
+        <!-- delete buttons -->
+        <span class="btn btn-default btn-xs" ng-click="task.delete = !task.delete">
+          <span class="glyphicon glyphicon-trash"></span>
+        </span>
+        <span ng-if="task.delete" class="btn btn-danger btn-xs" ng-click="deleteTask(task.id)">
+          <span class="glyphicon glyphicon-ok"></span>
+        </span>
+        <!-- /delete -->
+      </div>
+
+    </td>
+    <td>
+      <i>{{task.task}}</i> <span ng-show="task.description">-</span>
+      {{task.description}}
+    </td>
+    <td>
+      {{task.issue}}
+      &nbsp<span class="glyphicon glyphicon-new-window" ng-show="task.issue_key" ng-click="browseIssue(task.issue_key)"></span>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <b>{{listTotal()}}</b>
+    </td>
+    <td colspan="3"> </td>
+  </tr>
+</table>

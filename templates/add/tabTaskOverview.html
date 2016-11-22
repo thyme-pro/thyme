@@ -1,0 +1,42 @@
+<h4>Time</h4>
+
+<table class="table table-condensed">
+  <thead>
+    <tr>
+      <th>Start</th>
+      <th>Stop</th>
+      <th>Duration</th>
+      <th>Edit</th>
+    </tr>
+  </thead>
+  <tr ng-repeat="time_entry in task.time_entries">
+    <td class="col-xs-4" ng-hide="time_entry.edit">{{time_entry.start_formatted}}</td>
+    <td class="col-xs-4" ng-show="time_entry.edit"><input class="form-control" ng-model="time_entry.start_formatted" type="text"></td>
+    <td class="col-xs-4" ng-hide="time_entry.edit">{{time_entry.stop_formatted}}</td>
+    <td class="col-xs-4" ng-show="time_entry.edit"><input class="form-control" ng-model="time_entry.stop_formatted" type="text"></td>
+    <td class="col-xs-2" ng-hide="time_entry.edit">{{time_entry.duration_formatted}}</td>
+    <td class="col-xs-2" ng-show="time_entry.edit"><input class="form-control" ng-model="time_entry.duration_formatted" type="text"></td>
+    <td>
+      <div class="btn-group">
+        <span ng-hide="time_entry.edit" ng-click="time_entry.edit = true;" class="btn btn-default btn-xs">
+          <span class="glyphicon glyphicon-edit"></span>
+        </span>
+        <span ng-show="time_entry.edit" ng-click="time_entry.edit = false; saveTimeEntry(time_entry)" class="btn btn-success btn-xs">
+          <span class="glyphicon glyphicon-ok"></span>
+        </span>
+        <span class="btn btn-default btn-xs" ng-click="time_entry.delete = !time_entry.delete">
+          <span class="glyphicon glyphicon-trash"></span>
+        </span>
+        <span ng-if="time_entry.delete" class="btn btn-danger btn-xs" ng-click="deleteTimeEntry(time_entry)">
+          <span class="glyphicon glyphicon-ok"></span>
+        </span>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td>{{task.total_duration}}</td>
+    <td></td>
+  </tr>
+</table>

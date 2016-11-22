@@ -1,0 +1,44 @@
+<div class="form-group">
+  <form ng-submit="ok()">
+    <input autofocus type="text" placeholder="Issue" ng-model="task.issue" typeahead="issue.name for issue in issues| filter:$viewValue | limitTo:20" class="form-control" typeahead-on-select="selectIssue($item, $model, $label, issue)">
+<span class="input-loading">
+    <span ng-hide="issues" class="glyphicon glyphicon-transfer"></span>
+</span>
+
+    <input type="text" placeholder="Task" ng-model="task.task" typeahead="story.name for story in stories | filter:$viewValue | limitTo:20" class="form-control" typeahead-on-select="selectStory($item, $model, $label)">
+<span class="input-loading">
+    <span ng-hide="stories" class="glyphicon glyphicon-transfer"></span>
+</span>
+
+    <input type="text" placeholder="Description" ng-model="task.description" class="form-control">
+
+    <input type="submit" class="ng-hide" value="Submit" />
+  </form>
+  </div>
+
+  <div class="row" ng-show="task_estimate">
+    <div class="col-xs-4">
+      <span>Estimate:</span>
+      {{task_estimate}}
+    </div>
+    <div class="col-xs-4">
+      <span>Used:</span>
+      <span ng-click="tabs[2].active = true">{{time_used_formatted}}</span>
+      </span>
+    </div>
+    <div class="col-xs-4">
+      <span>Remaining:</span>
+      <span ng-click="tabs[2].active = true">{{time_remaining_formatted}}</span>
+      </span>
+    </div>
+  </div>
+  <div class="row" ng-show="percent_used">
+    <div class="col-md-12">
+      <progressbar class="progress-striped" value="percent_used" type="{{alert.type}}">{{percent_used}}%</progressbar>
+
+      <div ng-show="alert.show" >
+        <alert type="{{alert.type}}" ><span class="glyphicon glyphicon-exclamation-sign"></span> {{alert.msg}}</alert>
+      </div>
+    </div>
+</div>
+

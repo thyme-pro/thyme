@@ -1,0 +1,19 @@
+Overview over time already registered on the case with the task number.
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th>Date/time</th>
+      <th>Description</th>
+      <th>Name</th>
+      <th>Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="item in case_items">
+      <td>{{item.date_entered}}</td>
+      <td>{{item.description}}</td>
+      <td>{{item.created_by_name}}</td>
+      <td>{{item.time_length}}</td>
+    </tr>
+  </tbody>
+</table>

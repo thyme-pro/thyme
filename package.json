@@ -1,0 +1,28 @@
+{
+  "name": "Thyme",
+  "version": "0.1.0",
+  "description": "A time tracking application",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/electron/electron-quick-start",
+  "keywords": [
+    "Electron",
+    "quick",
+    "start",
+    "tutorial",
+    "demo"
+  ],
+  "author": "GitHub",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^1.4.1",
+    "electron-packager": "^8.3.0"
+  },
+  "dependencies": {
+    "googleapis": "^14.2.0",
+    "keytar": "^3.0.2",
+    "lodash": "^3.10.1"
+  }
+}
