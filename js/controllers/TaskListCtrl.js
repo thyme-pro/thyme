@@ -5,6 +5,13 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
 
   const ipc = require('electron').ipcRenderer
 
+  ipc.on('start-issue', (event, data) => {
+    let obj = data.obj
+    obj.issue = obj.issue_key
+
+    dbService.saveTask(obj, getTasks)
+  })
+
   $scope.dateFrom = new Date();
   $scope.dateTo = new Date();
   $scope.alwaysIncludeUnregistered = true;
@@ -39,9 +46,17 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
     getTasks(timeFrom, timeTo);
   });
 
-  function getTasks(timeFrom, timeTo) {
+  function getTasks(from, to) {
+    if (!from) {
+      from = timeFrom
+    }
+
+    if (!to) {
+      to = timeTo
+    }
+
     var unregistered = $scope.alwaysIncludeUnregistered;
-    dbService.getTasks(timeFrom, timeTo, unregistered).then(function(data){
+    dbService.getTasks(from, to, unregistered).then(function(data){
       $scope.tasks = {};
       $scope.tasks = data;
 
@@ -52,7 +67,6 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
       })
 
     });
-
   }
 
   $scope.$on('addedTask', function(event){
@@ -148,7 +162,6 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
   };
 
   $scope.browseIssue = function(issue_key) {
-    nw.Shell.openExternal(localStorage.jiraUrl + '/browse/' + issue_key);
   }
 
   // Refresh page, make the counter run.

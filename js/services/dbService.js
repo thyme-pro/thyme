@@ -130,7 +130,7 @@ angular.module('thyme')
       // Get tasks stuff
       return deferred.promise;
     },
-    saveTask: function(task) {
+    saveTask: function(task, callback) {
       var sql = '';
       var data = [];
 
@@ -162,6 +162,10 @@ angular.module('thyme')
           if (task.id === undefined && result.insertId) {
             dbService.tasks[result.insertId] = task;
             dbService.startTime(result.insertId);
+          }
+
+          if (callback) {
+            callback()
           }
         });
       });

@@ -20,6 +20,17 @@
   </body>
 
   <script>
+    const ipc = require('electron').ipcRenderer
+
+    document.ondragover = document.ondrop = (ev) => {
+      ev.preventDefault()
+    }
+
+    document.body.ondrop = (ev) => {
+      ipc.send('open-file', ev.dataTransfer.files[0].path)
+      ev.preventDefault()
+    }
+
     require('./vendor/underscore/underscore.js')
     require('./vendor/date/date.js')
     XDate = require('./vendor/xdate/xdate.js')
