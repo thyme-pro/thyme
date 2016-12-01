@@ -33,7 +33,6 @@ button{
 a {
   cursor: pointer;
   text-decoration: none;
-  border-bottom: 1px dashed;
   outline: none;
 }
 

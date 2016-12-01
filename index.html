@@ -11,9 +11,9 @@
 
   </head>
 
-  <body ng-controller="MenuCtrl">
+  <body>
     <div class="page-container">
-        <span class="btn btn-sm btn-success" id="js-add-task" ng-click="modal()"><span class="glyphicon glyphicon-plus"></span> Start new</span>
+      <span class="btn btn-sm btn-success" id="js-add-task" onclick="ipc.send('edit-worklog', {})"><span class="glyphicon glyphicon-plus"></span> Start new</span>
         <div ng-view></div>
 
     </div>
@@ -21,29 +21,10 @@
 
   <script>
     const ipc = require('electron').ipcRenderer
-
-    document.ondragover = document.ondrop = (ev) => {
-      ev.preventDefault()
-    }
-
-    document.body.ondrop = (ev) => {
-      ipc.send('open-file', ev.dataTransfer.files[0].path)
-      ev.preventDefault()
-    }
-
-    require('./vendor/underscore/underscore.js')
-    require('./vendor/date/date.js')
-    XDate = require('./vendor/xdate/xdate.js')
-    require('./vendor/mousetrap/mousetrap.js')
-    $ = require('./vendor/jquery/dist/jquery.min.js')
-    require('./vendor/angular/angular.js')
-    require('./vendor/angular-route/angular-route.js')
-    require('./vendor/angular-bootstrap/ui-bootstrap.js')
-    require('./vendor/angular-bootstrap/ui-bootstrap-tpls.js')
+    require('./renderer.js')
 
     require('./app.js')
 
-    require('./js/mousetrapBindings.js')
     require('./js/controllers/MenuCtrl.js')
     require('./js/controllers/CaseOverviewCtrl.js')
     require('./js/controllers/CaseOverviewCtrl.js')
@@ -54,85 +35,5 @@
     require('./js/services/dbService.js')
     require('./js/services/gapiService.js')
     require('./js/services/extService.js')
-
-    /**
-    * Calculate number of minutes in formatted time (00:10).
-    */
-    function get_minutes_from_time(time) {
-      var split_time = time.split(':');
-
-      return (parseInt(split_time[0]) * 60) + parseInt(split_time[1]);
-    }
-
-    /**
-    * Format pretty time info hh:mm from minutes.
-    */
-    function format_minutes_to_time(minutes) {
-      if (isNaN(minutes)) {
-        return;
-      }
-
-      time_hours = Math.floor(minutes / 60);
-      if (time_hours < 10) {
-        time_hours = "0" + time_hours;
-      }
-
-      time_minutes = Math.ceil(minutes % 60);
-      if (time_minutes < 10) {
-        time_minutes = "0" + time_minutes;
-      }
-
-      return time_hours + ':' + time_minutes;
-    }
-
-    function calculate_total_for_task(task) {
-      var total_diff = calculate_total_minutes_for_task(task);
-
-      return format_minutes_to_time(total_diff);
-    }
-
-    function calculate_total_minutes_for_task(task) {
-      var total_diff = 0;
-
-      if (task) {
-
-        angular.forEach(task.time_entries, function(value, key) {
-          var minutes = calculate_minutes_for_time_entry(value);
-          total_diff += minutes;
-        });
-      }
-
-      return total_diff;
-    }
-
-    function calculate_minutes_for_time_entry(time_entry) {
-      var start = XDate(time_entry.start);
-
-      var stop = XDate();
-      if (time_entry.stop) {
-        stop = XDate(time_entry.stop);
-      }
-
-      var minutes = 0;
-      var diff = Math.floor(start.diffMinutes(stop));
-      if (!isNaN(diff)) {
-        minutes = diff;
-      }
-
-      return minutes;
-    }
-
-    function time_converter(timestamp){
-      var a = new Date(timestamp);
-      var year = a.getFullYear();
-      var month = a.getMonth() + 1;
-      var date = ('0' + a.getDate()).slice(-2);
-      var hour = a.getHours();
-      var min = a.getMinutes();
-      var sec = a.getSeconds();
-      var time = year + '-' + month + '-' + date + 'T' + hour + ':' + min + ':' + sec + '.000+0100';
-      return time;
-    }
-
   </script>
 </html>

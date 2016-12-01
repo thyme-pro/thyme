@@ -5,11 +5,14 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
 
   const ipc = require('electron').ipcRenderer
 
-  ipc.on('start-issue', (event, data) => {
+  ipc.on('save-worklog', (event, data) => {
     let obj = data.obj
-    obj.issue = obj.issue_key
+    if (!obj.issue) {
+      obj.issue = obj.issue_key
+    }
 
-    dbService.saveTask(obj, getTasks)
+    dbService.saveTask(obj).then(() => {
+      getTasks()})
   })
 
   $scope.dateFrom = new Date();
@@ -69,10 +72,6 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
     });
   }
 
-  $scope.$on('addedTask', function(event){
-    getTasks(timeFrom, timeTo);
-  });
-
   $scope.showDate = function(task) {
     if (task.created) {
       date = new XDate(task.created).toString('dd/MM/yy');
@@ -109,22 +108,7 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
 
   // Send the task object to the modal
   $scope.editTask = function(task) {
-    var modalInstance = $modal.open({
-      templateUrl: 'templates/add/modalAddTask.html',
-      controller: 'ModalCreateCtrl',
-      size: 'lg',
-      resolve: {
-        task: function () {
-          return task;
-        }
-      }
-    });
-    modalInstance.result.then(function (selectedItem) {
-      setTimeout(function(){
-        $rootScope.$broadcast('addedTask');
-      }, 200);
-    }, function () {
-    });
+    ipc.send('edit-worklog', task);
   };
 
   $scope.deleteTask = function(task_id) {
@@ -169,7 +153,6 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
       $timeout(fireDigest, 1500);
   }
   fireDigest();
-
 
   if (localStorage.notificationInterval >>> 0 === parseFloat(localStorage.notificationInterval)) {
 

@@ -207,3 +207,36 @@ span#js-add-task {
 .worklogs tr td:nth-child(3) {
   min-width: 345px;
 }
+
+.dropdown-menu {
+  max-height: 200px;
+  overflow-y: scroll;
+  width: 393px;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+
+.modal-footer {
+  position: fixed;
+  right: 0px;
+  bottom: 0px;
+  width: 65%;
+}
+
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a {
+    background-color: rgb(84, 59, 181);
+    background-image: none;
+}
+
+.worklog-datepicker {
+  position: fixed;
+  top: 10px;
+  left: 235px;
+}
+
+.btn.bottom-right {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}

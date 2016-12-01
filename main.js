@@ -10,10 +10,11 @@ const path = require('path')
 const url = require('url')
 const fs = require('fs')
 
-const menu = require('./main/menu.js');
-//const tray = require('./main/tray.js');
+const menu = require('./main/menu.js')
+const windows= require('./main/windows')
+//const tray = require('./main/tray.js')
 
-const config = require('./config.js');
+const config = require('./config.js')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -42,7 +43,7 @@ function createWindow () {
 }
 
 const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
-  checkArgs(commandLine);
+  checkArgs(commandLine)
   if (mainWindow) {
     if (mainWindow.isMinimized()) mainWindow.restore()
     mainWindow.focus()
@@ -58,10 +59,9 @@ function openFile(path) {
 
   try {
     let obj = JSON.parse(data)
-    console.log(obj);
 
     // Start issue with:
-    mainWindow.webContents.send('start-issue' , {obj:obj})
+    mainWindow.webContents.send('save-worklog' , {obj:obj})
     mainWindow.focus()
 
   } catch (exception) {
@@ -71,10 +71,10 @@ function openFile(path) {
 
 function checkArgs(args) {
   for (i = 0; i < args.length; i++) {
-    arg = args[i];
+    arg = args[i]
 
     if (arg.indexOf('.thyme') != -1) {
-      openFile(path.join(process.cwd(), arg));
+      openFile(path.join(process.cwd(), arg))
     }
   }
 }
@@ -85,7 +85,7 @@ function checkArgs(args) {
 app.on('ready', createWindow)
 
 app.on('open-file', function(event, path){
-  openFile(path);
+  openFile(path)
 })
 
 // Quit when all windows are closed.
@@ -107,4 +107,13 @@ app.on('activate', function () {
 
 ipcMain.on('open-file', function(event, data) {
   openFile(data)
+})
+
+ipcMain.on('save-worklog', function(event, data) {
+  mainWindow.webContents.send('save-worklog' , {obj:data})
+  mainWindow.focus()
+})
+
+ipcMain.on('edit-worklog', function(event, data) {
+  windows.worklog.init(data)
 })

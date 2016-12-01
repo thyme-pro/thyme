@@ -6,9 +6,9 @@ module.exports = {
 
 const electron = require('electron')
 const {shell} = electron
-const app = electron.app
+const {app} = electron
 const path = require('path')
-const windows= require('./windows')
+const windows = require('./windows')
 const config = require('../config')
 
 var menu
@@ -50,6 +50,11 @@ function getMenuTemplate () {
     {
       label: 'File',
       submenu: [
+        {
+          label: 'New worklog',
+          accelerator: 'CmdOrCtrl+n',
+          click: () => windows.worklog.init()
+        },
         {
           type: 'separator'
         },

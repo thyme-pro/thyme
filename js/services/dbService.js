@@ -130,7 +130,8 @@ angular.module('thyme')
       // Get tasks stuff
       return deferred.promise;
     },
-    saveTask: function(task, callback) {
+    saveTask: function(task) {
+      var deferred = $q.defer();
       var sql = '';
       var data = [];
 
@@ -146,29 +147,35 @@ angular.module('thyme')
 
       if (task.id === undefined) {
         var id = null;
-        var created = new Date().getTime();
         sql = "INSERT INTO tasks(id, task, description, issue, issue_key, created) VALUES (?, ?, ?, ?, ?, ?)";
-        data = [id, task.task, task.description, task.issue, task.issue_key, created];
+        data = [id, task.task, task.description, task.issue, task.issue_key, task.created];
 
         // If this is a new task. The timer will be started.
-        dbService.endAllTimeEntries();
+        dbService.endAllTimeEntries().then(function() {
+          db.transaction(function(tx) {
+            tx.executeSql(sql, data, function(transaction, result){
+              if (task.id === undefined && result.insertId) {
+                dbService.tasks[result.insertId] = task;
+                dbService.startTime(result.insertId).then(function() {
+                  deferred.resolve()
+                });
+              }
+            });
+          });
+        });
       }
       else {
-        sql = "Update tasks SET task = ?, description = ?, issue = ?, issue_key = ? WHERE id = ?";
-        data = [task.task, task.description, task.issue, task.issue_key, task.id];
-      }
-      db.transaction(function(tx) {
-        tx.executeSql(sql, data, function(transaction, result){
-          if (task.id === undefined && result.insertId) {
-            dbService.tasks[result.insertId] = task;
-            dbService.startTime(result.insertId);
-          }
+        sql = "Update tasks SET task = ?, description = ?, issue = ?, issue_key = ?, created = ? WHERE id = ?";
+        data = [task.task, task.description, task.issue, task.issue_key, task.created, task.id];
 
-          if (callback) {
-            callback()
-          }
+        db.transaction(function(tx) {
+          tx.executeSql(sql, data, function(transaction, result){
+            deferred.resolve()
+          });
         });
-      });
+      }
+
+      return deferred.promise;
     },
     deleteTask: function(id) {
       db.transaction(function(tx) {
@@ -200,6 +207,8 @@ angular.module('thyme')
     },
     // Start the timer for a task.
     startTime: function(task_id) {
+      var deferred = $q.defer();
+
       dbService.endAllTimeEntries().then(function(){
         var start = new Date().getTime();
         dbService.addTimeEntry(task_id, start, '').then(function(insertId){
@@ -214,8 +223,11 @@ angular.module('thyme')
             id: insertId,
             start: start,
           };
+
+          deferred.resolve();
         });
       });
+      return deferred.promise;
     },
     // End timetaking for all entries.
     endAllTimeEntries: function() {

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html ng-app="thyme">
+  <head>
+    <meta charset="utf-8">
+    <title>Add worklog</title>
+
+    <link href="../vendor/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <link href="../vendor/bootstrap/dist/css/bootstrap-theme.css" rel="stylesheet">
+    <link href="../css/native.css" rel="stylesheet">
+    <link href="../css/app.css" rel="stylesheet">
+
+  </head>
+  <body ng-controller="CreateCtrl" class="settings">
+    <div ng-include src="'./../templates/add/modalAddTask.html'" ></div>
+  </body>
+
+  <script>
+    require('./../renderer.js')
+
+    require('./../app.js')
+
+    require('./../js/controllers/CreateCtrl.js')
+    require('./../js/services/dbService.js')
+    require('./../js/services/gapiService.js')
+    require('./../js/services/extService.js')
+
+    function debounce(func, wait, immediate) {
+	    var timeout;
+	    return function() {
+		    var context = this, args = arguments;
+		    var later = function() {
+			    timeout = null;
+			    if (!immediate) func.apply(context, args);
+		    };
+		    var callNow = immediate && !timeout;
+		    clearTimeout(timeout);
+		    timeout = setTimeout(later, wait);
+		    if (callNow) func.apply(context, args);
+	    };
+    };
+
+    // Scrolling logic could be imporved
+    var scroll = debounce(function() {
+      var parentDiv = $('.dropdown-menu[aria-hidden="false"]')
+      var innerListItem = $('.dropdown-menu li.active')
+
+      var height = parentDiv.height()
+      if (innerListItem.position().top > height/1.4) {
+        parentDiv.scrollTop(innerListItem.position().top + height)
+      }
+
+      if (innerListItem.position().top < 0) {
+        parentDiv.scrollTop(parentDiv.scrollTop() + innerListItem.position().top)
+      }
+
+    }, 10)
+
+    $(document).on('keyup', function(){
+      scroll();
+    });
+  </script>
+</html>

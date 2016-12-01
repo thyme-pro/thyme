@@ -1,44 +1,57 @@
-<div class="form-group">
-  <form ng-submit="ok()">
-    <input autofocus type="text" placeholder="Issue" ng-model="task.issue" typeahead="issue.name for issue in issues| filter:$viewValue | limitTo:20" class="form-control" typeahead-on-select="selectIssue($item, $model, $label, issue)">
-<span class="input-loading">
-    <span ng-hide="issues" class="glyphicon glyphicon-transfer"></span>
-</span>
+<form ng-submit="ok()">
+    <div class="form-group">
+        <label>Issue</label>
+        <input autofocus="" type="text" placeholder="" ng-model="task.issue" typeahead="issue.name for issue in issues| filter:$viewValue | limitTo:20" class="form-control" typeahead-on-select="selectIssue($item, $model, $label, issue)" />
+        <span class="input-loading">
+            <span ng-hide="issuesLoaded" class="glyphicon glyphicon-transfer"></span>
+        </span>
+    </div>
+    <div class="form-group">
+        <label>Task (support issue)</label>
+        <input type="text" placeholder="" ng-model="task.task" typeahead="story.name for story in stories | filter:$viewValue | limitTo:20" class="form-control" typeahead-on-select="selectStory($item, $model, $label)" />
+        <span class="input-loading">
+            <span ng-hide="stories" class="glyphicon glyphicon-transfer"></span>
+        </span>
+    </div>
+    <div class="form-group">
+        <label>Description</label>
+        <input type="text" placeholder="" ng-model="task.description" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Start date</label>
+        <input type="text" placeholder="" value="{{datepicker.formatted}}" ng-click="datepicker.show = !datepicker.show" class="form-control" />
+        <div ng-show="datepicker.show" ng-click="updateCreated()" class="well well-sm worklog-datepicker">
+          <datepicker style="float: left; margin-right: 10px;" ng-model="datepicker.start_date" show-weeks="true" ></datepicker>
+          <timepicker ng-model="datepicker.start_date" ng-change="changed()" hour-step="1" minute-step="1" show-meridian="false"></timepicker>
+          <br />
+          <div style="text-align: center">
+            <span class="btn btn-sm btn-default" ng-click="datepicker.setYesterday()">Yesterday</span>
+            <span class="btn btn-sm btn-default" ng-click="datepicker.setToday()">Today</span>
+            <span class="btn btn-sm btn-default" ng-click="datepicker.setTomorrow()">Tomorrow</span>
+          </div>
+          <span class="btn btn-xs btn-default bottom-right" ng-click="datepicker.show = !datepicker.show"><span class="glyphicon glyphicon-ok"></span></span>
+        </div>
 
-    <input type="text" placeholder="Task" ng-model="task.task" typeahead="story.name for story in stories | filter:$viewValue | limitTo:20" class="form-control" typeahead-on-select="selectStory($item, $model, $label)">
-<span class="input-loading">
-    <span ng-hide="stories" class="glyphicon glyphicon-transfer"></span>
-</span>
-
-    <input type="text" placeholder="Description" ng-model="task.description" class="form-control">
-
-    <input type="submit" class="ng-hide" value="Submit" />
-  </form>
-  </div>
-
-  <div class="row" ng-show="task_estimate">
+    </div>
+</form>
+<div class="row" ng-show="task_estimate">
     <div class="col-xs-4">
-      <span>Estimate:</span>
-      {{task_estimate}}
+    <span>Estimate:</span>{{task_estimate}}</div>
+    <div class="col-xs-4">
+        <span>Used:</span>
+        <span ng-click="tabs[2].active = true">{{time_used_formatted}}</span>
     </div>
     <div class="col-xs-4">
-      <span>Used:</span>
-      <span ng-click="tabs[2].active = true">{{time_used_formatted}}</span>
-      </span>
-    </div>
-    <div class="col-xs-4">
-      <span>Remaining:</span>
-      <span ng-click="tabs[2].active = true">{{time_remaining_formatted}}</span>
-      </span>
-    </div>
-  </div>
-  <div class="row" ng-show="percent_used">
-    <div class="col-md-12">
-      <progressbar class="progress-striped" value="percent_used" type="{{alert.type}}">{{percent_used}}%</progressbar>
-
-      <div ng-show="alert.show" >
-        <alert type="{{alert.type}}" ><span class="glyphicon glyphicon-exclamation-sign"></span> {{alert.msg}}</alert>
-      </div>
+        <span>Remaining:</span>
+        <span ng-click="tabs[2].active = true">{{time_remaining_formatted}}</span>
     </div>
 </div>
-
+<div class="row" ng-show="percent_used">
+    <div class="col-md-12">
+        <progressbar class="progress-striped" value="percent_used" type="{{alert.type}}">{{percent_used}}%</progressbar>
+        <div ng-show="alert.show">
+            <alert type="{{alert.type}}">
+            <span class="glyphicon glyphicon-exclamation-sign"></span>{{alert.msg}}</alert>
+        </div>
+    </div>
+</div>

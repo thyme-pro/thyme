@@ -4,44 +4,89 @@ angular.module('thyme')
 
     keytar = require('keytar');
 
+    getIssues = (page) => {
+      var deferred = $q.defer();
+
+      var username = localStorage.jiraUsername;
+      var password = keytar.getPassword('thyme.jiraPassword', 'jiraPassword');
+
+      var jiraInfo = {
+        url: localStorage.jiraUrl,
+        credentials: btoa(username + ':' + password)
+      }
+
+      var config = {
+        headers: {
+          'Content-Type': 'application/json',
+          "X-Atlassian-Token": "nocheck",
+          'Authorization': 'Basic ' + jiraInfo.credentials
+        }
+      }
+
+      pageSize = 250;
+
+      var url = jiraInfo.url + '/rest/api/2/search?jql=' + localStorage.jiraProjectJql + ' &maxResults=' + pageSize + '&startAt=' + (page * pageSize);
+
+      $http.get(url, config)
+        .success(function(data) {
+          deferred.resolve(data)
+        })
+
+      return deferred.promise;
+    }
+
     var extService = {
-      getIssues: function() {
+      getIssues: () => {
         var deferred = $q.defer();
 
-        var username = localStorage.jiraUsername;
-        var password = keytar.getPassword('thyme.jiraPassword', 'jiraPassword');
+        // Load first batch of issues issues
+        getIssues(0).then((data) => {
+          var correctData = [];
 
-        var jiraInfo = {
-          url: localStorage.jiraUrl,
-          credentials: btoa(username + ':' + password)
-        }
+          for (var i = 0; i < data.issues.length; i++) {
+            correctData.push({
+              name:                 data.issues[i].key + ' - ' + data.issues[i].fields.summary,
+              issue_key:            data.issues[i].key,
+              timeoriginalestimate: data.issues[i].fields.timeoriginalestimate,
+              timeestimate:         data.issues[i].fields.timeestimate,
+              timespent:            data.issues[i].fields.timespent,
+            });
+      	  }
 
-        var config = {
-          headers: {
-            'Content-Type': 'application/json',
-            "X-Atlassian-Token": "nocheck",
-            'Authorization': 'Basic ' + jiraInfo.credentials
+          // Calculate pagecount
+          pages = Math.ceil((data.total / pageSize) - 1)
+
+          // If no more return the fetched data
+          if (pages == 0) {
+            deferred.resolve(correctData);
           }
-        }
 
-        var url = jiraInfo.url + '/rest/api/2/search?jql=' + localStorage.jiraProjectJql + ' &maxResults=-1';
-        $http.get(url, config)
-          .success(function(data) {
+          // Create array of methods to call
+          promises = [];
+          while(pages) {
+            promises.push(getIssues(pages))
+            pages--
+          }
 
-            var correctData = [];
+          // Execute all functions gather return values
+          $q.all(promises).then((values) => {
+            for (var a = 0; a < values.length; a++) {
+              data = values[a]
 
-            for (var i = 0; i < data.issues.length; i++) {
-              correctData.push({
-                name: data.issues[i].key + ' - ' + data.issues[i].fields.summary,
-                issue_key: data.issues[i].key,
-                timeoriginalestimate: data.issues[i].fields.timeoriginalestimate,
-                timeestimate: data.issues[i].fields.timeestimate,
-                timespent: data.issues[i].fields.timespent,
-              });
-      	    }
+              for (var i = 0; i < data.issues.length; i++) {
+                correctData.push({
+                  name:                 data.issues[i].key + ' - ' + data.issues[i].fields.summary,
+                  issue_key:            data.issues[i].key,
+                  timeoriginalestimate: data.issues[i].fields.timeoriginalestimate,
+                  timeestimate:         data.issues[i].fields.timeestimate,
+                  timespent:            data.issues[i].fields.timespent,
+                });
+      	      }
+            }
 
             deferred.resolve(correctData);
           });
+        });
 
         return deferred.promise;
       },

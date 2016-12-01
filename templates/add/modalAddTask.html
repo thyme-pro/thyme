@@ -1,16 +1,17 @@
-<div class="modal-body">
-  <tabset>
-    <tab ng-repeat="tab in tabs" active="tab.active">
-      <tab-heading>
-        <i class="glyphicon glyphicon-{{tab.icon}}"></i> {{tab.title}}
-      </tab-heading>
+<nav>
+  <ul class="nav">
+    <li ng-repeat="tab in tabs" ng-class="activeTab == tab.title ? 'active' : ''">
+      <button ng-click="setTab(tab)">{{tab.title}}</button>
+    </li>
 
-      <!-- Include tab template -->
-      <div ng-include="tab.template"></div>
-    </tab>
-  </tabset>
-</div>
-<div class="modal-footer">
-  <button class="btn btn-sm btn-success" ng-click="ok()">OK</button>
-  <button class="btn btn-sm btn-warning" ng-click="cancel()">Cancel</button>
+  </ul>
+</nav>
+
+<div class="content">
+    <div ng-include="tab.template"></div>
+
+   <div class="modal-footer">
+      <button class="btn btn-sm btn-success" ng-click="ok()">OK</button>
+      <button class="btn btn-sm btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
 </div>
