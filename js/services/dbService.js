@@ -144,6 +144,9 @@ angular.module('thyme')
       if (task.issue === undefined) {
         task.issue = '';
       }
+      if (task.created === undefined) {
+        task.created = new Date().getTime();
+      }
 
       if (task.id === undefined) {
         var id = null;
