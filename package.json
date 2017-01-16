@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/thyme-pro/thyme",
   "keywords": [
     "Electron",
     "quick",
@@ -17,7 +17,7 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^1.4.1",
+    "electron": "^1.4.11",
     "electron-packager": "^8.3.0"
   },
   "dependencies": {
