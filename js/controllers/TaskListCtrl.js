@@ -91,8 +91,6 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
 
   $scope.startTask = function(task_id) {
     dbService.startTime(task_id);
-
-    $scope.activeTask = $scope.tasks[task_id];
   };
 
   $scope.stopTask = function(task_id) {
@@ -102,7 +100,6 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
       }
     });
 
-    $scope.activeTask = {};
     dbService.endAllTimeEntries();
   };
 
@@ -121,13 +118,13 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
       if (data.success == true) {
         task.register_info = {};
         task.register_info.date_entered = new Date().getTime();
-			  task.register_info.sugar_id = 1;
-			  task.register_info.issue_key = task.issue_key;
+		task.register_info.sugar_id = 1;
+		task.register_info.issue_key = task.issue_key;
         task.register_info.time_length = 1;
-			  dbService.saveRegisterInfo(task);
-			}
+		dbService.saveRegisterInfo(task);
+	  }
 
-			task.saving_log = false;
+	  task.saving_log = false;
     });
   };
 
@@ -150,12 +147,23 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
 
   // Refresh page, make the counter run.
   function fireDigest() {
-      $timeout(fireDigest, 1500);
+      $timeout(fireDigest, 200);
+
+      // Find active task while at it.
+      $scope.activeTask = {};
+
+      angular.forEach($scope.tasks, function(task, key){
+        if (task.active) {
+          $scope.activeTask = $scope.tasks[task.id];
+        }
+      })
   }
   fireDigest();
 
+  /**
+   * Notification loop.
+   */
   if (localStorage.notificationInterval >>> 0 === parseFloat(localStorage.notificationInterval)) {
-
     interval = localStorage.notificationInterval * 60 * 1000
 
     setInterval(function() {

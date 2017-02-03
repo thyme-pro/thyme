@@ -7,8 +7,8 @@ angular.module('thyme').controller('CreateCtrl', function($scope, $http, dbServi
   // Define tabs in modal.
   // They all share this controller.
   $scope.tabs = [
-    {title: 'Add task', icon: 'edit', template: '../templates/add/tabAddTask.html' },
-    {title: 'Task overview', icon: 'time', template: '../templates/add/tabTaskOverview.html' },
+    {title: 'Add task', icon: 'edit', template: '../templates/add/tabAddWorklog.html' },
+    {title: 'Task overview', icon: 'time', template: '../templates/add/tabWorklogOverview.html' },
   ];
 
   $scope.setTab = (tab) => {
@@ -18,7 +18,6 @@ angular.module('thyme').controller('CreateCtrl', function($scope, $http, dbServi
 
   $scope.setTab($scope.tabs[0]);
 
-  // Set task form dbService, if its not new.
   $scope.task = {};
   task = {};
 
@@ -35,10 +34,10 @@ angular.module('thyme').controller('CreateCtrl', function($scope, $http, dbServi
   $scope.stories = []
   $scope.issuesLoaded = false
 
+  // Load issues from localstorage cache.
   try {
     $scope.issues = JSON.parse(localStorage.jiraIssues);
   } catch (exception) {
-
     $scope.issue = [];
   }
 
@@ -60,13 +59,26 @@ angular.module('thyme').controller('CreateCtrl', function($scope, $http, dbServi
   }
 
   $scope.setProgress = function(originalestimate, estimate, spent) {
-    entire_estimate = originalestimate + estimate - spent;
+    $scope.task_estimate = 'N/A';
+    $scope.time_remaining_formatted = 'N/A';
 
+    var entire_estimate = originalestimate;
+    if (estimate) {
+      entire_estimate = (originalestimate + estimate) - spent;
+    }
+
+    var percent_used = Math.round(spent / (entire_estimate) * 100);
     $scope.percent_used = Math.round(spent / (entire_estimate) * 100);
 
-    $scope.task_estimate = format_minutes_to_time(entire_estimate / 60);
-    $scope.time_remaining_formatted = format_minutes_to_time((entire_estimate - spent)/ 60);
+    if (entire_estimate) {
+      $scope.task_estimate = format_minutes_to_time(entire_estimate / 60);
+    }
     $scope.time_used_formatted = format_minutes_to_time(spent / 60);
+
+    var time_remaining = (entire_estimate - spent)/ 60
+    if (time_remaining > 0) {
+      $scope.time_remaining_formatted = format_minutes_to_time(time_remaining);
+    }
 
     if (isNaN($scope.percent_used)) {
       $scope.percent_used = 0;
@@ -91,7 +103,7 @@ angular.module('thyme').controller('CreateCtrl', function($scope, $http, dbServi
         show: true,
         type: 'warning',
         msg: $scope.percent_used + "% used"
-      };
+      };e
     }
     else if ($scope.percent_used >= 100) {
       $scope.alert = {
@@ -102,28 +114,28 @@ angular.module('thyme').controller('CreateCtrl', function($scope, $http, dbServi
     }
   });
 
-  function calculatePercentage() {
-    $scope.percent_used = Math.round($scope.time_used_minutes / ($scope.task_estimate * 60) * 100);
-    if (isNaN($scope.percent_used)) {
-      $scope.percent_used = 0;
-    }
-  }
-
   $scope.saveTimeEntry = function(time_entry) {
-    var minutes = get_minutes_from_time(time_entry.duration_formatted);
+    var startObj = new XDate();
+    if ($scope.task.created) {
+      startObj = new XDate($scope.task.created);
+    }
+    var start_time_split = time_entry.start_formatted.split(':');
 
-    var start_split = time_entry.start_formatted.split(' ');
-    var start_time_split = start_split[0].split(':');
-    var start_date_split = start_split[1].split('/');
+    startObj.setHours(start_time_split[0]);
+    startObj.setMinutes(start_time_split[1]);
 
-    var start = XDate(start_date_split[2], start_date_split[1] - 1, start_date_split[0], start_time_split[0], start_time_split[1], start_time_split[2]).getTime();
-
-    var stop = XDate(start).addMinutes(minutes).getTime();
+    var stopObj = new XDate(startObj);
+    if (time_entry.hours) {
+      stopObj.addHours(time_entry.hours);
+    }
+    if (time_entry.minutes) {
+      stopObj.addMinutes(time_entry.minutes);
+    }
+    var start = startObj.getTime();
+    var stop = stopObj.getTime();
 
     $scope.task.time_entries[time_entry.id].start = start;
     $scope.task.time_entries[time_entry.id].stop = stop;
-
-    dbService.updateTimeEntry(start, stop, time_entry.id);
 
     $scope.format();
   };
@@ -131,14 +143,15 @@ angular.module('thyme').controller('CreateCtrl', function($scope, $http, dbServi
   $scope.formatDate = function(timestamp) {
     if (timestamp < 2000000000) {
       timestamp = timestamp * 1000;
-      return new XDate(timestamp).toString('H:mm:ss dd/MM/yy');
+      return new XDate(timestamp).toString('HH:mm');
     }
-    return new XDate(timestamp).toString('H:mm:ss dd/MM/yy');
+    return new XDate(timestamp).toString('HH:mm');
   };
 
 
   $scope.deleteTimeEntry = function(time_entry) {
-    dbService.deleteTimeEntry($scope.task.id , time_entry.id);
+    delete $scope.task.time_entries[time_entry.id]
+    dbService.deleteTimeEntry($scope.task.id, time_entry.id);
     $scope.format();
   };
 
@@ -147,14 +160,27 @@ angular.module('thyme').controller('CreateCtrl', function($scope, $http, dbServi
 
     angular.forEach($scope.task.time_entries, function(time_entry, key){
       $scope.task.time_entries[key].duration_formatted = format_minutes_to_time(calculate_minutes_for_time_entry(time_entry));
-      $scope.task.time_entries[key].start_formatted = new XDate(time_entry.start).toString('H:mm:ss dd/MM/yy');
+      $scope.task.time_entries[key].start_formatted = new XDate(time_entry.start).toString('HH:mm');
       if (time_entry.stop !== undefined) {
-        $scope.task.time_entries[key].stop_formatted = new XDate(time_entry.stop).toString('H:mm:ss dd/MM/yy');
+        $scope.task.time_entries[key].stop_formatted = new XDate(time_entry.stop).toString('HH:mm');
       }
     });
   };
 
   $scope.format();
+
+  $scope.addTimeEntry = function() {
+    var key = 'new-' + _.keys($scope.task.time_entries).length
+    if (!$scope.task.time_entries) {
+      $scope.task.time_entries = {};
+    }
+    $scope.task.time_entries[key] = {};
+    $scope.task.time_entries[key].start = new XDate().getTime();
+    $scope.task.time_entries[key].stop = new XDate().getTime();
+    $scope.task.time_entries[key].id = key;
+
+    $scope.format();
+  }
 
   $scope.datepicker = {};
   $scope.datepicker.start_date = new XDate();
@@ -184,7 +210,6 @@ angular.module('thyme').controller('CreateCtrl', function($scope, $http, dbServi
 
   $scope.ok = function() {
     ipc.send('save-worklog', $scope.task);
-
     // Close window
     const remote = require('electron').remote;
     var window = remote.getCurrentWindow();

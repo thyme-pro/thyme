@@ -12,7 +12,7 @@ module.exports = {
 
   HOME_PAGE_URL: 'http://thyme.pro',
   GITHUB_URL: 'https://github.com/thyme-pro/thyme',
-  GITHUB_URL_ISSUES: 'https://github.com/thyme-pro/issues',
+  GITHUB_URL_ISSUES: 'https://github.com/thyme-pro/thyme/issues',
 
   TRAY_ICON_PATH: path.join(__dirname, 'img', 'trayTemplate.png'),
 

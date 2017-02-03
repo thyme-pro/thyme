@@ -10,12 +10,15 @@
     </tr>
   </thead>
   <tr ng-repeat="time_entry in task.time_entries">
-    <td class="col-xs-4" ng-hide="time_entry.edit">{{time_entry.start_formatted}}</td>
-    <td class="col-xs-4" ng-show="time_entry.edit"><input class="form-control" ng-model="time_entry.start_formatted" type="text"></td>
-    <td class="col-xs-4" ng-hide="time_entry.edit">{{time_entry.stop_formatted}}</td>
-    <td class="col-xs-4" ng-show="time_entry.edit"><input class="form-control" ng-model="time_entry.stop_formatted" type="text"></td>
-    <td class="col-xs-2" ng-hide="time_entry.edit">{{time_entry.duration_formatted}}</td>
-    <td class="col-xs-2" ng-show="time_entry.edit"><input class="form-control" ng-model="time_entry.duration_formatted" type="text"></td>
+    <td class="col-xs-3" ng-hide="time_entry.edit">{{time_entry.start_formatted}}</td>
+    <td class="col-xs-3" ng-show="time_entry.edit"><input class="form-control" ng-model="time_entry.start_formatted" type="text"></td>
+    <td class="col-xs-3" ng-hide="time_entry.edit">{{time_entry.stop_formatted}}</td>
+    <td class="col-xs-3" ng-show="time_entry.edit"><input disabled="disabled" class="form-control" ng-model="time_entry.stop_formatted" type="text"></td>
+    <td class="col-xs-3" ng-hide="time_entry.edit">{{time_entry.duration_formatted}}</td>
+    <td class="col-xs-3 time-entry" ng-show="time_entry.edit">
+      <input class="form-control" ng-model="time_entry.hours" type="text"><span>h</span>
+      <input class="form-control" ng-model="time_entry.minutes" type="text"><span>m</span>
+    </td>
     <td>
       <div class="btn-group">
         <span ng-hide="time_entry.edit" ng-click="time_entry.edit = true;" class="btn btn-default btn-xs">
@@ -25,7 +28,7 @@
           <span class="glyphicon glyphicon-ok"></span>
         </span>
         <span class="btn btn-default btn-xs" ng-click="time_entry.delete = !time_entry.delete">
-          <span class="glyphicon glyphicon-trash"></span>
+          <span class="glyphicon glyphicon-trash"y></span>
         </span>
         <span ng-if="time_entry.delete" class="btn btn-danger btn-xs" ng-click="deleteTimeEntry(time_entry)">
           <span class="glyphicon glyphicon-ok"></span>
@@ -37,6 +40,10 @@
     <td></td>
     <td></td>
     <td>{{task.total_duration}}</td>
-    <td></td>
+    <td>
+        <span class="btn btn-default btn-xs" ng-click="addTimeEntry()">
+            <span class="glyphicon glyphicon-plus"></span>
+        </span>
+    </td>
   </tr>
 </table>

@@ -1,6 +1,6 @@
 {
   "name": "Thyme",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "description": "A time tracking application",
   "main": "main.js",
   "scripts": {
@@ -8,11 +8,7 @@
   },
   "repository": "https://github.com/thyme-pro/thyme",
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "Electron"
   ],
   "author": "GitHub",
   "license": "CC0-1.0",

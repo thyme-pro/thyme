@@ -57,13 +57,6 @@ function getMenuTemplate () {
         },
         {
           type: 'separator'
-        },
-        {
-          label: process.platform === 'win32'
-            ? 'Close'
-            : 'Close Window',
-          accelerator: 'CmdOrCtrl+W',
-          role: 'close'
         }
       ]
     },

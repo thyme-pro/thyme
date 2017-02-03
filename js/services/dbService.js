@@ -131,6 +131,7 @@ angular.module('thyme')
       return deferred.promise;
     },
     saveTask: function(task) {
+      var self = this;
       var deferred = $q.defer();
       var sql = '';
       var data = [];
@@ -149,36 +150,60 @@ angular.module('thyme')
       }
 
       if (task.id === undefined) {
-        var id = null;
-        sql = "INSERT INTO tasks(id, task, description, issue, issue_key, created) VALUES (?, ?, ?, ?, ?, ?)";
-        data = [id, task.task, task.description, task.issue, task.issue_key, task.created];
-
-        // If this is a new task. The timer will be started.
-        dbService.endAllTimeEntries().then(function() {
-          db.transaction(function(tx) {
-            tx.executeSql(sql, data, function(transaction, result){
-              if (task.id === undefined && result.insertId) {
-                dbService.tasks[result.insertId] = task;
-                dbService.startTime(result.insertId).then(function() {
-                  deferred.resolve()
-                });
-              }
-            });
-          });
-        });
-      }
-      else {
-        sql = "Update tasks SET task = ?, description = ?, issue = ?, issue_key = ?, created = ? WHERE id = ?";
-        data = [task.task, task.description, task.issue, task.issue_key, task.created, task.id];
-
-        db.transaction(function(tx) {
-          tx.executeSql(sql, data, function(transaction, result){
-            deferred.resolve()
-          });
-        });
+        self.saveNewTask(task, deferred);
+      } else {
+        self.updateTask(task, deferred);
       }
 
       return deferred.promise;
+    },
+    saveNewTask: function(task, deferred) {
+      var self = this;
+      sql = "INSERT INTO tasks(id, task, description, issue, issue_key, created) VALUES (?, ?, ?, ?, ?, ?)";
+      data = [null, task.task, task.description, task.issue, task.issue_key, task.created];
+
+      // If this is a new task. The timer will be started.
+      dbService.endAllTimeEntries().then(function() {
+        db.transaction(function(tx) {
+          tx.executeSql(sql, data, function(transaction, result){
+            if (task.id === undefined && result.insertId) {
+              dbService.tasks[result.insertId] = task;
+              task.id = result.insertId;
+              dbService.startTime(result.insertId).then(function() {
+                self.updateTimeEntries(task, deferred);
+              });
+            }
+          });
+        });
+      });
+    },
+    updateTask: function(task, deferred) {
+      var self = this;
+      sql = "Update tasks SET task = ?, description = ?, issue = ?, issue_key = ?, created = ? WHERE id = ?";
+      data = [task.task, task.description, task.issue, task.issue_key, task.created, task.id];
+
+      db.transaction(function(tx) {
+        tx.executeSql(sql, data, function(transaction, result){
+          self.updateTimeEntries(task, deferred);
+        });
+      });
+    },
+    updateTimeEntries: function(task, deferred) {
+      var self = this;
+      promises = [];
+
+      angular.forEach(task.time_entries, function(timeEntry, key) {
+        var id = timeEntry.id.toString();
+        if (id.indexOf('new') != -1) {
+          promises.push(self.addTimeEntry(task.id, timeEntry.start, timeEntry.stop));
+        } else {
+          promises.push(self.updateTimeEntry(timeEntry.start, timeEntry.stop, timeEntry.id));
+        }
+      })
+
+      $q.all(promises).then((values) => {
+        deferred.resolve();
+      })
     },
     deleteTask: function(id) {
       db.transaction(function(tx) {
@@ -271,7 +296,6 @@ angular.module('thyme')
       });
     },
     deleteTimeEntry: function(task_id, time_entry_id) {
-      delete dbService.tasks[task_id].time_entries[time_entry_id];
       var sql = "DELETE FROM time_entries WHERE id = ?";
       var data = [time_entry_id];
 

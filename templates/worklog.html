@@ -11,7 +11,7 @@
 
   </head>
   <body ng-controller="CreateCtrl" class="settings">
-    <div ng-include src="'./../templates/add/modalAddTask.html'" ></div>
+    <div ng-include src="'./../templates/add/addWorklog.html'" ></div>
   </body>
 
   <script>
@@ -25,18 +25,18 @@
     require('./../js/services/extService.js')
 
     function debounce(func, wait, immediate) {
-	    var timeout;
-	    return function() {
-		    var context = this, args = arguments;
-		    var later = function() {
-			    timeout = null;
-			    if (!immediate) func.apply(context, args);
-		    };
-		    var callNow = immediate && !timeout;
-		    clearTimeout(timeout);
-		    timeout = setTimeout(later, wait);
-		    if (callNow) func.apply(context, args);
+	  var timeout;
+	  return function() {
+	    var context = this, args = arguments;
+	    var later = function() {
+	      timeout = null;
+	      if (!immediate) func.apply(context, args);
 	    };
+	    var callNow = immediate && !timeout;
+	    clearTimeout(timeout);
+	    timeout = setTimeout(later, wait);
+	    if (callNow) func.apply(context, args);
+	  };
     };
 
     // Scrolling logic could be imporved
@@ -52,11 +52,12 @@
       if (innerListItem.position().top < 0) {
         parentDiv.scrollTop(parentDiv.scrollTop() + innerListItem.position().top)
       }
-
     }, 10)
 
-    $(document).on('keyup', function(){
-      scroll();
+    $(document).on('keyup', function(event){
+      if (event.keyCode == 38 || event.keyCode == 40) {
+        scroll();
+      }
     });
   </script>
 </html>
