@@ -5,6 +5,7 @@ const {app} = electron
 const {BrowserWindow} = electron
 const {dialog} = electron
 const {ipcMain} = electron
+const {session} = electron
 
 const path = require('path')
 const url = require('url')
@@ -38,6 +39,11 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    details.requestHeaders['User-Agent'] = 'thyme.pro';
+    callback({ cancel: false, requestHeaders: details.requestHeaders });
+  });
 
   menu.init()
 }
