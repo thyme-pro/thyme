@@ -161,7 +161,7 @@ angular.module('thyme').controller('CreateCtrl', function($scope, $http, dbServi
     angular.forEach($scope.task.time_entries, function(time_entry, key){
       $scope.task.time_entries[key].duration_formatted = format_minutes_to_time(calculate_minutes_for_time_entry(time_entry));
       $scope.task.time_entries[key].start_formatted = new XDate(time_entry.start).toString('HH:mm');
-      if (time_entry.stop !== undefined) {
+      if (time_entry.stop !== undefined && !isNaN(time_entry.stop)) {
         $scope.task.time_entries[key].stop_formatted = new XDate(time_entry.stop).toString('HH:mm');
       }
     });

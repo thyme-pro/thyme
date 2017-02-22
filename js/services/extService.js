@@ -112,7 +112,7 @@ angular.module('thyme')
 
         var comment = task.task;
 
-        if (task.description.length) {
+        if (task.description && task.description.length) {
           comment = comment + " + " + task.description;
         }
 

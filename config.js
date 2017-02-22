@@ -8,7 +8,7 @@ module.exports = {
   APP_NAME: APP_NAME,
   APP_VERSION: APP_VERSION,
 
-  IS_DEV: false,
+  IS_DEV: true,
 
   HOME_PAGE_URL: 'http://thyme.pro',
   GITHUB_URL: 'https://github.com/thyme-pro/thyme',
