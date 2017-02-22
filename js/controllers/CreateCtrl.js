@@ -124,11 +124,8 @@ angular.module('thyme').controller('CreateCtrl', function($scope, $http, dbServi
 
     let stopObj = new XDate(startObj);
 
-    if (time_entry.hours) {
-      stopObj.addHours(time_entry.hours);
-    }
-    if (time_entry.minutes) {
-      stopObj.addMinutes(time_entry.minutes);
+    if (time_entry.expression) {
+      stopObj.addMinutes(timeHelper.parseTimeExpression(time_entry.expression));
     }
 
     let start = startObj.getTime();

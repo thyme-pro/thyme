@@ -15,10 +15,7 @@
     <td class="col-xs-3" ng-hide="time_entry.edit">{{time_entry.stop_formatted}}</td>
     <td class="col-xs-3" ng-show="time_entry.edit"><input disabled="disabled" class="form-control" ng-model="time_entry.stop_formatted" type="text"></td>
     <td class="col-xs-3" ng-hide="time_entry.edit">{{time_entry.duration_formatted}}</td>
-    <td class="col-xs-3 time-entry" ng-show="time_entry.edit">
-      <input class="form-control" ng-model="time_entry.hours" type="text"><span>h</span>
-      <input class="form-control" ng-model="time_entry.minutes" type="text"><span>m</span>
-    </td>
+    <td class="col-xs-3" ng-show="time_entry.edit"><input class="form-control" ng-model="time_entry.expression" type="text"></td>
     <td>
       <div class="btn-group">
         <span ng-hide="time_entry.edit" ng-click="time_entry.edit = true;" class="btn btn-default btn-xs">
