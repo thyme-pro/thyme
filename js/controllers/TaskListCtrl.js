@@ -64,6 +64,8 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
     }
 
     if (worklog.time_entries === undefined) {
+      stopTimers();
+
       let key = 'new-' + _.keys(worklog.time_entries).length;
 
       worklog.active = true;
