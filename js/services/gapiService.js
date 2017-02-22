@@ -1,20 +1,20 @@
 angular.module('thyme')
   .factory('gapiService', ['$q', '$http', '$rootScope', function($q, $http, $rootScope) {
 
-    var fs = require('fs');
-    var readline = require('readline');
-    var google = require('googleapis');
-    var googleAuth = require('google-auth-library');
+    let fs = require('fs');
+    let readline = require('readline');
+    let google = require('googleapis');
+    let googleAuth = require('google-auth-library');
 
     // If modifying these scopes, delete your previously saved credentials
     // at ~/.credentials/calendar-nodejs-quickstart.json
-    var SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
-    var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
+    let SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
+    let TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
         process.env.USERPROFILE) + '/.credentials/';
-    var TOKEN_PATH = TOKEN_DIR + 'thyme-google.json';
+    let TOKEN_PATH = TOKEN_DIR + 'thyme-google.json';
 
 
-    var credentials = {};
+    let credentials = {};
 
     fs.readFile('client_secret.json', function processClientSecrets(err, content) {
       if (err) {
@@ -27,11 +27,11 @@ angular.module('thyme')
     });
 
     function authorize(callback) {
-      var clientSecret = credentials.installed.client_secret;
-      var clientId = credentials.installed.client_id;
-      var redirectUrl = credentials.installed.redirect_uris[0];
-      var auth = new googleAuth();
-      var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
+      let clientSecret = credentials.installed.client_secret;
+      let clientId = credentials.installed.client_id;
+      let redirectUrl = credentials.installed.redirect_uris[0];
+      let auth = new googleAuth();
+      let oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
 
       // Check if we have previously stored a token.
       fs.readFile(TOKEN_PATH, function(err, token) {
@@ -47,7 +47,7 @@ angular.module('thyme')
     }
 
     function listEvents(auth) {
-      var calendar = google.calendar('v3');
+      let calendar = google.calendar('v3');
       calendar.events.list({
         auth: auth,
         calendarId: 'primary',
@@ -61,15 +61,15 @@ angular.module('thyme')
           console.log('The API returned an error: ' + err);
           return;
         }
-        var events = response.items;
+        let events = response.items;
         if (events.length == 0) {
           console.log('No upcoming events found.');
         } else {
           console.log('Todays events:');
-          for (var i = 0; i < events.length; i++) {
-            var event = events[i];
-            var start = event.start.dateTime || event.start.date;
-            var description = event.description || '';
+          for (let i = 0; i < events.length; i++) {
+            let event = events[i];
+            let start = event.start.dateTime || event.start.date;
+            let description = event.description || '';
             console.log('%s - %s - %s', start, event.summary, description);
           }
         }
@@ -77,7 +77,7 @@ angular.module('thyme')
     }
 
     function getNewToken(oauth2Client, callback) {
-      var authUrl = oauth2Client.generateAuthUrl({
+      let authUrl = oauth2Client.generateAuthUrl({
         access_type: 'offline',
         scope: SCOPES
       });
@@ -85,12 +85,12 @@ angular.module('thyme')
       nw.Window.open(authUrl, {}, function(new_win) {
 
         var interval = setInterval(function() {
-          var title = new_win.window.document.getElementsByTagName('title')[0].text;
+          let title = new_win.window.document.getElementsByTagName('title')[0].text;
 
           if (title.indexOf('Success code=') != -1) {
             new_win.close(true);
 
-            var code = title.replace('Success code=', '');
+            let code = title.replace('Success code=', '');
 
             oauth2Client.getToken(code, function(err, token) {
               if (err) {
@@ -111,7 +111,7 @@ angular.module('thyme')
 
       console.log('Authorize this app by visiting this url: ', authUrl);
 
-      var rl = readline.createInterface({
+      let rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout
       });
@@ -141,7 +141,7 @@ angular.module('thyme')
       console.log('Token stored to ' + TOKEN_PATH);
     }
 
-    var gapiService = {
+    let gapiService = {
       init: function() {
         // Load client secrets from a local file.
         fs.readFile('client_secret.json', function processClientSecrets(err, content) {
@@ -156,14 +156,14 @@ angular.module('thyme')
       },
 
       authorize: function(callback) {
-        var clientSecret = credentials.installed.client_secret;
-        var clientId = credentials.installed.client_id;
-        var redirectUrl = credentials.installed.redirect_uris[0];
-        var auth = new googleAuth();
-        var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
+        let clientSecret = credentials.installed.client_secret;
+        let clientId = credentials.installed.client_id;
+        let redirectUrl = credentials.installed.redirect_uris[0];
+        let auth = new googleAuth();
+        let oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
 
         getNewToken(oauth2Client);
-        return
+        return;
         // Check if we have previously stored a token.
         fs.readFile(TOKEN_PATH, function(err, token) {
           if (err) {
@@ -186,7 +186,7 @@ angular.module('thyme')
       },
 
       getEvents: function() {
-        var deferred = $q.defer();
+        let deferred = $q.defer();
         fs.readFile('client_secret.json', function processClientSecrets(err, content) {
           if (err) {
             console.log('Error loading client secret file: ' + err);
@@ -194,12 +194,12 @@ angular.module('thyme')
           }
           // Authorize a client with the loaded credentials, then call the
           // Google Calendar API.
-          var credentials = JSON.parse(content);
-          var clientSecret = credentials.installed.client_secret;
-          var clientId = credentials.installed.client_id;
-          var redirectUrl = credentials.installed.redirect_uris[0];
-          var auth = new googleAuth();
-          var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
+          let credentials = JSON.parse(content);
+          let clientSecret = credentials.installed.client_secret;
+          let clientId = credentials.installed.client_id;
+          let redirectUrl = credentials.installed.redirect_uris[0];
+          let auth = new googleAuth();
+          let oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
 
           // Check if we have previously stored a token.
           fs.readFile(TOKEN_PATH, function(err, token) {
@@ -209,7 +209,7 @@ angular.module('thyme')
               console.log('load credentials');
               oauth2Client.credentials = JSON.parse(token);
 
-              var calendar = google.calendar('v3');
+              let calendar = google.calendar('v3');
               console.log((new Date(new XDate().clearTime())).toISOString());
 
               calendar.events.list({
@@ -226,7 +226,7 @@ angular.module('thyme')
                   return;
                 }
 
-                var events = response.items;
+                let events = response.items;
                 deferred.resolve(events);
               });
             }
@@ -234,8 +234,8 @@ angular.module('thyme')
         });
         return deferred.promise;
       }
-    }
+    };
 
     return gapiService;
   }
-]);
+  ]);

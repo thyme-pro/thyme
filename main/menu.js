@@ -2,51 +2,42 @@ module.exports = {
   init,
   onWindowBlur,
   onWindowFocus
+};
+
+const electron = require('electron');
+const {shell} = electron;
+const {app} = electron;
+const windows = require('./windows');
+const config = require('../config');
+
+let menu;
+
+function init() {
+  menu = electron.Menu.buildFromTemplate(getMenuTemplate());
+  electron.Menu.setApplicationMenu(menu);
 }
 
-const electron = require('electron')
-const {shell} = electron
-const {app} = electron
-const path = require('path')
-const windows = require('./windows')
-const config = require('../config')
-
-var menu
-
-function init () {
-  menu = electron.Menu.buildFromTemplate(getMenuTemplate())
-  electron.Menu.setApplicationMenu(menu)
+function onWindowBlur() {
+  getMenuItem('Full Screen').enabled = false;
+  getMenuItem('Float on Top').enabled = false;
 }
 
-function onToggleAlwaysOnTop (flag) {
-  getMenuItem('Float on Top').checked = flag
+function onWindowFocus() {
+  getMenuItem('Full Screen').enabled = true;
+  getMenuItem('Float on Top').enabled = true;
 }
 
-function onToggleFullScreen (flag) {
-  getMenuItem('Full Screen').checked = flag
-}
-
-function onWindowBlur () {
-  getMenuItem('Full Screen').enabled = false
-  getMenuItem('Float on Top').enabled = false
-}
-
-function onWindowFocus () {
-  getMenuItem('Full Screen').enabled = true
-  getMenuItem('Float on Top').enabled = true
-}
-
-function getMenuItem (label) {
-  for (var i = 0; i < menu.items.length; i++) {
-    var menuItem = menu.items[i].submenu.items.find(function (item) {
-      return item.label === label
-    })
-    if (menuItem) return menuItem
+function getMenuItem(label) {
+  for (let i = 0; i < menu.items.length; i++) {
+    let menuItem = menu.items[i].submenu.items.find(function(item) {
+      return item.label === label;
+    });
+    if (menuItem) return menuItem;
   }
 }
 
-function getMenuTemplate () {
-  var template = [
+function getMenuTemplate() {
+  let template = [
     {
       label: 'File',
       submenu: [
@@ -150,7 +141,7 @@ function getMenuTemplate () {
         }
       ]
     }
-  ]
+  ];
 
   if (process.platform === 'darwin') {
     template.unshift({
@@ -194,7 +185,7 @@ function getMenuTemplate () {
           click: () => app.quit()
         }
       ]
-    })
+    });
 
     // Add Window menu (OS X)
     template.splice(5, 0, {
@@ -214,7 +205,7 @@ function getMenuTemplate () {
           role: 'front'
         }
       ]
-    })
+    });
   }
 
   // Add "File > Quit" menu item so Linux distros where the system tray icon is
@@ -224,8 +215,8 @@ function getMenuTemplate () {
     template[0].submenu.push({
       label: 'Quit',
       click: () => app.quit()
-    })
+    });
   }
 
-  return template
+  return template;
 }

@@ -1,2 +1,2 @@
-exports.preferences = require('./preferences')
-exports.worklog = require('./worklog')
+exports.preferences = require('./preferences');
+exports.worklog = require('./worklog');

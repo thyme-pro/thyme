@@ -7,8 +7,8 @@ angular.module('thyme').controller('CalendarCtrl', function($scope, $rootScope, 
 
   gapiService.getEvents().then(function(data) {
 
-    for (i = 0; i < data.length; i++) {
-      event = data[i];
+    for (let i = 0; i < data.length; i++) {
+      const event = data[i];
       if (event.description) {
         data[i].issue_key = event.description.match(/([a-z]+-[0-9]+)/i)[0];
       }
@@ -19,12 +19,12 @@ angular.module('thyme').controller('CalendarCtrl', function($scope, $rootScope, 
 
 
   $scope.start = function(event) {
-    var task = {};
+    let task = {};
     task.task = event.summary;
     task.issue = event.issue_key;
     task.issue_key = event.issue_key;
 
     dbService.saveTask(task);
     $rootScope.$broadcast('addedTask');
-  }
+  };
 });
