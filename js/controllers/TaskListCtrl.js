@@ -7,22 +7,20 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
     let saveWorklog;
 
     _.each($scope.tasks, function(worklog, key){
-      if (worklog.active) {
-        $scope.tasks[key].active = false;
+      $scope.tasks[key].active = false;
 
-        saveWorklog = false;
+      saveWorklog = false;
 
-        _.each($scope.tasks[key].time_entries, function(timeEntry){
-          if (isNaN(timeEntry.stop)) {
-            timeEntry.stop = new Date().getTime();
+      _.each($scope.tasks[key].time_entries, function(timeEntry){
+        if (isNaN(timeEntry.stop) || !timeEntry.stop) {
+          timeEntry.stop = new Date().getTime();
 
-            saveWorklog = true;
-          }
-        });
-
-        if (saveWorklog) {
-          worklogs.save(worklog);
+          saveWorklog = true;
         }
+      });
+
+      if (saveWorklog) {
+        worklogs.save(worklog);
       }
     });
   }
