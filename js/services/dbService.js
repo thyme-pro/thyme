@@ -2,8 +2,8 @@ angular.module('thyme')
   .factory('dbService', ['$q', ($q) => {
     let db = openDatabase('db', '1.0', 'database', 2 * 1024 * 1024);
 
-  // Create tables
-    db.transaction( function(tx) {
+    // Create tables
+    db.transaction((tx) => {
       tx.executeSql('CREATE TABLE IF NOT EXISTS `tasks` (`id` INTEGER PRIMARY KEY NOT NULL UNIQUE, `task` VARCHAR NOT NULL, `description` VARCHAR NOT NULL, `issue` VARCHAR NOT NULL, `issue_key` VARCHAR NOT NULL, `created` INTEGER)');
       tx.executeSql('CREATE TABLE IF NOT EXISTS `time_entries` (`id` INTEGER PRIMARY KEY NOT NULL UNIQUE, `task_id` INTEGER, `start` INTEGER, `stop` INTEGER)');
       tx.executeSql('CREATE TABLE IF NOT EXISTS `register_info` (`id` INTEGER PRIMARY KEY NOT NULL UNIQUE, `task_id` INTEGER, `date_entered` INTEGER, `issue_key` VARCHAR NOT NULL, `sugar_id` VARCHAR NOT NULL, `time_length` VARCHAR)');
@@ -17,13 +17,14 @@ angular.module('thyme')
         let sql = '';
         let data = [];
 
+        let deferSelectTasks = $q.defer();
         // Get a list of tasks for the selected period.
         dbService.tasks = {};
-        db.transaction(function(tx) {
+        db.transaction((tx) => {
           sql = 'SELECT * FROM tasks WHERE created > ? AND created < ?';
           data = [timeFrom, timeTo];
 
-          tx.executeSql(sql, data, function(tx, rs) {
+          tx.executeSql(sql, data, (tx, rs) => {
             for (let i=0; i<rs.rows.length; i++) {
               let row = rs.rows.item(i);
 
@@ -38,65 +39,82 @@ angular.module('thyme')
                 };
               }
             }
-          });
 
-      // If selected, get all tasks that are not registered, regardless of date.
+            deferSelectTasks.resolve();
+          });
+        });
+
+        let deferSelectUnregistered = $q.defer();
+
+        deferSelectTasks.promise.then(() => {
+          // If selected, get all tasks that are not registered, regardless of date.
           if (unregistered) {
-            sql = 'SELECT T.id AS t_id, T.issue_key AS t_issue_key, * FROM tasks AS T LEFT JOIN register_info AS R ON T.id = R.task_id WHERE R.task_id IS NULL';
-            tx.executeSql(sql, [], function(tx, rs) {
+            db.transaction((tx) => {
+              sql = 'SELECT T.id AS t_id, T.issue_key AS t_issue_key, * FROM tasks AS T LEFT JOIN register_info AS R ON T.id = R.task_id WHERE R.task_id IS NULL';
+              tx.executeSql(sql, [], (tx, rs) => {
+                for (let i=0; i<rs.rows.length; i++) {
+                  let row = rs.rows.item(i);
+
+                  if (row.t_id && dbService.tasks[row.t_id] === undefined) {
+                    dbService.tasks[row.t_id] = {
+                      id: row.t_id,
+                      task: row.task,
+                      created: row.created,
+                      description: row.description,
+                      issue_key: row.t_issue_key,
+                      issue: row.issue
+                    };
+                  }
+                }
+                deferSelectUnregistered.resolve();
+              });
+            });
+          } else {
+            deferSelectUnregistered.resolve();
+          }
+        });
+
+        deferSelectUnregistered.promise.then(() => {
+          db.transaction((tx) => {
+
+            sql = 'SELECT * FROM time_entries';
+            tx.executeSql(sql, [], (tx, rs) => {
               for (let i=0; i<rs.rows.length; i++) {
                 let row = rs.rows.item(i);
+                let task_id = row.task_id;
 
-                if (row.t_id && dbService.tasks[row.t_id] === undefined) {
-                  dbService.tasks[row.t_id] = {
-                    id: row.t_id,
-                    task: row.task,
-                    created: row.created,
-                    description: row.description,
-                    issue_key: row.t_issue_key,
-                    issue: row.issue
-                  };
+                if (dbService.tasks[task_id]) {
+                  if (!dbService.tasks[task_id].time_entries) {
+                    dbService.tasks[task_id].time_entries = {};
+                  }
+
+                  dbService.tasks[task_id].time_entries[row.id] = {};
+                  dbService.tasks[task_id].time_entries[row.id].id = row.id;
+                  dbService.tasks[task_id].time_entries[row.id].start = row.start;
+
+                  if (row.stop == '' || row.stop === undefined) {
+                    dbService.tasks[task_id].active = true;
+                  } else {
+                    dbService.tasks[task_id].time_entries[row.id].stop = row.stop;
+                  }
                 }
               }
             });
-          }
 
-          sql = 'SELECT * FROM time_entries';
-          tx.executeSql(sql, [], function(tx, rs) {
-            for (let i=0; i<rs.rows.length; i++) {
-              let row = rs.rows.item(i);
-              let task_id = row.task_id;
+            sql = 'SELECT * FROM register_info';
+            tx.executeSql(sql, [], (tx, rs) => {
+              for (let i=0; i<rs.rows.length; i++) {
+                let row = rs.rows.item(i);
+                let task_id = row.task_id;
 
-              if (dbService.tasks[task_id]) {
-                if (!dbService.tasks[task_id].time_entries) {
-                  dbService.tasks[task_id].time_entries = {};
-                }
-
-                dbService.tasks[task_id].time_entries[row.id] = {};
-                dbService.tasks[task_id].time_entries[row.id].id = row.id;
-                dbService.tasks[task_id].time_entries[row.id].start = row.start;
-
-                if (row.stop == '' || row.stop === undefined) {
-                  dbService.tasks[task_id].active = true;
-                } else {
-                  dbService.tasks[task_id].time_entries[row.id].stop = row.stop;
+                if (dbService.tasks[task_id]) {
+                  dbService.tasks[task_id].register_info = row;
+                  dbService.tasks[task_id].register_info.registered = true;
                 }
               }
-            }
-          });
 
-          sql = 'SELECT * FROM register_info';
-          tx.executeSql(sql, [], function(tx, rs) {
-            for (let i=0; i<rs.rows.length; i++) {
-              let row = rs.rows.item(i);
-              let task_id = row.task_id;
 
-              if (dbService.tasks[task_id]) {
-                dbService.tasks[task_id].register_info = row;
-                dbService.tasks[task_id].register_info.registered = true;
-              }
-            }
-
+            });
           });
 
           deferred.resolve(_.toArray(dbService.tasks));
@@ -110,8 +128,8 @@ angular.module('thyme')
         let data = [task_id];
 
         let result = [];
-        db.transaction(function(tx) {
-          tx.executeSql(sql, data, function(tx, rs) {
+        db.transaction((tx) => {
+          tx.executeSql(sql, data, (tx, rs) => {
             for (let i = 0; i < rs.rows.length; i++) {
               let row = rs.rows.item(i);
               result[i] = { id: row.id,
@@ -127,7 +145,6 @@ angular.module('thyme')
         return deferred.promise;
       },
       saveTask: function(task) {
-        const self = this;
         let deferred = $q.defer();
 
         if (task.task === undefined) {
@@ -144,9 +161,9 @@ angular.module('thyme')
         }
 
         if (isNaN(task.id)) {
-          self.saveNewTask(task, deferred);
+          this.saveNewTask(task, deferred);
         } else {
-          self.updateTask(task, deferred);
+          this.updateTask(task, deferred);
         }
 
         return deferred.promise;
@@ -157,10 +174,8 @@ angular.module('thyme')
         const sql = 'INSERT INTO tasks(id, task, description, issue, issue_key, created) VALUES (?, ?, ?, ?, ?, ?)';
         let data = [null, task.task, task.description, task.issue, task.issue_key, task.created];
 
-      // If this is a new task. The timer will be started.
-      //dbService.endAllTimeEntries().then(function() {
-        db.transaction(function(tx) {
-          tx.executeSql(sql, data, function(transaction, result){
+        db.transaction((tx)=> {
+          tx.executeSql(sql, data, (transaction, result) => {
             if (result.insertId) {
               dbService.tasks[result.insertId] = task;
               task.id = result.insertId;
@@ -175,8 +190,8 @@ angular.module('thyme')
         const sql = 'Update tasks SET task = ?, description = ?, issue = ?, issue_key = ?, created = ? WHERE id = ?';
         let data = [task.task, task.description, task.issue, task.issue_key, task.created, task.id];
 
-        db.transaction(function(tx) {
-          tx.executeSql(sql, data, function(){
+        db.transaction((tx) => {
+          tx.executeSql(sql, data, () => {
             self.updateTimeEntries(task, deferred);
           });
         });
@@ -185,11 +200,11 @@ angular.module('thyme')
         const self = this;
         let promises = [];
 
-        db.transaction(function(tx) {
+        db.transaction((tx) => {
           const sql = 'DELETE FROM time_entries WHERE task_id = ?';
           tx.executeSql(sql, [task.id], () => {
 
-            angular.forEach(task.time_entries, function(timeEntry) {
+            angular.forEach(task.time_entries, (timeEntry) => {
               promises.push(self.addTimeEntry(task.id, timeEntry.start, timeEntry.stop));
             });
           });
@@ -204,7 +219,7 @@ angular.module('thyme')
         });
       },
       deleteTask: function(id) {
-        db.transaction(function(tx) {
+        db.transaction((tx) => {
           let data = [id];
           let sql = 'DELETE FROM tasks WHERE id = ?';
           tx.executeSql(sql, data);
@@ -223,8 +238,8 @@ angular.module('thyme')
         const  sql = 'INSERT INTO time_entries(task_id, start, stop) VALUES (?, ?, ?)';
         let data = [task_id, start, stop];
 
-        db.transaction(function(tx) {
-          tx.executeSql(sql, data, function(transaction, result) {
+        db.transaction((tx) => {
+          tx.executeSql(sql, data, (transaction, result) => {
             deferred.resolve(result.insertId);
           });
         });
@@ -236,7 +251,7 @@ angular.module('thyme')
       endAllTimeEntries: function() {
         let deferred = $q.defer();
 
-        angular.forEach(dbService.tasks, function(value, key){
+        angular.forEach(dbService.tasks, (value, key) => {
           if (value.active) {
             dbService.tasks[key].active = false;
           }
@@ -245,8 +260,8 @@ angular.module('thyme')
         let sql = 'UPDATE time_entries SET stop = ? WHERE stop = \'\'';
         let data = [new Date().getTime()];
 
-        db.transaction(function(tx) {
-          tx.executeSql(sql, data, function(){
+        db.transaction((tx) => {
+          tx.executeSql(sql, data, () => {
             deferred.resolve();
           });
         });
@@ -266,7 +281,7 @@ angular.module('thyme')
           data = [start, stop, id];
         }
 
-        db.transaction(function(tx) {
+        db.transaction((tx) => {
           tx.executeSql(sql, data);
         });
       },
@@ -274,7 +289,7 @@ angular.module('thyme')
         let sql = 'DELETE FROM time_entries WHERE id = ?';
         let data = [time_entry_id];
 
-        db.transaction(function(tx) {
+        db.transaction((tx) => {
           tx.executeSql(sql, data);
         });
       },
@@ -288,7 +303,7 @@ angular.module('thyme')
           task.register_info.time_length,
         ];
 
-        db.transaction(function(tx) {
+        db.transaction((tx) => {
           tx.executeSql(sql, data);
         });
       }
