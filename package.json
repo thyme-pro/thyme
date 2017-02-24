@@ -4,7 +4,7 @@
   "description": "A time tracking application",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "THYME_ENABLE_DEV=true electron ."
   },
   "repository": "https://github.com/thyme-pro/thyme",
   "keywords": [
