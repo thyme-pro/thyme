@@ -1,21 +1,5 @@
 _ = require('lodash');
-angular.module('thyme', ['ui.bootstrap', 'ngRoute', 'utils.autofocus']);
-
-/**
- * Route provider
- */
-angular.module('thyme').config(['$routeProvider',
-  function($routeProvider) {
-    $routeProvider.
-      when('/list', {
-        templateUrl: 'templates/list/pageTaskList.html',
-        controller: 'TaskListCtrl'
-      }).
-      otherwise({
-        redirectTo: '/list'
-      });
-  }
-]);
+angular.module('thyme', ['ui.bootstrap', 'utils.autofocus']);
 
 angular.module('thyme').filter('object2Array', function() {
   return function(input) {

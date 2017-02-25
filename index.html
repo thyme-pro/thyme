@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>Thyme</title>
 
-    <link href="vendor/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
-    <link href="vendor/bootstrap/dist/css/bootstrap-theme.css" rel="stylesheet">
+    <link href="node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <link href="node_modules/bootstrap/dist/css/bootstrap-theme.css" rel="stylesheet">
     <link href="css/native.css" rel="stylesheet">
     <link href="css/app.css" rel="stylesheet">
 
@@ -14,8 +14,10 @@
   <body>
     <div class="page-container">
       <span class="btn btn-sm btn-success" id="js-add-task" onclick="ipc.send('edit-worklog', {})"><span class="glyphicon glyphicon-plus"></span> Start new</span>
-        <div ng-view></div>
-
+    <div ng-view></div>
+      <div ng-controller="TaskListCtrl">
+        <div ng-include src="'./templates/list/pageTaskList.html'"></div>
+      </div >
     </div>
   </body>
 

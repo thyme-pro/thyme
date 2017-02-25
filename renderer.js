@@ -15,17 +15,11 @@ document.body.ondrop = (ev) => {
 
 const path = require('path');
 
-window.$ = require(path.join(__dirname, 'vendor/jquery/dist/jquery.min.js'));
-window.XDate = require(path.join(__dirname, 'vendor/xdate/xdate.js'));
+window.$ = require('jquery');
 
-
-require(path.join(__dirname, 'vendor/underscore/underscore.js'));
+window.XDate = require('xdate');
 
 require(path.join(__dirname, 'js/helper/time.js'));
 
-require(path.join(__dirname, 'vendor/date/date.js'));
-
-require(path.join(__dirname, 'vendor/angular/angular.js'));
-require(path.join(__dirname, 'vendor/angular-route/angular-route.js'));
-require(path.join(__dirname, 'vendor/angular-bootstrap/ui-bootstrap.js'));
-require(path.join(__dirname, 'vendor/angular-bootstrap/ui-bootstrap-tpls.js'));
+require('angular');
+require('angular-bootstrap');

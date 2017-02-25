@@ -1,10 +1,16 @@
+.form-control,
+.dropdown-menu,
+.btn,
 body {
   font-size: 11px;
   line-height: 1.42857143;
+}
+body {
   color: #333333;
   background-color: #ffffff;
 }
 
+html body,
 html {
   height: 100%;
   font-family: 'BlinkMacSystemFont', 'Lucida Grande', 'Segoe UI', Ubuntu, Cantarell, sans-serif;
