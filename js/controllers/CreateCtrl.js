@@ -1,14 +1,14 @@
 /**
- * Controller for task creation
+ * Controller for worklog creation
  */
-angular.module('thyme').controller('CreateCtrl', function($scope, $http, dbService, extService) {
+angular.module('thyme').controller('CreateCtrl', function ($scope, $http, dbService, extService) {
   const ipc = require('electron').ipcRenderer;
 
   // Define tabs in modal.
   // They all share this controller.
   $scope.tabs = [
-    {title: 'Add task', icon: 'edit', template: '../templates/add/tabAddWorklog.html' },
-    {title: 'Task overview', icon: 'time', template: '../templates/add/tabWorklogOverview.html' },
+    {title: 'Add worklog', icon: 'edit', template: '../templates/add/tabAddWorklog.html'},
+    {title: 'Task overview', icon: 'time', template: '../templates/add/tabWorklogOverview.html'},
   ];
 
   $scope.setTab = (tab) => {
@@ -18,46 +18,45 @@ angular.module('thyme').controller('CreateCtrl', function($scope, $http, dbServi
 
   $scope.setTab($scope.tabs[0]);
 
-  $scope.task = {};
+  $scope.worklog = {};
 
   ipc.on('edit-worklog', (event, data) => {
-    $scope.task = data.obj;
+    $scope.worklog = data.obj;
     $scope.format();
 
-    if ($scope.task.created) {
-      $scope.datepicker.start_date = new XDate($scope.task.created);
+    if ($scope.worklog.created) {
+      $scope.datepicker.start_date = new XDate($scope.worklog.created);
       $scope.updateCreated();
     }
   });
 
   $scope.stories = [];
-  $scope.issuesLoaded = false;
+  $scope.tasksLoaded = false;
 
-  // Load issues from localstorage cache.
+  // Load tasks from localstorage cache.
   try {
-    $scope.issues = JSON.parse(localStorage.jiraIssues);
+    $scope.tasks = JSON.parse(localStorage.tasks);
   } catch (exception) {
-    $scope.issue = [];
+    $scope.tasks = [];
   }
 
-  extService.getTasks().then(function(data){
+  extService.getTickets().then(function (data) {
     $scope.stories = data;
   });
 
-  extService.getIssues().then(function(data){
-    $scope.issues = data;
-    localStorage.jiraIssues = JSON.stringify(data);
-    $scope.issuesLoaded = true;
+  extService.getIssues().then(function (data) {
+    $scope.tasks = data;
+    localStorage.tasks = JSON.stringify(data);
+    $scope.tasksLoaded = true;
   });
 
-  $scope.selectIssue = function($item) {
-    let issue_key = $item.issue_key;
-    $scope.task.issue_key = issue_key;
+  $scope.selectTask = function ($item) {
+    $scope.worklog.task_id = $item.task_id;
 
     $scope.setProgress($item.timeoriginalestimate, $item.timeestimate, $item.timespent);
   };
 
-  $scope.setProgress = function(originalestimate, estimate, spent) {
+  $scope.setProgress = function (originalestimate, estimate, spent) {
     $scope.task_estimate = 'N/A';
     $scope.time_remaining_formatted = 'N/A';
 
@@ -73,7 +72,7 @@ angular.module('thyme').controller('CreateCtrl', function($scope, $http, dbServi
     }
     $scope.time_used_formatted = timeHelper.formatMinutesToTime(spent / 60);
 
-    let time_remaining = (entire_estimate - spent)/ 60;
+    let time_remaining = (entire_estimate - spent) / 60;
     if (time_remaining > 0) {
       $scope.time_remaining_formatted = timeHelper.formatMinutesToTime(time_remaining);
     }
@@ -83,7 +82,7 @@ angular.module('thyme').controller('CreateCtrl', function($scope, $http, dbServi
     }
   };
 
-  $scope.$watch('percent_used', function() {
+  $scope.$watch('percent_used', function () {
     if (isNaN($scope.time_used) || $scope.time_used === 0) {
       $scope.alert = {
         show: false,
@@ -112,10 +111,10 @@ angular.module('thyme').controller('CreateCtrl', function($scope, $http, dbServi
     }
   });
 
-  $scope.saveTimeEntry = function(time_entry) {
+  $scope.saveTimeEntry = function (time_entry) {
     let startObj = new XDate();
-    if ($scope.task.created) {
-      startObj = new XDate($scope.task.created);
+    if ($scope.worklog.created) {
+      startObj = new XDate($scope.worklog.created);
     }
     let start_time_split = time_entry.start_formatted.split(':');
 
@@ -131,13 +130,13 @@ angular.module('thyme').controller('CreateCtrl', function($scope, $http, dbServi
     let start = startObj.getTime();
     let stop = stopObj.getTime();
 
-    $scope.task.time_entries[time_entry.id].start = start;
-    $scope.task.time_entries[time_entry.id].stop = stop;
+    $scope.worklog.time_entries[time_entry.id].start = start;
+    $scope.worklog.time_entries[time_entry.id].stop = stop;
 
     $scope.format();
   };
 
-  $scope.formatDate = function(timestamp) {
+  $scope.formatDate = function (timestamp) {
     if (timestamp < 2000000000) {
       timestamp = timestamp * 1000;
       return new XDate(timestamp).toString('HH:mm');
@@ -146,36 +145,36 @@ angular.module('thyme').controller('CreateCtrl', function($scope, $http, dbServi
   };
 
 
-  $scope.deleteTimeEntry = function(time_entry) {
-    delete $scope.task.time_entries[time_entry.id];
-    dbService.deleteTimeEntry($scope.task.id, time_entry.id);
+  $scope.deleteTimeEntry = function (time_entry) {
+    delete $scope.worklog.time_entries[time_entry.id];
+    dbService.deleteTimeEntry($scope.worklog.id, time_entry.id);
     $scope.format();
   };
 
   $scope.format = function formatTimeEntries() {
-    $scope.task.total_duration = timeHelper.formattedTotalForWorklog($scope.task);
+    $scope.worklog.total_duration = timeHelper.formattedTotalForWorklog($scope.worklog);
 
-    angular.forEach($scope.task.time_entries, function(time_entry, key){
-      $scope.task.time_entries[key].duration_formatted = timeHelper.formatMinutesToTime(timeHelper.calculateMinutesForTimeEntry(time_entry));
-      $scope.task.time_entries[key].start_formatted = new XDate(time_entry.start).toString('HH:mm');
+    angular.forEach($scope.worklog.time_entries, function (time_entry, key) {
+      $scope.worklog.time_entries[key].duration_formatted = timeHelper.formatMinutesToTime(timeHelper.calculateMinutesForTimeEntry(time_entry));
+      $scope.worklog.time_entries[key].start_formatted = new XDate(time_entry.start).toString('HH:mm');
       if (time_entry.stop !== undefined && !isNaN(time_entry.stop)) {
-        $scope.task.time_entries[key].stop_formatted = new XDate(time_entry.stop).toString('HH:mm');
+        $scope.worklog.time_entries[key].stop_formatted = new XDate(time_entry.stop).toString('HH:mm');
       }
     });
   };
 
   $scope.format();
 
-  $scope.addTimeEntry = function() {
-    let key = 'new-' + _.keys($scope.task.time_entries).length;
-    if (!$scope.task.time_entries) {
-      $scope.task.time_entries = {};
+  $scope.addTimeEntry = function () {
+    let key = 'new-' + _.keys($scope.worklog.time_entries).length;
+    if (!$scope.worklog.time_entries) {
+      $scope.worklog.time_entries = {};
     }
-    $scope.task.time_entries[key] = {};
-    $scope.task.time_entries[key].start = new XDate().getTime();
-    $scope.task.time_entries[key].stop = new XDate().getTime();
-    $scope.task.time_entries[key].id = key;
-    $scope.task.time_entries[key].edit = true;
+    $scope.worklog.time_entries[key] = {};
+    $scope.worklog.time_entries[key].start = new XDate().getTime();
+    $scope.worklog.time_entries[key].stop = new XDate().getTime();
+    $scope.worklog.time_entries[key].id = key;
+    $scope.worklog.time_entries[key].edit = true;
 
     $scope.format();
   };
@@ -185,7 +184,7 @@ angular.module('thyme').controller('CreateCtrl', function($scope, $http, dbServi
 
   $scope.updateCreated = () => {
     let date = new XDate($scope.datepicker.start_date);
-    $scope.task.created = date.getTime();
+    $scope.worklog.created = date.getTime();
     $scope.datepicker.formatted = date.toString('H:mm:ss dd/MM/yyyy');
   };
 
@@ -206,15 +205,15 @@ angular.module('thyme').controller('CreateCtrl', function($scope, $http, dbServi
 
   $scope.updateCreated();
 
-  $scope.ok = function() {
-    ipc.send('save-worklog', $scope.task);
+  $scope.ok = function () {
+    ipc.send('save-worklog', $scope.worklog);
     // Close window
     const remote = require('electron').remote;
     let window = remote.getCurrentWindow();
     window.close();
   };
 
-  $scope.cancel = function() {
+  $scope.cancel = function () {
     // Close window
     const remote = require('electron').remote;
     let window = remote.getCurrentWindow();

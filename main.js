@@ -115,6 +115,7 @@ ipcMain.on('open-file', function(event, data) {
 });
 
 ipcMain.on('save-worklog', function(event, data) {
+  console.log(data)
   mainWindow.webContents.send('save-worklog' , {obj:data});
   mainWindow.focus();
 });

@@ -22,4 +22,4 @@ window.XDate = require('xdate');
 require(path.join(__dirname, 'js/helper/time.js'));
 
 require('angular');
-require('angular-bootstrap');
+require('angular-ui-bootstrap');

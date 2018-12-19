@@ -6,43 +6,41 @@
  */
 angular.module('thyme')
   .factory('worklogs', ['$q', '$rootScope', 'dbService', ($q, $rootScope, dbService) => {
+    function worklogs(guid) {
+      this.worklogs = []
 
-    /**
-     * Generate GUID, used when creating new task, not yet saved
-     * to persistent storage.
-     */
-    const guid = () => {
-      const s4 = () => {
-        return Math.floor((1 + Math.random()) * 0x10000)
+      /**
+       * Generate GUID, used when creating new task, not yet saved
+       * to persistent storage.
+       */
+      function guid() {
+        const s4 = () => {
+          return Math.floor((1 + Math.random()) * 0x10000)
             .toString(16)
             .substring(1);
+        };
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+          s4() + '-' + s4() + s4() + s4();
       };
-      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-            s4() + '-' + s4() + s4() + s4();
-    };
 
-    let worklogs = {
-      worklogs: [],
-
-        /**
-         * Get Worklogs from storage.
-         */
-      get: (timeFrom, timeTo, unregistered) => {
+      /**
+       * Get Worklogs from storage.
+       */
+      this.get = (timeFrom, timeTo, unregistered) => {
         let deferred = $q.defer();
 
-        dbService.getTasks(timeFrom, timeTo, unregistered).then((data) => {
+        dbService.getWorklogs(timeFrom, timeTo, unregistered).then((data) => {
           this.worklogs = data;
           deferred.resolve(this.worklogs);
         });
 
         return deferred.promise;
-      },
+      }
 
-        /**
-         * Save worklog.
-         */
-      save: (worklog) => {
-
+      /**
+       * Save worklog.
+       */
+      this.save = (worklog) => {
         if (!worklog.id) {
           worklog.id = guid();
           this.worklogs.push(worklog);
@@ -54,7 +52,7 @@ angular.module('thyme')
           }
         });
 
-        dbService.saveTask(worklog).then((id) => {
+        dbService.saveWorklog(worklog).then((id) => {
           if (isNaN(worklog.id)) {
             _.each(this.worklogs, (_worklog, key) => {
               if (_worklog.id == worklog.id) {
@@ -63,12 +61,12 @@ angular.module('thyme')
             });
           }
         });
-      },
+      }
 
-        /**
-         * Delete worklog by Id.
-         */
-      delete: (worklogId) => {
+      /**
+       * Delete worklog by Id.
+       */
+      this.delete = (worklogId) => {
         _.each(this.worklogs, (_worklog, key) => {
           if (_worklog.id == worklogId) {
             this.worklogs.splice(key, 1);
@@ -77,8 +75,10 @@ angular.module('thyme')
 
         dbService.deleteTask(worklogId);
       }
-    };
+    }
 
-    return worklogs;
+
+    return new worklogs;
   }
-  ]);
+  ])
+;

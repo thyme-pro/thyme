@@ -20,11 +20,11 @@ angular.module('thyme').controller('CalendarCtrl', function($scope, $rootScope, 
 
   $scope.start = function(event) {
     let task = {};
-    task.task = event.summary;
-    task.issue = event.issue_key;
-    task.issue_key = event.issue_key;
+    worklog.task = event.summary;
+    worklog.issue = event.issue_key;
+    worklog.issue_key = event.issue_key;
 
-    dbService.saveTask(task);
+    dbService.saveTask(worklog);
     $rootScope.$broadcast('addedTask');
   };
 });

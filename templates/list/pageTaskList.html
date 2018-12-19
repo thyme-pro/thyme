@@ -9,8 +9,8 @@
         {{activeTask.issue}}
       </div>
       <div class="description">
-        {{activeTask.task}}
-        {{activeTask.description}}
+          {{activeTask.worklog}}
+          {{activeTask.description}}
       </div>
     </div>
 
@@ -45,52 +45,52 @@
     <th>Task / description</th>
     <th>Issue</th>
   </thead>
-  <tr ng-repeat-start="task in tasks | object2Array | orderBy:'id':true" class="active date-row">
-    <td colspan="4" ng-if="showDate(task)"><small><i>{{rowDate}}</i></small></td>
+  <tr ng-repeat-start="worklog in worklogs | object2Array | orderBy:'id':true" class="active date-row">
+    <td colspan="4" ng-if="showDate(worklog)"><small><i>{{rowDate}}</i></small></td>
   </tr>
-  <tr ng-repeat-end ng-class="task.active ? 'success' : '';">
+  <tr ng-repeat-end ng-class="worklog.active ? 'success' : '';">
     <td>
-      <b>{{timeTotal(task)}}</b>
+      <b>{{timeTotal(worklog)}}</b>
     </td>
     <td class="col-actions">
       <div class="">
         <!-- start -->
-        <span ng-if="task.register_info" class="btn btn-disabled btn-xs">
+        <span ng-if="worklog.register_info" class="btn btn-disabled btn-xs">
           <span class="glyphicon glyphicon-time"></span>
         </span>
-        <span ng-show="task.active" class="btn btn-warning btn-xs" ng-click="stopTask(task.id)">
+        <span ng-show="worklog.active" class="btn btn-warning btn-xs" ng-click="stopTask(worklog.id)">
           <span class="glyphicon glyphicon-pause"></span>
         </span>
-        <span ng-hide="task.active || task.register_info" class="btn btn-success btn-start-task btn-xs" ng-click="startTask(task.id)">
+        <span ng-hide="worklog.active || worklog.register_info" class="btn btn-success btn-start-task btn-xs" ng-click="startTask(worklog.id)">
           <span class="glyphicon glyphicon-play"></span>
         </span>
         <!-- /start -->
 
         <!-- edit -->
-        <span class="btn btn-default btn-xs" ng-click="editTask(task)">
+        <span class="btn btn-default btn-xs" ng-click="editTask(worklog)">
           <span class="glyphicon glyphicon-edit"></span>
         </span>
         <!-- /edit -->
 
         <!-- register -->
-        <span ng-hide="task.active || task.register_info || task.saving_log" class="btn btn-primary btn-xs" ng-click="registerTask(task)">
+        <span ng-hide="worklog.active || worklog.register_info || worklog.saving_log" class="btn btn-primary btn-xs" ng-click="registerTask(worklog)">
           <span class="glyphicon glyphicon-floppy-disk"></span>
         </span>
-        <span ng-show="task.active" class="btn btn-disabled btn-xs">
+        <span ng-show="worklog.active" class="btn btn-disabled btn-xs">
           <span class="glyphicon glyphicon-floppy-disk"></span>
         </span>
-        <span ng-show="task.register_info" class="btn btn-success btn-xs" ng-click="editTask(task)">
+        <span ng-show="worklog.register_info" class="btn btn-success btn-xs" ng-click="editTask(worklog)">
           <span class="glyphicon glyphicon-floppy-saved"></span>
         </span>
 
-        <span ng-show="task.saving_log" class="btn btn-xs"><span class="glyphicon glyphicon-cloud-upload"></span></span>
+        <span ng-show="worklog.saving_log" class="btn btn-xs"><span class="glyphicon glyphicon-cloud-upload"></span></span>
         <!-- /register -->
 
         <!-- delete buttons -->
-        <span class="btn btn-default btn-xs" ng-click="task.delete = !task.delete">
+        <span class="btn btn-default btn-xs" ng-click="worklog.delete = !worklog.delete">
           <span class="glyphicon glyphicon-trash"></span>
         </span>
-        <span ng-if="task.delete" class="btn btn-danger btn-xs" ng-click="deleteTask(task.id)">
+        <span ng-if="worklog.delete" class="btn btn-danger btn-xs" ng-click="deleteWorklog(worklog.id)">
           <span class="glyphicon glyphicon-ok"></span>
         </span>
         <!-- /delete -->
@@ -98,12 +98,10 @@
 
     </td>
     <td>
-      <i>{{task.task}}</i> <span ng-show="task.description">-</span>
-      {{task.description}}
+      <i>{{worklog.task}} ({{worklog.task_id}})</i> <span ng-show="worklog.description">-</span>
+        {{worklog.description}}
     </td>
     <td>
-      {{task.issue}}
-      &nbsp<span class="glyphicon glyphicon-new-window" ng-show="task.issue_key" ng-click="browseIssue(task.issue_key)"></span>
     </td>
   </tr>
   <tr>

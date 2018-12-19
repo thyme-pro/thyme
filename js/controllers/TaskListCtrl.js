@@ -1,17 +1,17 @@
 /**
  * Task List controller.
  */
-angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $http, $modal, worklogs, extService) {
+angular.module('thyme').controller('TaskListCtrl', function ($scope, $timeout, $http, $uibModal, worklogs, extService) {
 
   function stopTimers() {
     let saveWorklog;
 
-    _.each($scope.tasks, function(worklog, key){
-      $scope.tasks[key].active = false;
+    _.each($scope.worklogs, function (worklog, key) {
+      $scope.worklogs[key].active = false;
 
       saveWorklog = false;
 
-      _.each($scope.tasks[key].time_entries, function(timeEntry){
+      _.each($scope.worklogs[key].time_entries, function (timeEntry) {
         if (isNaN(timeEntry.stop) || !timeEntry.stop) {
           timeEntry.stop = new Date().getTime();
 
@@ -28,9 +28,9 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
   function startTimer(worklog_id) {
     let worklog = null;
 
-    _.each($scope.tasks, function(_worklog, key) {
+    _.each($scope.worklogs, function (_worklog, key) {
       if (_worklog.id == worklog_id) {
-        worklog = $scope.tasks[key];
+        worklog = $scope.worklogs[key];
       }
     });
 
@@ -57,9 +57,6 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
 
   ipc.on('save-worklog', (event, data) => {
     let worklog = data.obj;
-    if (!worklog.issue) {
-      worklog.issue = worklog.issue_key;
-    }
 
     if (worklog.time_entries === undefined) {
       stopTimers();
@@ -86,7 +83,7 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
   let timeFrom = 0;
   let timeTo = 0;
 
-  $scope.$watch('dateFrom', function(){
+  $scope.$watch('dateFrom', function () {
     let dateFrom = new XDate($scope.dateFrom);
     let dateTo = new XDate($scope.dateTo);
     let timeFrom = dateFrom.clearTime().getTime();
@@ -99,7 +96,7 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
     getTasks(timeFrom, timeTo);
   });
 
-  $scope.$watch('dateTo', function(){
+  $scope.$watch('dateTo', function () {
     let dateFrom = new XDate($scope.dateFrom);
     let dateTo = new XDate($scope.dateTo);
     let timeFrom = dateFrom.clearTime().getTime();
@@ -122,22 +119,22 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
     }
 
     let unregistered = $scope.alwaysIncludeUnregistered;
-    worklogs.get(from, to, unregistered).then(function(data){
-      $scope.tasks = {};
-      $scope.tasks = data;
+    worklogs.get(from, to, unregistered).then(function (data) {
+      $scope.worklogs= {};
+      $scope.worklogs = data;
 
-      angular.forEach($scope.tasks, function(task){
-        if (task.active) {
-          $scope.activeTask = $scope.tasks[task.id];
+      angular.forEach($scope.worklogs, function (worklog) {
+        if (worklog && worklog.active) {
+          $scope.activeTask = $scope.worklogs[worklog.id];
         }
       });
 
     });
   }
 
-  $scope.showDate = function(task) {
-    if (task.created) {
-      let date = new XDate(task.created).toString('dd/MM/yy');
+  $scope.showDate = function (worklog) {
+    if (worklog && worklog.created) {
+      let date = new XDate(worklog.created).toString('dd/MM/yy');
       if (date !== $scope.rowDate) {
         $scope.rowDate = date;
 
@@ -160,47 +157,45 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
     stopTimers();
   };
 
-  // Send the task object to the modal
-  $scope.editTask = (task) => {
-    ipc.send('edit-worklog', task);
+  // Send the worklog object to the modal
+  $scope.editTask = (worklog) => {
+    ipc.send('edit-worklog', worklog);
   };
 
-  $scope.deleteTask = (task_id) => {
-    worklogs.delete(task_id);
+  $scope.deleteWorklog = (id) => {
+    worklogs.delete(id);
   };
 
-  $scope.registerTask = (task) => {
-    task.saving_log = true;
+  $scope.registerTask = (worklog) => {
+    worklog.saving_log = true;
 
-    extService.logTime(task).then(function(data){
+    extService.logTime(worklog).then(function (data) {
       if (data.success == true) {
-        task.register_info = {};
-        task.register_info.date_entered = new Date().getTime();
-        task.register_info.sugar_id = 1;
-        task.register_info.issue_key = task.issue_key;
-        task.register_info.time_length = 1;
-        worklogs.save(task);
+        worklog.register_info = {};
+        worklog.register_info.date_entered = new Date().getTime();
+        worklog.register_info.external_id = data.data.id;
+        worklogs.save(worklog);
       }
 
-      task.saving_log = false;
+      worklog.saving_log = false;
     });
   };
 
-  $scope.listTotal = function() {
+  $scope.listTotal = function () {
     let total_minutes = 0;
 
-    angular.forEach($scope.tasks, function(task) {
-      total_minutes += timeHelper.calculateTotalForWorklog(task);
+    angular.forEach($scope.worklogs, function (worklog) {
+      total_minutes += timeHelper.calculateTotalForWorklog(worklog);
     });
 
     return timeHelper.formatMinutesToTime(total_minutes);
   };
 
-  $scope.timeTotal = function(task) {
-    return timeHelper.formattedTotalForWorklog(task);
+  $scope.timeTotal = function (worklog) {
+    return timeHelper.formattedTotalForWorklog(worklog);
   };
 
-  $scope.browseIssue = function(issue_key) {
+  $scope.browseIssue = function (issue_key) {
     issue_key;
   };
 
@@ -208,15 +203,16 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
   function fireDigest() {
     $timeout(fireDigest, 200);
 
-      // Find active task while at it.
+    // Find active worklog while at it.
     $scope.activeTask = {};
 
-    angular.forEach($scope.tasks, function(task){
-      if (task.active) {
-        $scope.activeTask = $scope.tasks[task.id];
+    angular.forEach($scope.worklogs, function (worklog) {
+      if (worklog.active) {
+        $scope.activeTask = $scope.worklogs[worklog.id];
       }
     });
   }
+
   fireDigest();
 
   /**
@@ -225,11 +221,11 @@ angular.module('thyme').controller('TaskListCtrl', function($scope, $timeout, $h
   if (localStorage.notificationInterval >>> 0 === parseFloat(localStorage.notificationInterval)) {
     const interval = localStorage.notificationInterval * 60 * 1000;
 
-    setInterval(function() {
+    setInterval(function () {
       let notificationMessage = 'Get to work!';
 
       if ($scope.activeTask && $scope.activeTask.active) {
-        notificationMessage = $scope.activeTask.issue_key + ' - ' + $scope.activeTask.task;
+        notificationMessage = $scope.activeTask.issue_key + ' - ' + $scope.activeTask.worklog;
         notificationMessage += '\nTime used: ' + $scope.timeTotal($scope.activeTask);
       }
 
