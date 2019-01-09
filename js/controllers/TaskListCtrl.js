@@ -75,41 +75,44 @@ angular.module('thyme').controller('TaskListCtrl', function ($scope, $timeout, $
 
   });
 
-  $scope.dateFrom = new Date();
-  $scope.dateTo = new Date();
   $scope.alwaysIncludeUnregistered = true;
   $scope.rowDate = '';
+  $scope.filter = {}
+  $scope.filter.dateFrom = new Date();
+  $scope.filter.dateTo = new Date();
 
   let timeFrom = 0;
   let timeTo = 0;
 
-  $scope.$watch('dateFrom', function () {
-    let dateFrom = new XDate($scope.dateFrom);
-    let dateTo = new XDate($scope.dateTo);
+
+  $scope.$watch('filter.dateFrom', function () {
+    let dateFrom = new XDate($scope.filter.dateFrom);
+    let dateTo = new XDate($scope.filter.dateTo);
     let timeFrom = dateFrom.clearTime().getTime();
     let timeTo = dateTo.setHours(23).setMinutes(59).getTime();
 
     if (dateFrom.diffMinutes(dateTo) < 0) {
-      $scope.dateTo = dateFrom;
+      $scope.filter.dateTo = $scope.filter.dateFrom;
     }
 
     getTasks(timeFrom, timeTo);
   });
 
-  $scope.$watch('dateTo', function () {
-    let dateFrom = new XDate($scope.dateFrom);
-    let dateTo = new XDate($scope.dateTo);
+  $scope.$watch('filter.dateTo', function () {
+    let dateFrom = new XDate($scope.filter.dateFrom);
+    let dateTo = new XDate($scope.filter.dateTo);
     let timeFrom = dateFrom.clearTime().getTime();
     let timeTo = dateTo.setHours(23).setMinutes(59).getTime();
 
     if (dateFrom.diffMinutes(dateTo) < 0) {
-      $scope.dateFrom = dateTo;
+      $scope.filter.dateFrom = $scope.filter.dateTo;
     }
 
     getTasks(timeFrom, timeTo);
   });
 
   function getTasks(from, to) {
+    console.log(from, to)
     if (!from) {
       from = timeFrom;
     }
@@ -120,7 +123,7 @@ angular.module('thyme').controller('TaskListCtrl', function ($scope, $timeout, $
 
     let unregistered = $scope.alwaysIncludeUnregistered;
     worklogs.get(from, to, unregistered).then(function (data) {
-      $scope.worklogs= {};
+      $scope.worklogs = {};
       $scope.worklogs = data;
 
       angular.forEach($scope.worklogs, function (worklog) {
@@ -201,7 +204,7 @@ angular.module('thyme').controller('TaskListCtrl', function ($scope, $timeout, $
 
   // Refresh page, make the counter run.
   function fireDigest() {
-    $timeout(fireDigest, 200);
+    $timeout(fireDigest, 2000);
 
     // Find active worklog while at it.
     $scope.activeTask = {};

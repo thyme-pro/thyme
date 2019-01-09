@@ -81,7 +81,7 @@ angular.module('thyme')
             tx.executeSql(sql, [], (tx, rs) => {
               for (let i = 0; i < rs.rows.length; i++) {
                 let row = rs.rows.item(i);
-                let task_id = row.id;
+                let task_id = row.task_id;
 
                 if (dbService.tasks[task_id]) {
                   if (!dbService.tasks[task_id].time_entries) {
@@ -194,13 +194,13 @@ angular.module('thyme')
         });
       },
       updateTimeEntries: function (worklog, deferred) {
+        console.log('updateTimeEntries')
         const self = this;
         let promises = [];
 
         db.transaction((tx) => {
           const sql = 'DELETE FROM time_entries WHERE task_id = ?';
           tx.executeSql(sql, [worklog.id], () => {
-
             angular.forEach(worklog.time_entries, (timeEntry) => {
               promises.push(self.addTimeEntry(worklog.id, timeEntry.start, timeEntry.stop));
             });
@@ -215,22 +215,25 @@ angular.module('thyme')
           deferred.resolve(worklog.id);
         });
       },
-      deleteTask: function (id) {
+      deleteWorklog: function (id) {
         db.transaction((tx) => {
           let data = [id];
           let sql = 'DELETE FROM worklogs WHERE id = ?';
-          tx.executeSql(sql, data);
+
+          tx.executeSql(sql, data, (t, data) => {
+          });
 
           sql = 'DELETE FROM time_entries WHERE task_id = ?';
           tx.executeSql(sql, data);
 
-          sql = 'DELETE FROM register_info WHERE task_id = ?';
+          sql = 'DELETE FROM register_info WHERE worklog_id = ?';
           tx.executeSql(sql, data);
         });
 
         delete dbService.tasks[id];
       },
       addTimeEntry: function (task_id, start, stop) {
+        console.log('addTimeEntry')
         let deferred = $q.defer();
         const sql = 'INSERT INTO time_entries(task_id, start, stop) VALUES (?, ?, ?)';
         let data = [task_id, start, stop];

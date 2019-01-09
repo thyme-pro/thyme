@@ -8,6 +8,7 @@ angular.module('thyme').controller('SettingsCtrl', function ($scope, $log, gapiS
   let properties = [
     'focusApp',
     'notificationInterval',
+    'internalApiToken',
     'jiraUrl',
     'jiraUsername',
     'jiraProjectJql',

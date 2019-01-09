@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html ng-app="thyme">
-  <head>
+<head>
     <meta charset="UTF-8">
     <title>Thyme</title>
 
@@ -9,30 +9,36 @@
     <link href="css/native.css" rel="stylesheet">
     <link href="css/app.css" rel="stylesheet">
 
-  </head>
+</head>
 
-  <body>
-    <div class="page-container">
-      <span class="btn btn-sm btn-success" id="js-add-task" onclick="ipc.send('edit-worklog', {})"><span class="glyphicon glyphicon-plus"></span> Start new</span>
+<body>
+<div class="page-container">
+    <span class="btn btn-sm btn-success" id="js-add-task" onclick="ipc.send('edit-worklog', {})"><span
+            class="glyphicon glyphicon-plus"></span> Start new</span>
     <div ng-view></div>
-      <div ng-controller="TaskListCtrl">
+    <div ng-controller="TaskListCtrl">
         <div ng-include src="'./templates/list/pageTaskList.html'"></div>
-      </div >
     </div>
-  </body>
+    <div ng-controller="InfoCtrl">
+        <div ng-include src="'./templates/list/info.html'"></div>
+    </div>
+</div>
+</body>
 
-  <script>
-    const ipc = require('electron').ipcRenderer
-    require('./renderer.js')
+<script>
+const open = require('open')
+const ipc = require('electron').ipcRenderer
+require('./renderer.js')
 
-    require('./app.js')
+require('./app.js')
 
-    require('./js/controllers/TaskListCtrl.js')
-    require('./js/controllers/CalendarCtrl.js')
-    require('./js/controllers/SettingsCtrl.js')
-    require('./js/services/worklogs.js')
-    require('./js/services/dbService.js')
-    require('./js/services/gapiService.js')
-    require('./js/services/extService.js')
-  </script>
+require('./js/controllers/TaskListCtrl.js')
+require('./js/controllers/CalendarCtrl.js')
+require('./js/controllers/SettingsCtrl.js')
+require('./js/controllers/InfoCtrl.js')
+require('./js/services/worklogs.js')
+require('./js/services/dbService.js')
+require('./js/services/gapiService.js')
+require('./js/services/extService.js')
+</script>
 </html>

@@ -21,6 +21,7 @@ angular.module('thyme').controller('CreateCtrl', function ($scope, $http, dbServ
   $scope.worklog = {};
 
   ipc.on('edit-worklog', (event, data) => {
+    console.log(data)
     $scope.worklog = data.obj;
     $scope.format();
 

@@ -68,12 +68,12 @@ angular.module('thyme')
        */
       this.delete = (worklogId) => {
         _.each(this.worklogs, (_worklog, key) => {
-          if (_worklog.id == worklogId) {
+          if (_worklog && _worklog.id == worklogId) {
             this.worklogs.splice(key, 1);
           }
         });
 
-        dbService.deleteTask(worklogId);
+        dbService.deleteWorklog(worklogId);
       }
     }
 

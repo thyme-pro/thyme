@@ -1,113 +1,134 @@
 <div class="tracker">
-  <div class="head">
-    <div class="timetotal">
-      {{timeTotal(activeTask)}}
-      <span class="glyphicon glyphicon-play-circle" style="font-size: 17px" ng-if="activeTask.active"></span>
+    <div class="head">
+        <div class="timetotal">
+            {{timeTotal(activeTask)}}
+            <span class="glyphicon glyphicon-play-circle" style="font-size: 17px" ng-if="activeTask.active"></span>
+        </div>
+        <div class="info">
+            <div class="issue">
+                {{activeTask.issue}}
+            </div>
+            <div class="description">
+                {{activeTask.worklog}}
+                {{activeTask.description}}
+            </div>
+        </div>
+
     </div>
-    <div class="info">
-      <div class="issue">
-        {{activeTask.issue}}
-      </div>
-      <div class="description">
-          {{activeTask.worklog}}
-          {{activeTask.description}}
-      </div>
+</div>
+
+<div class="filter row">
+    <div class="col-sm-3">
+        <label class="pull-left">From</label>
+        <p class="input-group">
+            <input type="text" class="form-control" uib-datepicker-popup ng-model="filter.dateFrom"
+                   is-open="editFrom" datepicker-options="dateOptions" ng-required="true" close-text="Close"
+            />
+            <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="editFrom = !editFrom"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </p>
+    </div>
+    <div class="col-sm-3">
+        <label class="pull-left">To</label>
+        <p class="input-group">
+            <input type="text" class="form-control" uib-datepicker-popup ng-model="filter.dateTo"
+                   is-open="editTo" datepicker-options="dateOptions" ng-required="true" close-text="Close"
+            />
+            <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="editTo = !editTo"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </p>
+    </div>
+    <div class="col-sm-6">
+        <a class="btn btn-sm btn-default" ng-click="resetDate()">Today</a>
+        <label>
+            <input ng-model="alwaysIncludeUnregistered" type="checkbox">Always include all unregistered
+        </label>
     </div>
 
-  </div>
 </div>
 
-<div class="filter">
-  <span class="btn btn-sm " ng-click="editDates = !editDates"><span class="glyphicon glyphicon-filter"></span></span>
-</div>
-<div class="pop-up" ng-show="editDates">
-  <span class="btn btn-sm " ng-click="editDates = !editDates" style="    position: absolute;
-    right: 0px;
-    top: 0px;"><span class="glyphicon glyphicon-remove"></span></span>
-  <a class="btn btn-sm btn-default" ng-click="resetDate()" style="display: block; height: 22px">Today</a>
-  <div style="display:inline-block;">
-  <b>From</b>
-      <datepicker ng-model="dateFrom" datepicker-options="dateOptions" show-weeks="true" class="well well-sm"></datepicker>
-  </div>
-  <div style="display:inline-block;">
-  <b>To</b>
-      <datepicker ng-model="dateTo" show-weeks="true" class="well well-sm"></datepicker>
-  </div>
-  <label>
-    <input ng-model="alwaysIncludeUnregistered" type="checkbox">Always include all unregistered
-  </label>
-</div>
-
-<table class="worklogs table table-condensed">
-  <thead>
-    <th>Time</th>
-    <th>Actions</th>
-    <th>Task / description</th>
-    <th>Issue</th>
-  </thead>
-  <tr ng-repeat-start="worklog in worklogs | object2Array | orderBy:'id':true" class="active date-row">
-    <td colspan="4" ng-if="showDate(worklog)"><small><i>{{rowDate}}</i></small></td>
-  </tr>
-  <tr ng-repeat-end ng-class="worklog.active ? 'success' : '';">
-    <td>
-      <b>{{timeTotal(worklog)}}</b>
-    </td>
-    <td class="col-actions">
-      <div class="">
-        <!-- start -->
-        <span ng-if="worklog.register_info" class="btn btn-disabled btn-xs">
+<div class="task-container">
+    <table class="worklogs table table-condensed">
+        <thead>
+        <th>Time</th>
+        <th>Actions</th>
+        <th>Task / description</th>
+        <th>Issue</th>
+        </thead>
+        <tr ng-repeat-start="worklog in worklogs | object2Array | orderBy:'id':true" class="active date-row">
+            <td colspan="4" ng-if="showDate(worklog)">
+                <i>{{rowDate}}</i>
+            </td>
+        </tr>
+        <tr ng-repeat-end ng-class="worklog.active ? 'success' : '';">
+            <td>
+                <b>{{timeTotal(worklog)}}</b>
+            </td>
+            <td class="col-actions">
+                <div class="">
+                    <!-- start -->
+                    <span ng-if="worklog.register_info" class="btn btn-disabled btn-xs">
           <span class="glyphicon glyphicon-time"></span>
         </span>
-        <span ng-show="worklog.active" class="btn btn-warning btn-xs" ng-click="stopTask(worklog.id)">
+                    <span ng-show="worklog.active" class="btn btn-warning btn-xs" ng-click="stopTask(worklog.id)">
           <span class="glyphicon glyphicon-pause"></span>
         </span>
-        <span ng-hide="worklog.active || worklog.register_info" class="btn btn-success btn-start-task btn-xs" ng-click="startTask(worklog.id)">
+                    <span ng-hide="worklog.active || worklog.register_info"
+                          class="btn btn-success btn-start-task btn-xs"
+                          ng-click="startTask(worklog.id)">
           <span class="glyphicon glyphicon-play"></span>
         </span>
-        <!-- /start -->
+                    <!-- /start -->
 
-        <!-- edit -->
-        <span class="btn btn-default btn-xs" ng-click="editTask(worklog)">
+                    <!-- edit -->
+                    <span class="btn btn-default btn-xs" ng-click="editTask(worklog)">
           <span class="glyphicon glyphicon-edit"></span>
         </span>
-        <!-- /edit -->
+                    <!-- /edit -->
 
-        <!-- register -->
-        <span ng-hide="worklog.active || worklog.register_info || worklog.saving_log" class="btn btn-primary btn-xs" ng-click="registerTask(worklog)">
+                    <!-- register -->
+                    <span ng-hide="worklog.active || worklog.register_info || worklog.saving_log"
+                          class="btn btn-primary btn-xs" ng-click="registerTask(worklog)">
           <span class="glyphicon glyphicon-floppy-disk"></span>
         </span>
-        <span ng-show="worklog.active" class="btn btn-disabled btn-xs">
+                    <span ng-show="worklog.active" class="btn btn-disabled btn-xs">
           <span class="glyphicon glyphicon-floppy-disk"></span>
         </span>
-        <span ng-show="worklog.register_info" class="btn btn-success btn-xs" ng-click="editTask(worklog)">
+                    <span ng-show="worklog.register_info" class="btn btn-success btn-xs" ng-click="editTask(worklog)">
           <span class="glyphicon glyphicon-floppy-saved"></span>
         </span>
 
-        <span ng-show="worklog.saving_log" class="btn btn-xs"><span class="glyphicon glyphicon-cloud-upload"></span></span>
-        <!-- /register -->
+                    <span ng-show="worklog.saving_log" class="btn btn-xs"><span
+                            class="glyphicon glyphicon-cloud-upload"></span></span>
+                    <!-- /register -->
 
-        <!-- delete buttons -->
-        <span class="btn btn-default btn-xs" ng-click="worklog.delete = !worklog.delete">
+                    <!-- delete buttons -->
+                    <span class="btn btn-default btn-xs" ng-click="worklog.delete = !worklog.delete">
           <span class="glyphicon glyphicon-trash"></span>
         </span>
-        <span ng-if="worklog.delete" class="btn btn-danger btn-xs" ng-click="deleteWorklog(worklog.id)">
+                    <span ng-if="worklog.delete" class="btn btn-danger btn-xs" ng-click="deleteWorklog(worklog.id)">
           <span class="glyphicon glyphicon-ok"></span>
         </span>
-        <!-- /delete -->
-      </div>
+                    <!-- /delete -->
+                </div>
 
-    </td>
-    <td>
-      <i>{{worklog.task}} ({{worklog.task_id}})</i> <span ng-show="worklog.description">-</span>
-        {{worklog.description}}
-    </td>
-    <td>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <b>{{listTotal()}}</b>
-    </td>
-    <td colspan="3"> </td>
-  </tr>
-</table>
+            </td>
+            <td>
+                <i>{{worklog.task}} ({{worklog.task_id}})</i> <span ng-show="worklog.description">-</span>
+                {{worklog.description}}
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>{{listTotal()}}</b>
+            </td>
+            <td colspan="3"></td>
+        </tr>
+    </table>
+</div>

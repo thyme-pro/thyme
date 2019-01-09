@@ -1,78 +1,96 @@
 <nav>
-	<ul class="nav">
-  	<li role="presentation" ng-class="tab.general ? 'active' : ''"><button ng-click="tab.general = true; tab.jira = false; tab.zendesk = false; tab.google=false">General</button></li>
-  	<li role="presentation" ng-class="tab.jira ? 'active' : ''"><button ng-click="tab.jira = true; tab.general = false; tab.zendesk = false;tab.google =false">Jira</button></li>
-  	<li role="presentation" ng-class="tab.zendesk? 'active' : ''"><button ng-click="tab.zendesk = true; tab.general = false; tab.jira = false; tab.google =false">Zendesk</button></li>
-  	<li role="presentation" ng-class="tab.google ? 'active' : ''"><button ng-click="tab.google = true; tab.zendesk = false; tab.general = false; tab.jira = false">Google</button></li>
-	</ul>
+    <ul class="nav">
+        <li role="presentation" ng-class="tab.general ? 'active' : ''">
+            <button ng-click="tab.general = true; tab.jira = false; tab.zendesk = false; tab.google=false">General
+            </button>
+        </li>
+        <li role="presentation" class="hide" ng-class="tab.jira ? 'active' : ''">
+            <button ng-click="tab.jira = true; tab.general = false; tab.zendesk = false;tab.google =false">Jira</button>
+        </li>
+        <li role="presentation" ng-class="tab.zendesk? 'active' : ''">
+            <button ng-click="tab.zendesk = true; tab.general = false; tab.jira = false; tab.google =false">Zendesk
+            </button>
+        </li>
+        <li role="presentation" ng-class="tab.google ? 'active' : ''">
+            <button ng-click="tab.google = true; tab.zendesk = false; tab.general = false; tab.jira = false">Google
+            </button>
+        </li>
+    </ul>
 </nav>
 
 <div class="settings content">
-	<form ng-submit="saveSettings()">
-	  <div ng-show="tab.general" class="section">
-  	  <div class="form-group">
-    	  <label>Global keyboard shortcut, start new tracking:</label>
-    	  <input ng-model="config.focusApp" class="focusApp form-control" />
-			  <p><i>Example: 'command+g'</i></p>
-			  <span>Change requires restart</span>
-			  <br>
-			  <b>Not yet implemented!</b>
-  	  </div>
-  	  <div class="form-group">
-    	  <label>Notification interval</label>
-    	  <input ng-model="config.notificationInterval" class="form-control" />
-			  <p><i>In minutes</i></p>
-  	  </div>
-	  </div>
+    <form ng-submit="saveSettings()">
+        <div ng-show="tab.general" class="section">
+            <div class="form-group">
+                <label>Global keyboard shortcut, start new tracking:</label>
+                <input ng-model="config.focusApp" class="focusApp form-control"/>
+                <p><i>Example: 'command+g'</i></p>
+                <span>Change requires restart</span>
+                <br>
+                <b>Not yet implemented!</b>
+            </div>
+            <div class="form-group">
+                <label>Notification interval</label>
+                <input ng-model="config.notificationInterval" class="form-control"/>
+                <p><i>In minutes</i></p>
+            </div>
 
-	  <div ng-show="tab.jira" class="section">
-  	  <div class="form-group">
-    	  <label>Jira url:</label>
-    	  <input ng-model="config.jiraUrl" class="form-control" />
-  	  </div>
-  	  <div class="form-group">
-    	  <label>Jira username:</label>
-    	  <input ng-model="config.jiraUsername" class="form-control" />
-  	  </div>
-  	  <div class="form-group">
-    	  <label>Jira password:</label>
-    	  <input type="password" ng-model="config.jiraPassword" class="form-control" />
-  	  </div>
-  	  <div class="form-group">
-    	  <label>Jira project search JQL</label>
-    	  <textarea style="resize: false; height: 96px;" ng-model="config.jiraProjectJql" class="form-control" ></textarea>
-  	  </div>
-	  </div >
+            <div class="form-group">
+                <label>Improving Internal API Token</label>
+                <textarea ng-model="config.internalApiToken" class="form-control"><textarea/>
+                <p><i></i></p>
+            </div>
+        </div>
 
-	  <div ng-show="tab.zendesk" class="section">
-  	  <div class="form-group">
-    	  <label>Zendesk url:</label>
-    	  <input ng-model="config.zendeskUrl" class="form-control" />
-  	  </div>
-  	  <div class="form-group">
-    	  <label>Zendesk username:</label>
-    	  <input ng-model="config.zendeskUsername" class="form-control" />
-  	  </div>
-  	  <div class="form-group">
-    	  <label>Zendesk password:</label>
-    	  <input type="password" ng-model="config.zendeskPassword" class="form-control" />
-  	  </div>
-  	  <div class="form-group">
-    	  <label>Zendesk user id</label>
-    	  <input ng-model="config.zendeskUserId" class="form-control" />
-  	  </div>
-	  </div >
-	  <div ng-show="tab.google" class="section">
+        <div ng-show="tab.jira" class="section">
+            <div class="form-group">
+                <label>Jira url:</label>
+                <input ng-model="config.jiraUrl" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <label>Jira username:</label>
+                <input ng-model="config.jiraUsername" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <label>Jira password:</label>
+                <input type="password" ng-model="config.jiraPassword" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <label>Jira project search JQL</label>
+                <textarea style="resize: false; height: 96px;" ng-model="config.jiraProjectJql"
+                          class="form-control"></textarea>
+            </div>
+        </div>
 
-	    <br />
-			  <b>Not yet implemented!</b>
-			  <br>
-	    <span class="btn btn-default" ng-click="connectGoogle()">Click to connect to google account</span>
-	    <span class="glyphicon glyphicon-ok" ng-show="googleConnectStatus"></span>
+        <div ng-show="tab.zendesk" class="section">
+            <div class="form-group">
+                <label>Zendesk url:</label>
+                <input ng-model="config.zendeskUrl" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <label>Zendesk username:</label>
+                <input ng-model="config.zendeskUsername" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <label>Zendesk password:</label>
+                <input type="password" ng-model="config.zendeskPassword" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <label>Zendesk user id</label>
+                <input ng-model="config.zendeskUserId" class="form-control"/>
+            </div>
+        </div>
+        <div ng-show="tab.google" class="section">
 
-	    <br />
-	    <br />
-	    <span class="btn btn-default" ng-click="disconnectGoogle()">Click to disconnect from google account</span>
-	  </div >
-	</form>
+            <br/>
+            <b>Not yet implemented!</b>
+            <br>
+            <span class="btn btn-default" ng-click="connectGoogle()">Click to connect to google account</span>
+            <span class="glyphicon glyphicon-ok" ng-show="googleConnectStatus"></span>
+
+            <br/>
+            <br/>
+            <span class="btn btn-default" ng-click="disconnectGoogle()">Click to disconnect from google account</span>
+        </div>
+    </form>
 </div>
