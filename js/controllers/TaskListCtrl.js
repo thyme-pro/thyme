@@ -222,8 +222,7 @@ angular.module('thyme').controller('TaskListCtrl', function ($scope, $timeout, $
 
   /**
    * Notification loop.
-   */
-  if (localStorage.notificationInterval >>> 0 === parseFloat(localStorage.notificationInterval)) {
+   if (localStorage.notificationInterval >>> 0 === parseFloat(localStorage.notificationInterval)) {
     const interval = localStorage.notificationInterval * 60 * 1000;
 
     setInterval(function () {
@@ -240,4 +239,5 @@ angular.module('thyme').controller('TaskListCtrl', function ($scope, $timeout, $
       });
     }, interval);
   }
+   */
 });

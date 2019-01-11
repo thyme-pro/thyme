@@ -1,21 +1,26 @@
 {
   "name": "Thyme",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "A time tracking application",
   "main": "main.js",
   "scripts": {
     "start": "THYME_ENABLE_DEV=false electron .",
-    "dev": "THYME_ENABLE_DEV=true electron ."
+    "dev": "THYME_ENABLE_DEV=true electron .",
+    "dist": "build",
+    "pack": "build --dir"
   },
   "repository": "https://github.com/thyme-pro/thyme",
   "keywords": [
     "Electron"
   ],
-  "author": "GitHub",
+  "author": {
+    "name": "tth",
+    "email": "th@improving.dk"
+  },
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^3.0.10",
-    "electron-builder": "^20.38.1",
+    "electron-builder": "^20.38.4",
     "electron-packager": "^8.3.0",
     "electron-rebuild": "^1.8.2"
   },
@@ -30,5 +35,27 @@
     "open": "0.0.5",
     "opn": "^5.4.0",
     "xdate": "^0.8.0"
+  },
+  "build": {
+    "appId": "com.electron.improving",
+    "dmg": {
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "deb"
+      ]
+    }
   }
 }

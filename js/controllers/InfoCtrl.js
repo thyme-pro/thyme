@@ -3,7 +3,7 @@ angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout)
 
   $scope.apiToken = localStorage['internalApiToken']
 
-  $scope.url = 'http://dashboard.test'
+  $scope.url = localStorage['dashboardUrl']
   $scope.taskId = null
   $scope.infoData = {}
   $scope.ftpProgram = localStorage['ftpProgram']
@@ -11,7 +11,7 @@ angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout)
   function fetchInfo() {
     $timeout(fetchInfo, 1000 * 60 * 5);
 
-    fetch($scope.url + '/api/tracker/info?api_token=' + $scope.apiToken)
+    fetch($scope.url + 'api/tracker/info?api_token=' + $scope.apiToken)
       .then(res => res.json())
       .then(data => {
         $scope.infoData = data
@@ -60,7 +60,7 @@ angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout)
   $scope.fetchCustomerInfo = (taskId) => {
     $scope.customerInfo = {}
 
-    fetch(`${$scope.url}/api/tracker/customer/info/${taskId}?api_token=${$scope.apiToken}`)
+    fetch(`${$scope.url}api/tracker/customer/info/${taskId}?api_token=${$scope.apiToken}`)
       .then(res => res.json())
       .then(data => {
         $scope.customerInfo = data
@@ -108,7 +108,7 @@ angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout)
   }
 
   function searchTask(search) {
-    return fetch(`${$scope.url}/api/tracker/task/search/${search}/?api_token=${$scope.apiToken}`)
+    return fetch(`${$scope.url}api/tracker/task/search/${search}/?api_token=${$scope.apiToken}`)
       .then(res => res.json())
   }
 });

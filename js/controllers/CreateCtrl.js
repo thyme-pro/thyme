@@ -54,29 +54,15 @@ angular.module('thyme').controller('CreateCtrl', function ($scope, $http, dbServ
   $scope.selectTask = function ($item) {
     $scope.worklog.task_id = $item.task_id;
 
-    $scope.setProgress($item.timeoriginalestimate, $item.timeestimate, $item.timespent);
+    $scope.setProgress($item.budget, $item.timespent);
+    $scope.budget = $item.budget;
   };
 
-  $scope.setProgress = function (originalestimate, estimate, spent) {
-    $scope.task_estimate = 'N/A';
+  $scope.setProgress = function (budget, spent) {
+    $scope.budget = budget;
     $scope.time_remaining_formatted = 'N/A';
 
-    let entire_estimate = originalestimate;
-    if (estimate) {
-      entire_estimate = (originalestimate + estimate) - spent;
-    }
-
-    $scope.percent_used = Math.round(spent / (entire_estimate) * 100);
-
-    if (entire_estimate) {
-      $scope.task_estimate = timeHelper.formatMinutesToTime(entire_estimate / 60);
-    }
-    $scope.time_used_formatted = timeHelper.formatMinutesToTime(spent / 60);
-
-    let time_remaining = (entire_estimate - spent) / 60;
-    if (time_remaining > 0) {
-      $scope.time_remaining_formatted = timeHelper.formatMinutesToTime(time_remaining);
-    }
+    $scope.percent_used = Math.round(spent / (budget) * 100);
 
     if (isNaN($scope.percent_used)) {
       $scope.percent_used = 0;

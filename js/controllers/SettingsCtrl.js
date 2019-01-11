@@ -9,7 +9,7 @@ angular.module('thyme').controller('SettingsCtrl', function ($scope, $log, gapiS
     'focusApp',
     'notificationInterval',
     'internalApiToken',
-    'jiraUrl',
+    'dashboardUrl',
     'jiraUsername',
     'jiraProjectJql',
     'zendeskUsername',
@@ -44,5 +44,12 @@ angular.module('thyme').controller('SettingsCtrl', function ($scope, $log, gapiS
 
   $scope.disconnectGoogle = function () {
     gapiService.revoke();
+  };
+
+  $scope.close = function () {
+    // Close window
+    const remote = require('electron').remote;
+    let window = remote.getCurrentWindow();
+    window.close();
   };
 });

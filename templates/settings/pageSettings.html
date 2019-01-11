@@ -17,6 +17,11 @@
         </li>
     </ul>
 </nav>
+<span class="btn btn-success" ng-click="close()" style="
+    position: fixed;
+    bottom: 10px;
+    left: 10px; ">Close</span>
+
 
 <div class="settings content">
     <form ng-submit="saveSettings()">
@@ -37,8 +42,13 @@
 
             <div class="form-group">
                 <label>Improving Internal API Token</label>
-                <textarea ng-model="config.internalApiToken" class="form-control"><textarea/>
+                <textarea ng-model="config.internalApiToken" class="form-control"></textarea>
                 <p><i></i></p>
+            </div>
+
+            <div class="form-group">
+                <label>Dashboard url:</label>
+                <input ng-model="config.dashboardUrl" class="form-control"/>
             </div>
         </div>
 
