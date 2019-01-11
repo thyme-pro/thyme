@@ -2,6 +2,7 @@
  * Task List controller.
  */
 angular.module('thyme').controller('TaskListCtrl', function ($scope, $timeout, $http, $uibModal, worklogs, extService) {
+  const ipc = require('electron').ipcRenderer;
 
   function stopTimers() {
     let saveWorklog;
@@ -50,10 +51,10 @@ angular.module('thyme').controller('TaskListCtrl', function ($scope, $timeout, $
       worklog.time_entries[key].id = key;
 
       worklogs.save(worklog);
+
+      ipc.send('start-worklog', worklog);
     }
   }
-
-  const ipc = require('electron').ipcRenderer;
 
   ipc.on('save-worklog', (event, data) => {
     let worklog = data.obj;
@@ -212,6 +213,7 @@ angular.module('thyme').controller('TaskListCtrl', function ($scope, $timeout, $
     angular.forEach($scope.worklogs, function (worklog) {
       if (worklog.active) {
         $scope.activeTask = $scope.worklogs[worklog.id];
+        ipc.send('start-worklog', worklog);
       }
     });
   }

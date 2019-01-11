@@ -11,7 +11,7 @@ const path = require('path');
 const fs = require('fs');
 
 const menu = require('./main/menu.js');
-const windows= require('./main/windows');
+const windows = require('./main/windows');
 //const tray = require('./main/tray.js')
 
 const config = require('./config.js');
@@ -32,7 +32,7 @@ function createWindow() {
   }
 
   // Emitted when the window is closed.
-  mainWindow.on('closed', function() {
+  mainWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
@@ -41,7 +41,7 @@ function createWindow() {
 
   session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
     details.requestHeaders['User-Agent'] = 'thyme.pro';
-    callback({ cancel: false, requestHeaders: details.requestHeaders });
+    callback({cancel: false, requestHeaders: details.requestHeaders});
   });
 
   menu.init();
@@ -66,7 +66,7 @@ function openFile(path) {
     let obj = JSON.parse(data);
 
     // Start issue with:
-    mainWindow.webContents.send('save-worklog' , {obj:obj});
+    mainWindow.webContents.send('save-worklog', {obj: obj});
     mainWindow.focus();
 
   } catch (exception) {
@@ -89,12 +89,12 @@ function checkArgs(args) {
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
 
-app.on('open-file', function(event, path){
+app.on('open-file', function (event, path) {
   openFile(path);
 });
 
 // Quit when all windows are closed.
-app.on('window-all-closed', function() {
+app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
@@ -102,7 +102,7 @@ app.on('window-all-closed', function() {
   }
 });
 
-app.on('activate', function() {
+app.on('activate', function () {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
@@ -110,16 +110,21 @@ app.on('activate', function() {
   }
 });
 
-ipcMain.on('open-file', function(event, data) {
+ipcMain.on('open-file', function (event, data) {
   openFile(data);
 });
 
-ipcMain.on('save-worklog', function(event, data) {
+ipcMain.on('save-worklog', function (event, data) {
   console.log(data)
-  mainWindow.webContents.send('save-worklog' , {obj:data});
+  mainWindow.webContents.send('save-worklog', {obj: data});
   mainWindow.focus();
 });
 
-ipcMain.on('edit-worklog', function(event, data) {
+ipcMain.on('start-worklog', function (event, data) {
+  console.log(data)
+  mainWindow.webContents.send('start-worklog', {obj: data});
+});
+
+ipcMain.on('edit-worklog', function (event, data) {
   windows.worklog.init(data);
 });

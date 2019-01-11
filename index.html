@@ -10,23 +10,22 @@
     <link href="css/app.css" rel="stylesheet">
 
 </head>
-
 <body>
 <div class="page-container">
     <span class="btn btn-sm btn-success" id="js-add-task" onclick="ipc.send('edit-worklog', {})"><span
             class="glyphicon glyphicon-plus"></span> Start new</span>
     <div ng-view></div>
-    <div ng-controller="TaskListCtrl">
+    <div ng-controller="TaskListCtrl" class="task-block">
         <div ng-include src="'./templates/list/pageTaskList.html'"></div>
     </div>
-    <div ng-controller="InfoCtrl">
-        <div ng-include src="'./templates/list/info.html'"></div>
+    <div ng-controller="InfoCtrl" style="overflow-y:scroll;" class="info-block">
+        <div ng-include style="overflow:hidden;" src="'./templates/list/info.html'"></div>
     </div>
 </div>
 </body>
 
 <script>
-const open = require('open')
+const open = require('opn')
 const ipc = require('electron').ipcRenderer
 require('./renderer.js')
 
@@ -40,5 +39,12 @@ require('./js/services/worklogs.js')
 require('./js/services/dbService.js')
 require('./js/services/gapiService.js')
 require('./js/services/extService.js')
+
+$('.info-block').height($('body').height() - $('.task-block').height())
+$(window).on('resize', () => {
+    $('.info-block').height($('body').height() - $('.task-block').height())
+  }
+)
+
 </script>
 </html>
