@@ -100,7 +100,7 @@ angular.module('thyme')
         return deferred.promise;
       },
 
-      getTickets() {
+      getTickets(sanitize = true) {
         let deferred = $q.defer();
 
         let username = localStorage.zendeskUsername;
@@ -126,11 +126,16 @@ angular.module('thyme')
             let data = result.data
 
             let correctData = [];
+            if (sanitize) {
 
-            for (let i = 0; i < data.tickets.length; i++) {
-              correctData.push({
-                name: '#' + data.tickets[i].id + ' - ' + data.tickets[i].subject
-              });
+              for (let i = 0; i < data.tickets.length; i++) {
+                correctData.push({
+                  name: '#' + data.tickets[i].id + ' - ' + data.tickets[i].subject
+                });
+              }
+            }
+            else {
+              correctData = data.tickets
             }
 
             deferred.resolve(correctData);

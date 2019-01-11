@@ -1,4 +1,4 @@
-angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout) {
+angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout, extService) {
   $log.log('InfoCtrl loaded')
 
   $scope.apiToken = localStorage['internalApiToken']
@@ -6,6 +6,7 @@ angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout)
   $scope.url = localStorage['dashboardUrl']
   $scope.taskId = null
   $scope.infoData = {}
+  $scope.myTickets = {}
   $scope.ftpProgram = localStorage['ftpProgram']
 
   function fetchInfo() {
@@ -16,6 +17,12 @@ angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout)
       .then(data => {
         $scope.infoData = data
       })
+
+    extService.getTickets(false).then(data => {
+      $scope.myTickets = data.filter((ticket) => {
+        return ['open', 'pending', 'hold'].includes(ticket.status)
+      })
+    })
   }
 
   fetchInfo()

@@ -39,7 +39,7 @@
     </div>
 </div>
 <div class="row">
-    <div ng-if="infoData.need_attention" class="col-sm-6">
+    <div ng-if="infoData.need_attention" class="col-sm-4">
         <h5>Sager der mangler svar <span ng-click="openZendesk()"
                                          class="glyphicon glyphicon-new-window btn btn-default btn-xs"></span>
         </h5>
@@ -56,7 +56,28 @@
         </ul>
         <b ng-if="!infoData.need_attention.length">Alt er godt!</b>
     </div>
-    <div ng-if="infoData.rp_tasks" class="col-sm-6">
+    <div ng-if="myTickets" class="col-sm-4">
+        <h5>Mine sager<span ng-click="openZendesk()"
+                            class="glyphicon glyphicon-new-window btn btn-default btn-xs"></span>
+        </h5>
+        <ul class="list-group">
+            <li class="list-group-item" ng-class="{
+                'disabled': ticket.status == 'hold',
+                'list-group-item-warning': ticket.status == 'open',
+                'list-group-item-info': ticket.status == 'pending',
+            }"
+                ng-repeat="ticket in myTickets">
+                #{{ticket.id}} - {{ticket.subject}}
+                <span class="pull-right">
+
+                <span class="btn btn-xs btn-default" ng-click="openBrowserWithTicket(ticket.id)">Open in browser</span>
+                <span class="btn btn-xs btn-default"
+                      ng-click="startTrackerForTicket(ticket.id, ticket.subject)">Start tracker</span>
+                </span>
+            </li>
+        </ul>
+    </div>
+    <div ng-if="infoData.rp_tasks" class="col-sm-4">
         <h5>Ressourceplan <span
                 ng-click="openURL('https://docs.google.com/spreadsheets/d/1eRvXCFW_hsCnxrq8h_MAZKKI1WrufphjRUnkpw7FKHU/')"
                 class="glyphicon glyphicon-new-window btn btn-default btn-xs"></span>
