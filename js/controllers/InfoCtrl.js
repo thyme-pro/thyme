@@ -1,4 +1,6 @@
 angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout, extService) {
+  const ipc = require('electron').ipcRenderer;
+
   $log.log('InfoCtrl loaded')
 
   $scope.apiToken = localStorage['internalApiToken']
@@ -9,7 +11,7 @@ angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout,
   $scope.myTickets = {}
   $scope.ftpProgram = localStorage['ftpProgram']
 
-  function fetchInfo() {
+  function fetchInfo () {
     $timeout(fetchInfo, 1000 * 60 * 5);
 
     fetch($scope.url + 'api/tracker/info?api_token=' + $scope.apiToken)
@@ -37,7 +39,6 @@ angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout,
     open(ticketUrl);
   }
 
-  const ipc = require('electron').ipcRenderer;
 
   ipc.on('save-worklog', (event, data) => {
     let worklog = data.obj;
@@ -46,6 +47,7 @@ angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout,
       $scope.taskId = worklog.task_id;
     }
   })
+
   ipc.on('start-worklog', (event, data) => {
     let worklog = data.obj;
     if ($scope.taskId != worklog.task_id) {
@@ -61,7 +63,7 @@ angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout,
   }
 
   $scope.ftpOpen = (hostname, user, password) => {
-    open(`ftp://${user}:${password}@${hostname}`, {app: $scope.ftpProgram})
+    console.log(open(`ftp://${user}:${password}@${hostname}`, {app: localStorage['ftpProgram']}))
   }
 
   $scope.fetchCustomerInfo = (taskId) => {
@@ -77,6 +79,7 @@ angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout,
   $scope.openURL = (url) => {
     open(url)
   }
+
   $scope.openZendesk = () => {
     open(localStorage['zendeskUrl'])
   }
@@ -87,9 +90,8 @@ angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout,
   }
 
   $scope.startTrackerForTicket = (id, subject) => {
-    console.log(id)
     const description = `#${id} - ${subject}`
-    ipc.send('edit-worklog', {'description': description})
+    $scope.startTrackerForTask({task: description})
   }
 
   $scope.startTrackerForTask = (task) => {
@@ -107,14 +109,18 @@ angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout,
     }
 
     searchTask(id).then(data => {
-      console.log(data)
-      ipc.send('edit-worklog', data)
+      if (data.task) {
+        ipc.send('edit-worklog', data)
+      } else {
+        ipc.send('edit-worklog', {'description': task.task})
+      }
+
     }).catch(data => {
       console.log('error')
     })
   }
 
-  function searchTask(search) {
+  function searchTask (search) {
     return fetch(`${$scope.url}api/tracker/task/search/${search}/?api_token=${$scope.apiToken}`)
       .then(res => res.json())
   }

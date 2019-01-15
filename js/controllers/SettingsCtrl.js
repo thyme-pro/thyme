@@ -16,6 +16,7 @@ angular.module('thyme').controller('SettingsCtrl', function ($scope, $log, gapiS
     'zendeskUserId',
     'zendeskUrl',
     'zendeskPassword',
+    'ftpProgram',
     'jiraPassword'
   ];
 

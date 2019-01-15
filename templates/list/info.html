@@ -1,98 +1,133 @@
 <div class="row" ng-if="customerInfo">
-    <div class="col-sm-6">
-        <h5>Kundeinfo</h5>
-        <p><b>Sites:</b></p>
-        <div ng-repeat="site in customerInfo.sites">
-            <p><a ng-click="openURL(site.url)">{{site.url}}</a></p>
-            <p>- <a ng-repeat="extraUrl in site.extra_url" ng-click="openURL(extraUrl)">{{extraUrl}}</a></p>
-            <p><a ng-click="openURL(site.admin_url)">{{site.admin_url}}</a></p>
-
-            <b>Database</b><span ng-if="site.db_user" ng-click="copyClipboard(site.db_user)"
-                                 class="btn btn-default btn-sm"><span
-                class="glyphicon glyphicon-copy"></span> User</span>
-            <span ng-if="site.db_password" ng-click="copyClipboard(site.db_password)"
-                  class="btn btn-default btn-sm"><span
-                    class="glyphicon glyphicon-copy"></span> Password</span><br>
-            <b>FTP</b><span ng-if="site.hostname" ng-click="copyClipboard(site.hostname)"
-                            class="btn btn-default btn-sm"><span
-                class="glyphicon glyphicon-copy"></span> Hostname</span>
-            <span ng-if="site.ftp_user" ng-click="copyClipboard(site.ftp_user)"
-                  class="btn btn-default btn-sm"><span
-                    class="glyphicon glyphicon-copy"></span> User</span>
-            <span ng-if="site.ftp_password" ng-click="copyClipboard(site.ftp_password)"
-                  class="btn btn-default btn-sm"><span
-                    class="glyphicon glyphicon-copy"></span> Password</span>
-
-            <span ng-if="ftpProgram" ng-click="ftpOpen(site.hostname, site.ftp_user, site.ftp_password)"
-                  class="btn btn-default btn-sm">Open in external program</span><br>
-
-            <span ng-if="site.misc">{{site.misc}}</span>
-        </div>
-    </div>
-    <div class="col-sm-6">
-        <p><b>Tickets:</b></p>
-        <span ng-repeat="ticket in customerInfo.last_tickets">
-            <p>#{{ticket.id}} - {{ticket.subject}}
-                <span class="btn btn-xs btn-default" ng-click="openBrowserWithTicket(ticket.id)">Open in browser</span>
-            </p>
+  <div class="col-sm-6">
+    <h5>Kundeinfo</h5>
+    <p><b>Sites</b></p>
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="site in customerInfo.sites">
+        <span class="pull-right">
+          <span class="btn btn-xs btn-default"
+                ng-click="openURL(customerInfo.customer_url + '/sites/' + site.id + '/edit')">More info
+          </span>
         </span>
-    </div>
+        <b><a ng-click="openURL(site.url)">{{site.url}}</a></b>
+        <ul>
+          <li ng-repeat="extraUrl in site.extra_url"><a ng-click="openURL(extraUrl)">{{extraUrl}}</a></li>
+        </ul>
+        <a ng-click="openURL(site.admin_url)">{{site.admin_url}}</a><br>
+        <b>Database</b><br>
+        <span ng-if="site.db_user" ng-click="copyClipboard(site.db_user)"
+              class="btn btn-default btn-sm"><span
+            class="glyphicon glyphicon-copy"></span> User</span>
+        <span ng-if="site.db_password" ng-click="copyClipboard(site.db_password)"
+              class="btn btn-default btn-sm"><span
+            class="glyphicon glyphicon-copy"></span> Password</span><br>
+        <b>FTP</b><br>
+        <span ng-if="site.hostname" ng-click="copyClipboard(site.hostname)"
+              class="btn btn-default btn-sm"><span
+            class="glyphicon glyphicon-copy"></span> Hostname</span>
+        <span ng-if="site.ftp_user" ng-click="copyClipboard(site.ftp_user)"
+              class="btn btn-default btn-sm"><span
+            class="glyphicon glyphicon-copy"></span> User</span>
+        <span ng-if="site.ftp_password" ng-click="copyClipboard(site.ftp_password)"
+              class="btn btn-default btn-sm"><span
+            class="glyphicon glyphicon-copy"></span> Password</span>
+
+        <span ng-if="ftpProgram" ng-click="ftpOpen(site.hostname, site.ftp_user, site.ftp_password)"
+              class="btn btn-default btn-sm">Open in external program</span><br>
+        <b>Backup</b><br>
+        <span ng-if="site.backup_user" ng-click="copyClipboard(site.backup_user)"
+              class="btn btn-default btn-sm"><span
+            class="glyphicon glyphicon-copy"></span> User</span>
+        <span ng-if="site.backup_password" ng-click="copyClipboard(site.backup_password)"
+              class="btn btn-default btn-sm"><span
+            class="glyphicon glyphicon-copy"></span> Password</span>
+
+        <span ng-if="ftpProgram"
+              ng-click="ftpOpen('backup1.powerhosting.dk', site.backup_user, site.backup_password)"
+              class="btn btn-default btn-sm">Open in external program</span><br>
+      </li>
+    </ul>
+  </div>
+  <div class="col-sm-6">
+    <h5>Kundens seneste tickets</h5>
+    <ul class="list-group">
+      <li class="list-group-item" ng-class="{
+                'disabled': ticket.status == 'hold',
+                'list-group-item-warning': ticket.status == 'open',
+                'list-group-item-success': ticket.status == 'solved',
+                'list-group-item-info': ticket.status == 'pending',
+            }"
+          ng-repeat="ticket in customerInfo.last_tickets">
+        <span class="pull-right">
+          <span class="btn btn-xs btn-default" ng-click="openBrowserWithTicket(ticket.id)">Open in browser</span>
+          <span class="btn btn-xs btn-default"
+                ng-click="startTrackerForTicket(ticket.id, ticket.subject)">Start tracker</span>
+          </span>
+        <b>#{{ticket.id}}</b><br>{{ticket.subject}}
+      </li>
+    </ul>
+  </div>
 </div>
 <div class="row">
-    <div ng-if="infoData.need_attention" class="col-sm-4">
-        <h5>Sager der mangler svar <span ng-click="openZendesk()"
-                                         class="glyphicon glyphicon-new-window btn btn-default btn-xs"></span>
-        </h5>
-        <ul class="list-group">
-            <li class="list-group-item" ng-repeat="ticket in infoData.need_attention">
-                #{{ticket.id}} - {{ticket.subject}}
-                <span class="pull-right">
+  <div ng-if="infoData.need_attention" class="col-sm-4">
+    <h5>Sager der mangler svar <span ng-click="openZendesk()"
+                                     class="glyphicon glyphicon-new-window btn btn-default btn-xs"></span>
+    </h5>
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="ticket in infoData.need_attention">
+        <span class="pull-right">
 
                 <span class="btn btn-xs btn-default" ng-click="openBrowserWithTicket(ticket.id)">Open in browser</span>
                 <span class="btn btn-xs btn-default"
                       ng-click="startTrackerForTicket(ticket.id, ticket.subject)">Start tracker</span>
                 </span>
-            </li>
-        </ul>
-        <b ng-if="!infoData.need_attention.length">Alt er godt!</b>
-    </div>
-    <div ng-if="myTickets" class="col-sm-4">
-        <h5>Mine sager<span ng-click="openZendesk()"
-                            class="glyphicon glyphicon-new-window btn btn-default btn-xs"></span>
-        </h5>
-        <ul class="list-group">
-            <li class="list-group-item" ng-class="{
+        <b>#{{ticket.id}}</b><br>{{ticket.subject}}
+      </li>
+    </ul>
+    <b ng-if="!infoData.need_attention.length">Alt er godt!</b>
+  </div>
+  <div ng-if="myTickets" class="col-sm-4">
+    <h5>Mine sager<span ng-click="openZendesk()"
+                        class="glyphicon glyphicon-new-window btn btn-default btn-xs"></span>
+    </h5>
+    <ul class="list-group">
+      <li class="list-group-item" ng-class="{
                 'disabled': ticket.status == 'hold',
                 'list-group-item-warning': ticket.status == 'open',
                 'list-group-item-info': ticket.status == 'pending',
             }"
-                ng-repeat="ticket in myTickets">
-                #{{ticket.id}} - {{ticket.subject}}
-                <span class="pull-right">
-
+          ng-repeat="ticket in myTickets">
+        <span class="pull-right">
                 <span class="btn btn-xs btn-default" ng-click="openBrowserWithTicket(ticket.id)">Open in browser</span>
                 <span class="btn btn-xs btn-default"
                       ng-click="startTrackerForTicket(ticket.id, ticket.subject)">Start tracker</span>
+        </span>
+        <b>#{{ticket.id}}</b><br>
+        <span ng-repeat="field in ticket.fields">
+                    <span ng-if="field.id == 44228089 && field.value"
+                          class="label label-default">Uge: {{field.value}}
+<br>
+                    </span>
                 </span>
-            </li>
-        </ul>
-    </div>
-    <div ng-if="infoData.rp_tasks" class="col-sm-4">
-        <h5>Ressourceplan <span
-                ng-click="openURL('https://docs.google.com/spreadsheets/d/1eRvXCFW_hsCnxrq8h_MAZKKI1WrufphjRUnkpw7FKHU/')"
-                class="glyphicon glyphicon-new-window btn btn-default btn-xs"></span>
-        </h5>
-        <ul class="list-group">
-            <li class="list-group-item" ng-class="{'list-group-item-success': task.is_done}"
-                ng-repeat="task in infoData.rp_tasks">
-                {{ task.customer }} <span ng-if="task.task"> - {{ task.task }}</span>
-                <span class="pull-right">
-
+        {{ticket.subject}}
+      </li>
+    </ul>
+  </div>
+  <div ng-if="infoData.rp_tasks" class="col-sm-4">
+    <h5>Ressourceplan <span
+        ng-click="openURL('https://docs.google.com/spreadsheets/d/1eRvXCFW_hsCnxrq8h_MAZKKI1WrufphjRUnkpw7FKHU/')"
+        class="glyphicon glyphicon-new-window btn btn-default btn-xs"></span>
+    </h5>
+    <ul class="list-group">
+      <li class="list-group-item" ng-class="{'list-group-item-success': task.is_done}"
+          ng-repeat="task in infoData.rp_tasks">
+        <span class="pull-right">
                 <span class="btn btn-xs btn-default" ng-if="(task.task.indexOf('#') !== -1)"
                       ng-click="openBrowserWithTask(task.task)">Open in browser</span>
                 <span class="btn btn-xs btn-default" ng-click="startTrackerForTask(task)">Start tracker</span>
-                </span>
-            </li>
-        </ul>
-    </div>
+        </span>
+        <b>{{ task.customer }}</b> <span ng-if="task.task"> <br> {{ task.task }}</span>
+      </li>
+    </ul>
+  </div>
 </div>
