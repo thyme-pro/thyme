@@ -14,10 +14,12 @@ angular.module('thyme')
 
       getWorklogs: function (timeFrom, timeTo, unregistered) {
         let deferred = $q.defer();
+
         let sql = '';
         let data = [];
 
         let deferSelectTasks = $q.defer();
+
         // Get a list of tasks for the selected period.
         dbService.tasks = {};
         db.transaction((tx) => {
@@ -99,6 +101,8 @@ angular.module('thyme')
                   }
                 }
               }
+
+              deferred.resolve(_.toArray(dbService.tasks));
             });
 
             sql = 'SELECT * FROM register_info';
@@ -117,7 +121,6 @@ angular.module('thyme')
             });
           });
 
-          deferred.resolve(_.toArray(dbService.tasks));
         });
         return deferred.promise;
       },

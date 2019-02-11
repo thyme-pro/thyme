@@ -23,7 +23,7 @@ module.exports = {
 
   TRAY_ICON_PATH: path.join(__dirname, 'img', 'trayTemplate.png'),
 
-  WINDOW_MAIN: 'file://' + path.join(__dirname, 'index.html'),
-  WINDOW_PREFERENCES: 'file://' + path.join(__dirname, 'templates', 'preferences.html'),
-  WINDOW_WORKLOG: 'file://' + path.join(__dirname, 'templates', 'worklog.html')
+  WINDOW_MAIN: path.join(__dirname, 'index.html'),
+  WINDOW_PREFERENCES: path.join(__dirname, 'templates', 'preferences.html'),
+  WINDOW_WORKLOG: path.join(__dirname, 'templates', 'worklog.html')
 };

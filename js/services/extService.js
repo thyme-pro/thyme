@@ -1,42 +1,13 @@
 angular.module('thyme')
   .factory('extService', ['$q', '$http', '$rootScope', function ($q, $http, $rootScope) {
-    // @todo: Move out jira and zendesk stuff to two seperate servies.
     const getIssues = () => {
       let url = `${localStorage.dashboardUrl}api/tracker/tasks/?api_token=${localStorage.internalApiToken}`;
 
-      return fetch(url)
+      return fetch(url, {headers: helper.basicAuthHeaders})
         .then(res => res.json())
     };
 
     let extService = {
-      getWorklogs: () => {
-        let deferred = $q.defer();
-
-        let username = localStorage.jiraUsername;
-        let password = localStorage.jiraPassword;
-        let jiraInfo = {
-          url: localStorage.dashboardUrl,
-          credentials: btoa(username + ':' + password)
-        };
-        let url = jiraInfo.url + '/rest/api/2/getWorklogs';
-
-        let config = {
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Atlassian-Token': 'nocheck',
-            'Authorization': 'Basic ' + jiraInfo.credentials
-          }
-        };
-
-        $http.get(url, config)
-          .then(function (data) {
-            deferred.resolve(data);
-          }, function (error) {
-            console.log(error)
-          });
-
-        return deferred.promise;
-      },
       getIssues: () => {
         let deferred = $q.defer();
 
@@ -74,56 +45,58 @@ angular.module('thyme')
 
         let url = `${localStorage.dashboardUrl}api/tracker/worklog/${timesheet.taskId}/add?api_token=${localStorage.internalApiToken}`;
 
-        let data = JSON.stringify({
+        let body = JSON.stringify({
           'timeSpentSeconds': timesheet.worklog,
           'comment': timesheet.comment,
           'started': timesheet.startTime
         });
 
         let config = {
-          headers: {
-            'Content-Type': 'application/json'
-          }
+          headers: {}
         };
 
-        $http.post(url, data, config)
-          .then(function (data) {
+        fetch(url, {
+          method: 'POST',
+          cache: 'no-cache',
+          headers: helper.basicAuthHeaders,
+          body: body
+        })
+          .then(res => {
+            if (!res.ok) {
+              throw res
+            }
+            return res.json()
+          })
+          .then(data => {
+            console.log(data)
             data.success = true;
             deferred.resolve(data);
-          }, function (data) {
-            $rootScope.$broadcast('displayError', data.message);
+          })
+          .catch(err => {
+            err.json()
+              .then(errMsg => {
+                ipc.send('display-error', errMsg);
+              })
 
-            data.success = false;
-            deferred.resolve(data);
+            deferred.resolve({success: false});
           });
 
         return deferred.promise;
       },
 
-      getTickets(sanitize = true) {
+      getTickets (sanitize = true) {
         let deferred = $q.defer();
 
-        let username = localStorage.zendeskUsername;
-        let password = localStorage.zendeskPassword;
+        const username = localStorage.zendeskUsername
+        const password = localStorage.zendeskPassword
 
-        let zendeskInfo = {
-          url: localStorage.zendeskUrl,
-          credentials: btoa(username + ':' + password),
-          userId: localStorage.zendeskUserId,
-        };
+        let headers = new Headers();
+        headers.set('Authorization', 'Basic ' + btoa(username + ':' + password));
 
-        let config = {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Basic ' + zendeskInfo.credentials
-          }
-        };
+        let url = `${localStorage.zendeskUrl}/api/v2/users/${localStorage.zendeskUserId}/tickets/assigned.json`
 
-        let url = zendeskInfo.url + '/api/v2/users/' + zendeskInfo.userId + '/tickets/assigned.json';
-
-        $http.get(url, config)
-          .then(function (result) {
-            let data = result.data
+        fetch(url, {headers: headers}).then(res => res.json())
+          .then(function (data) {
 
             let correctData = [];
             if (sanitize) {

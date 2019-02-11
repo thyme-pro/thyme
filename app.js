@@ -1,4 +1,5 @@
-_ = require('lodash');
+window._ = require('lodash');
+
 angular.module('thyme', ['ui.bootstrap', 'utils.autofocus']);
 
 angular.module('thyme').filter('object2Array', function() {

@@ -20,12 +20,12 @@ const config = require('./config.js');
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow = null;
 
-function createWindow() {
+function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600});
 
   // and load the index.html of the app.
-  mainWindow.loadURL(config.WINDOW_MAIN);
+  mainWindow.loadFile(config.WINDOW_MAIN);
 
   if (config.IS_DEV) {
     mainWindow.webContents.openDevTools();
@@ -47,7 +47,8 @@ function createWindow() {
   menu.init();
 }
 
-const shouldQuit = app.makeSingleInstance((commandLine) => {
+/*
+const shouldQuit = app.requestSingleInstanceLock((commandLine) => {
   checkArgs(commandLine);
   if (mainWindow) {
     if (mainWindow.isMinimized()) mainWindow.restore();
@@ -58,8 +59,9 @@ const shouldQuit = app.makeSingleInstance((commandLine) => {
 if (shouldQuit) {
   app.quit();
 }
+*/
 
-function openFile(path) {
+function openFile (path) {
   let data = fs.readFileSync(path, 'utf-8');
 
   try {
@@ -74,7 +76,7 @@ function openFile(path) {
   }
 }
 
-function checkArgs(args) {
+function checkArgs (args) {
   for (let i = 0; i < args.length; i++) {
     let arg = args[i];
 
@@ -125,6 +127,14 @@ ipcMain.on('start-worklog', function (event, data) {
   mainWindow.webContents.send('start-worklog', {obj: data});
 });
 
+ipcMain.on('emit-event', function (event, data) {
+  mainWindow.webContents.send('emit-event', data);
+});
+
 ipcMain.on('edit-worklog', function (event, data) {
   windows.worklog.init(data);
 });
+
+ipcMain.on('display-error', (event, data) => {
+  dialog.showErrorBox('Error', data.message);
+})

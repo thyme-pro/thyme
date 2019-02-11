@@ -11,7 +11,7 @@ const electron = require('electron');
 
 const BrowserWindow = electron.BrowserWindow;
 
-function init() {
+function init () {
   if (preferences.win) {
     return preferences.win.show();
   }
@@ -23,7 +23,7 @@ function init() {
     resizable: false
   });
 
-  win.loadURL(config.WINDOW_PREFERENCES);
+  win.loadFile(config.WINDOW_PREFERENCES);
 
   if (config.IS_DEV) {
     win.webContents.openDevTools();
@@ -32,11 +32,11 @@ function init() {
   // No menu on the About window
   win.setMenu(null);
 
-  win.webContents.on('did-finish-load', function() {
+  win.webContents.on('did-finish-load', function () {
     win.show();
   });
 
-  win.once('closed', function() {
+  win.once('closed', function () {
     preferences.win = null;
   });
 }

@@ -54,46 +54,56 @@ angular.module('thyme').controller('CreateCtrl', function ($scope, $http, dbServ
   $scope.selectTask = function ($item) {
     $scope.worklog.task_id = $item.task_id;
 
-    $scope.setProgress($item.budget, $item.timespent);
+    $scope.setProgress($item.budget, $item.task_id);
     $scope.budget = $item.budget;
   };
 
-  $scope.setProgress = function (budget, spent) {
-    $scope.budget = budget;
-    $scope.time_remaining_formatted = 'N/A';
+  $scope.time = {}
+  $scope.setProgress = function (budget, taskId) {
+    $scope.time.budget = timeHelper.formatMinutesToTime(budget * 60);
+    $scope.time.remaining_formatted = '--:--';
+    $scope.time.used_formatted = '--:--';
+    $scope.time.percent_used = false;
 
-    $scope.percent_used = Math.round(spent / (budget) * 100);
+    const url = `${localStorage['dashboardUrl']}api/tracker/task/${taskId}/info?api_token=${localStorage['internalApiToken']}`
 
-    if (isNaN($scope.percent_used)) {
-      $scope.percent_used = 0;
-    }
+    fetch(url, {headers: helper.basicAuthHeaders})
+      .then(res => res.json())
+      .then(data => {
+        $scope.time.used_formatted = timeHelper.formatMinutesToTime(data.total_hours * 60)
+        if (budget - data.total_hours > 0) {
+          $scope.time.remaining_formatted = timeHelper.formatMinutesToTime((budget - data.total_hours) * 60)
+        }
+        $scope.time.percent_used = Math.ceil((data.total_hours / budget) * 100)
+        $scope.$apply()
+      })
   };
 
-  $scope.$watch('percent_used', function () {
+  $scope.$watch('time.percent_used', function () {
     if (isNaN($scope.time_used) || $scope.time_used === 0) {
       $scope.alert = {
         show: false,
         type: 'success'
       };
     }
-    if ($scope.percent_used < 80) {
+    if ($scope.time.percent_used < 80) {
       $scope.alert = {
         show: false,
         type: 'success'
       };
     }
-    else if ($scope.percent_used >= 80 && $scope.percent_used < 99) {
+    else if ($scope.time.percent_used >= 80 && $scope.time.percent_used < 99) {
       $scope.alert = {
         show: true,
         type: 'warning',
-        msg: $scope.percent_used + '% used'
+        msg: $scope.time.percent_used + '% used'
       };
     }
-    else if ($scope.percent_used >= 100) {
+    else if ($scope.time.percent_used >= 100) {
       $scope.alert = {
         show: true,
         type: 'danger',
-        msg: $scope.percent_used + '% used'
+        msg: $scope.time.percent_used + '% used'
       };
     }
   });
@@ -138,7 +148,7 @@ angular.module('thyme').controller('CreateCtrl', function ($scope, $http, dbServ
     $scope.format();
   };
 
-  $scope.format = function formatTimeEntries() {
+  $scope.format = function formatTimeEntries () {
     $scope.worklog.total_duration = timeHelper.formattedTotalForWorklog($scope.worklog);
 
     angular.forEach($scope.worklog.time_entries, function (time_entry, key) {

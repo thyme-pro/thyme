@@ -14,7 +14,7 @@ angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout,
   function fetchInfo () {
     $timeout(fetchInfo, 1000 * 60 * 5);
 
-    fetch($scope.url + 'api/tracker/info?api_token=' + $scope.apiToken)
+    fetch(`${$scope.url}api/tracker/info?api_token=${$scope.apiToken}`, {headers: helper.basicAuthHeaders})
       .then(res => res.json())
       .then(data => {
         $scope.infoData = data
@@ -69,7 +69,9 @@ angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout,
   $scope.fetchCustomerInfo = (taskId) => {
     $scope.customerInfo = {}
 
-    fetch(`${$scope.url}api/tracker/customer/info/${taskId}?api_token=${$scope.apiToken}`)
+    fetch(`${$scope.url}api/tracker/customer/info/${taskId}?api_token=${$scope.apiToken}`, {
+      headers: helper.basicAuthHeaders
+    })
       .then(res => res.json())
       .then(data => {
         $scope.customerInfo = data

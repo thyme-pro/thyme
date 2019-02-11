@@ -17,30 +17,30 @@
         <b>Database</b><br>
         <span ng-if="site.db_user" ng-click="copyClipboard(site.db_user)"
               class="btn btn-default btn-sm"><span
-            class="glyphicon glyphicon-copy"></span> User</span>
+          class="glyphicon glyphicon-copy"></span> User</span>
         <span ng-if="site.db_password" ng-click="copyClipboard(site.db_password)"
               class="btn btn-default btn-sm"><span
-            class="glyphicon glyphicon-copy"></span> Password</span><br>
+          class="glyphicon glyphicon-copy"></span> Password</span><br>
         <b>FTP</b><br>
         <span ng-if="site.hostname" ng-click="copyClipboard(site.hostname)"
               class="btn btn-default btn-sm"><span
-            class="glyphicon glyphicon-copy"></span> Hostname</span>
+          class="glyphicon glyphicon-copy"></span> Hostname</span>
         <span ng-if="site.ftp_user" ng-click="copyClipboard(site.ftp_user)"
               class="btn btn-default btn-sm"><span
-            class="glyphicon glyphicon-copy"></span> User</span>
+          class="glyphicon glyphicon-copy"></span> User</span>
         <span ng-if="site.ftp_password" ng-click="copyClipboard(site.ftp_password)"
               class="btn btn-default btn-sm"><span
-            class="glyphicon glyphicon-copy"></span> Password</span>
+          class="glyphicon glyphicon-copy"></span> Password</span>
 
         <span ng-if="ftpProgram" ng-click="ftpOpen(site.hostname, site.ftp_user, site.ftp_password)"
               class="btn btn-default btn-sm">Open in external program</span><br>
         <b>Backup</b><br>
         <span ng-if="site.backup_user" ng-click="copyClipboard(site.backup_user)"
               class="btn btn-default btn-sm"><span
-            class="glyphicon glyphicon-copy"></span> User</span>
+          class="glyphicon glyphicon-copy"></span> User</span>
         <span ng-if="site.backup_password" ng-click="copyClipboard(site.backup_password)"
               class="btn btn-default btn-sm"><span
-            class="glyphicon glyphicon-copy"></span> Password</span>
+          class="glyphicon glyphicon-copy"></span> Password</span>
 
         <span ng-if="ftpProgram"
               ng-click="ftpOpen('backup1.powerhosting.dk', site.backup_user, site.backup_password)"
@@ -68,24 +68,8 @@
     </ul>
   </div>
 </div>
-<div class="row">
-  <div ng-if="infoData.need_attention" class="col-sm-4">
-    <h5>Sager der mangler svar <span ng-click="openZendesk()"
-                                     class="glyphicon glyphicon-new-window btn btn-default btn-xs"></span>
-    </h5>
-    <ul class="list-group">
-      <li class="list-group-item" ng-repeat="ticket in infoData.need_attention">
-        <span class="pull-right">
 
-                <span class="btn btn-xs btn-default" ng-click="openBrowserWithTicket(ticket.id)">Open in browser</span>
-                <span class="btn btn-xs btn-default"
-                      ng-click="startTrackerForTicket(ticket.id, ticket.subject)">Start tracker</span>
-                </span>
-        <b>#{{ticket.id}}</b><br>{{ticket.subject}}
-      </li>
-    </ul>
-    <b ng-if="!infoData.need_attention.length">Alt er godt!</b>
-  </div>
+<div class="row">
   <div ng-if="myTickets" class="col-sm-4">
     <h5>Mine sager<span ng-click="openZendesk()"
                         class="glyphicon glyphicon-new-window btn btn-default btn-xs"></span>
@@ -115,8 +99,8 @@
   </div>
   <div ng-if="infoData.rp_tasks" class="col-sm-4">
     <h5>Ressourceplan <span
-        ng-click="openURL('https://docs.google.com/spreadsheets/d/1eRvXCFW_hsCnxrq8h_MAZKKI1WrufphjRUnkpw7FKHU/')"
-        class="glyphicon glyphicon-new-window btn btn-default btn-xs"></span>
+      ng-click="openURL('https://docs.google.com/spreadsheets/d/1eRvXCFW_hsCnxrq8h_MAZKKI1WrufphjRUnkpw7FKHU/')"
+      class="glyphicon glyphicon-new-window btn btn-default btn-xs"></span>
     </h5>
     <ul class="list-group">
       <li class="list-group-item" ng-class="{'list-group-item-success': task.is_done}"
@@ -126,7 +110,7 @@
                       ng-click="openBrowserWithTask(task.task)">Open in browser</span>
                 <span class="btn btn-xs btn-default" ng-click="startTrackerForTask(task)">Start tracker</span>
         </span>
-        <b>{{ task.customer }}</b> <span ng-if="task.task"> <br> {{ task.task }}</span>
+        <b>{{ task.customer }}</b> <span ng-if="task.task"> <br> {{ task.task }} <span class="label label-success">{{task.time}}</span></span>
       </li>
     </ul>
   </div>

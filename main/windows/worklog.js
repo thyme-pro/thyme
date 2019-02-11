@@ -24,7 +24,7 @@ function init(worklogObj) {
     resizable: false
   });
 
-  win.loadURL(config.WINDOW_WORKLOG);
+  win.loadFile(config.WINDOW_WORKLOG);
 
   if (config.IS_DEV) {
     win.webContents.openDevTools();

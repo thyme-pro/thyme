@@ -171,28 +171,17 @@ form {
 }
 
 .tracker .head {
-    background: linear-gradient(to bottom, rgb(60, 44, 119) 28%, rgb(159, 94, 201) 146%);
     background-color: rgb(84, 59, 181);
     color: rgb(255, 255, 255);
     border-bottom: 1px solid rgb(200, 200, 200);
-    height: 80px;
-    font-size: 18px;
-}
-
-.timetotal {
-    float: left;
-    margin: 25px;
-    font-weight: bold;
-}
-
-.info {
-    padding: 19px;
+    height: 3px;
 }
 
 span#js-add-task {
     position: absolute;
     right: 25px;
-    top: 30px;
+    top: 8px;
+    z-index: 1000;
 }
 
 .filter {

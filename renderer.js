@@ -20,6 +20,7 @@ window.$ = require('jquery');
 window.XDate = require('xdate');
 
 require(path.join(__dirname, 'js/helper/time.js'));
+require(path.join(__dirname, 'js/helper/index.js'));
 
 require('angular');
 require('angular-ui-bootstrap');

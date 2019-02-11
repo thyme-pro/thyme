@@ -1,26 +1,29 @@
 <!DOCTYPE html>
 <html ng-app="thyme">
 <head>
-    <meta charset="UTF-8">
-    <title>Thyme</title>
+  <meta charset="UTF-8">
+  <title>Thyme</title>
 
-    <link href="node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
-    <link href="node_modules/bootstrap/dist/css/bootstrap-theme.css" rel="stylesheet">
-    <link href="css/native.css" rel="stylesheet">
-    <link href="css/app.css" rel="stylesheet">
+  <link href="node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+  <link href="node_modules/bootstrap/dist/css/bootstrap-theme.css" rel="stylesheet">
+  <link href="css/native.css" rel="stylesheet">
+  <link href="css/app.css" rel="stylesheet">
 
 </head>
 <body>
 <div class="page-container">
-    <span class="btn btn-sm btn-success" id="js-add-task" onclick="ipc.send('edit-worklog', {})"><span
-            class="glyphicon glyphicon-plus"></span> Start new</span>
-    <div ng-view></div>
-    <div ng-controller="TaskListCtrl" class="task-block">
-        <div ng-include src="'./templates/list/pageTaskList.html'"></div>
-    </div>
-    <div ng-controller="InfoCtrl" style="overflow-y:scroll;" class="info-block">
-        <div ng-include style="overflow:hidden;" src="'./templates/list/info.html'"></div>
-    </div>
+  <div ng-controller="TopCtrl" style="overflow-y:scroll;" >
+    <div ng-include style="" src="'./templates/list/top.html'"></div>
+  </div>
+
+  <div ng-view></div>
+  <div ng-controller="TaskListCtrl" class="task-block">
+    <div ng-include src="'./templates/list/pageTaskList.html'"></div>
+  </div>
+
+  <div ng-controller="InfoCtrl" style="overflow-y:scroll;" class="info-block">
+    <div ng-include style="overflow:hidden;" src="'./templates/list/info.html'"></div>
+  </div>
 </div>
 </body>
 
@@ -35,6 +38,7 @@ require('./js/controllers/TaskListCtrl.js')
 require('./js/controllers/CalendarCtrl.js')
 require('./js/controllers/SettingsCtrl.js')
 require('./js/controllers/InfoCtrl.js')
+require('./js/controllers/TopCtrl.js')
 require('./js/services/worklogs.js')
 require('./js/services/dbService.js')
 require('./js/services/gapiService.js')
