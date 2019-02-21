@@ -7,6 +7,9 @@ const {dialog} = electron;
 const {ipcMain} = electron;
 const {session} = electron;
 
+const contextMenu = require('electron-context-menu');
+contextMenu();
+
 const path = require('path');
 const fs = require('fs');
 
