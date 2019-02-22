@@ -1,4 +1,4 @@
-<div class="row" ng-if="customerInfo">
+<!--<div class="row" ng-if="customerInfo">
   <div class="col-sm-6">
     <h5>Kundeinfo</h5>
     <p><b>Sites</b></p>
@@ -67,9 +67,97 @@
       </li>
     </ul>
   </div>
-</div>
+</div>-->
 
 <div class="row">
+    <div class="col-md-12 col-lg-6" ng-if="myTickets">
+        <div class="flex-table">
+            <div class="flex-table-head">
+                <div class="flex-row">
+                    <div class="flex-col d-flex">
+                        <span><strong>Mine sager</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-table-body">
+                <div class="flex-row" ng-repeat="ticket in myTickets">
+                    <div class="flex-col flex-grow-0">
+                        <span
+                            class="badge text-uppercase"
+                            ng-class="{
+                            'badge-hold': ticket.status.string == 'hold',
+                            'badge-open': ticket.status.string == 'open',
+                            'badge-pending': ticket.status.string == 'pending'}">
+                            <span class="text-shadow">{{ticket.status.key}}</span>
+                        </span>
+                    </div>
+                    <div class="flex-col flex-grow-0">
+                        <span><strong>#{{ticket.id}}</strong></span>
+                    </div>
+                    <div class="flex-col flex-grow-0">
+                        <span ng-if="ticket.week" class="badge rounded-0">Uge: {{ticket.week.value}}</span>
+                    </div>
+                    <div class="flex-col">
+                        <div class="client">
+                            <strong>Apuls.dk</strong>
+                        </div>
+                        <span>{{ticket.subject}}</span>
+                    </div>
+                    <div class="flex-col flex-grow-0 d-flex">
+                        <span class="action" ng-click="startTrackerForTicket(ticket.id, ticket.subject)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M3 22v-20l18 10-18 10z"/></svg>
+                        </span>
+                        <span class="action" ng-click="openBrowserWithTicket(ticket.id)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-lg-6" ng-if="infoData.rp_tasks">
+        <div class="flex-table">
+            <div class="flex-table-head">
+                <div class="flex-row">
+                    <div class="flex-col d-flex">
+                        <span><strong>Ressourceplan</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-table-body">
+                <div class="flex-row" ng-repeat="task in infoData.rp_tasks">
+                    <div class="flex-col flex-grow-0">
+                        <span class="badge text-uppercase" ng-class="{
+                                  'badge-open': !task.is_done,
+                                  'badge-hold': task.is_done}">
+                            <span class="text-shadow">{{ task.statusKey }}</span>
+                        </span>
+                    </div>
+                    <div class="flex-col flex-grow-0">
+                        <span ng-if="task.id"><strong>{{ task.id }}</strong></span>
+                    </div>
+                    <div class="flex-col">
+                        <div class="client">
+                            <strong>{{ task.customer }}</strong>
+                            <span class="badge badge-time rounded-0 float-right d-block week">{{task.time}} t.</span>
+                        </div>
+                        <span>{{ task.desc || task.task }}</span>
+                    </div>
+                    <div class="flex-col flex-grow-0 d-flex">
+                        <span class="action play" ng-click="startTrackerForTask(task)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M3 22v-20l18 10-18 10z"/></svg>
+                        </span>
+                        <span class="action open" ng-class="{'disabled': (task.task.indexOf('#') === -1)}" ng-click="openBrowserWithTask(task.task)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="row">
   <div ng-if="myTickets" class="col-sm-4">
     <h5>Mine sager<span ng-click="openZendesk()"
                         class="glyphicon glyphicon-new-window btn btn-default btn-xs"></span>
@@ -114,4 +202,4 @@
       </li>
     </ul>
   </div>
-</div>
+</div>-->

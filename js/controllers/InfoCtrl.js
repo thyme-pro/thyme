@@ -17,6 +17,7 @@ angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout,
     fetch(`${$scope.url}api/tracker/info?api_token=${$scope.apiToken}`, {headers: helper.basicAuthHeaders})
       .then(res => res.json())
       .then(data => {
+        data.rp_tasks = parseTasks(data.rp_tasks);
         $scope.infoData = data
       })
 
@@ -24,7 +25,10 @@ angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout,
       $scope.myTickets = data.filter((ticket) => {
         return ['open', 'pending', 'hold'].includes(ticket.status)
       })
+
+      $scope.myTickets = parseTickets($scope.myTickets);
     })
+
   }
 
   fetchInfo()
@@ -126,4 +130,30 @@ angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout,
     return fetch(`${$scope.url}api/tracker/task/search/${search}/?api_token=${$scope.apiToken}`)
       .then(res => res.json())
   }
+
+    function parseTasks (tasks) {
+        return Object.entries(tasks).map((task) => {
+            task = task[1];
+            let taskSplit = task.task.split("-").map((str) => str.trim());
+            if(taskSplit.length > 1) {
+                task.id = taskSplit[0];
+                task.desc = taskSplit[1];
+            }
+            task.statusKey = task.is_done ? 'l' : 'å';
+            return task;
+        });
+    }
+
+    function parseTickets (tickets) {
+        return tickets.map((ticket) => {
+            ticket.status = {
+                key: (ticket.status === 'pending' ? 'v' : 'å'),
+                string: ticket.status
+            };
+            ticket.week = ticket.fields.find(t => {
+                return t.id === 44228089;
+            });
+            return ticket;
+        });
+    }
 });
