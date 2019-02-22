@@ -104,7 +104,7 @@
                         <span>{{ticket.subject}}</span>
                     </div>
                     <div class="flex-col flex-grow-0 d-flex">
-                        <span class="action" ng-click="startTrackerForTicket(ticket.id, ticket.subject)">
+                        <span class="action mr-5" ng-click="startTrackerForTicket(ticket.id, ticket.subject)">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M3 22v-20l18 10-18 10z"/></svg>
                         </span>
                         <span class="action" ng-click="openBrowserWithTicket(ticket.id)">
@@ -144,7 +144,7 @@
                         <span>{{ task.desc || task.task }}</span>
                     </div>
                     <div class="flex-col flex-grow-0 d-flex">
-                        <span class="action play" ng-click="startTrackerForTask(task)">
+                        <span class="action play mr-5" ng-click="startTrackerForTask(task)">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M3 22v-20l18 10-18 10z"/></svg>
                         </span>
                         <span class="action open" ng-class="{'disabled': (task.task.indexOf('#') === -1)}" ng-click="openBrowserWithTask(task.task)">
@@ -156,50 +156,3 @@
         </div>
     </div>
 </div>
-
-<!--<div class="row">
-  <div ng-if="myTickets" class="col-sm-4">
-    <h5>Mine sager<span ng-click="openZendesk()"
-                        class="glyphicon glyphicon-new-window btn btn-default btn-xs"></span>
-    </h5>
-    <ul class="list-group">
-      <li class="list-group-item" ng-class="{
-                'disabled': ticket.status == 'hold',
-                'list-group-item-warning': ticket.status == 'open',
-                'list-group-item-info': ticket.status == 'pending',
-            }"
-          ng-repeat="ticket in myTickets">
-        <span class="pull-right">
-                <span class="btn btn-xs btn-default" ng-click="openBrowserWithTicket(ticket.id)">Open in browser</span>
-                <span class="btn btn-xs btn-default"
-                      ng-click="startTrackerForTicket(ticket.id, ticket.subject)">Start tracker</span>
-        </span>
-        <b>#{{ticket.id}}</b><br>
-        <span ng-repeat="field in ticket.fields">
-                    <span ng-if="field.id == 44228089 && field.value"
-                          class="label label-default">Uge: {{field.value}}
-<br>
-                    </span>
-                </span>
-        {{ticket.subject}}
-      </li>
-    </ul>
-  </div>
-  <div ng-if="infoData.rp_tasks" class="col-sm-4">
-    <h5>Ressourceplan <span
-      ng-click="openURL('https://docs.google.com/spreadsheets/d/1eRvXCFW_hsCnxrq8h_MAZKKI1WrufphjRUnkpw7FKHU/')"
-      class="glyphicon glyphicon-new-window btn btn-default btn-xs"></span>
-    </h5>
-    <ul class="list-group">
-      <li class="list-group-item" ng-class="{'list-group-item-success': task.is_done}"
-          ng-repeat="task in infoData.rp_tasks">
-        <span class="pull-right">
-                <span class="btn btn-xs btn-default" ng-if="(task.task.indexOf('#') !== -1)"
-                      ng-click="openBrowserWithTask(task.task)">Open in browser</span>
-                <span class="btn btn-xs btn-default" ng-click="startTrackerForTask(task)">Start tracker</span>
-        </span>
-        <b>{{ task.customer }}</b> <span ng-if="task.task"> <br> {{ task.task }} <span class="label label-success">{{task.time}}</span></span>
-      </li>
-    </ul>
-  </div>
-</div>-->

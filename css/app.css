@@ -63,14 +63,50 @@ body {
     padding: 5px;
 }
 
-.flex-table .action:not(:first-child) {
-    margin-left: 10px;
+/* Actions */
+.action {
+    display: block;
+}
+
+.action.action-button {
+    background-color: #e2e2e2;
+    height: 25px;
+    width: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action.action-button.action-button-disabled svg {
+    fill: gray;
+}
+.action.action-button.action-button-warning {
+    background-color: #f4f637;
 }
 
 /* Margins */
+.ml-auto {
+    margin-left: auto;
+}
 
 .ml-15 {
     margin-left: 15px;
+}
+
+.mr-10 {
+    margin-right: 10px;
+}
+
+.mr-5 {
+    margin-right: 5px;
+}
+
+.mt-5 {
+    margin-top: 5px;
+}
+
+.mb-5 {
+    margin-bottom: 5px;
 }
 
 /* Icons */
@@ -148,6 +184,29 @@ body {
     right: 0;
     top: 24px;
 }
+
+/* Task table */
+.task-table {
+
+}
+
+.task-table .flex-col.time {
+    width: 45px;
+}
+
+.task-table .flex-col.actions {
+    width: 75px;
+}
+
+.task-table .flex-col.remove-action {
+    width: 65px;
+}
+
+.task-table .flex-col.text {
+    width: 200px;
+}
+
+
 
 /** OLD **/
 .settings {
