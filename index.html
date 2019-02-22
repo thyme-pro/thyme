@@ -15,14 +15,20 @@
   <div ng-controller="TopCtrl">
     <div ng-include style="" src="'./templates/list/top.html'"></div>
   </div>
-
   <div ng-view></div>
-  <div ng-controller="TaskListCtrl" class="task-block">
-    <div ng-include src="'./templates/list/pageTaskList.html'"></div>
-  </div>
-
-  <div ng-controller="InfoCtrl" style="overflow-y:scroll;" class="info-block">
-    <div ng-include style="overflow:hidden;" src="'./templates/list/info.html'"></div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 col-lg-6">
+        <div ng-controller="TaskListCtrl" class="task-block">
+          <div ng-include src="'./templates/list/pageTaskList.html'"></div>
+        </div>
+      </div>
+      <div class="col-md-12 col-lg-6">
+        <div ng-controller="InfoCtrl" style="overflow-y:scroll;" class="info-block">
+          <div ng-include style="overflow:hidden;" src="'./templates/list/info.html'"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 </body>
