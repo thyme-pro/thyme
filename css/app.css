@@ -18,7 +18,6 @@ html {
     font-size: 11px;
     line-height: 1.5;
     overflow: hidden; /* Prevents rubber-band scrolling of the whole "page" */
-    color: var(--color);
     background-color: #fff; /* To cover OSes with no default background color */
 }
 
@@ -27,6 +26,68 @@ body {
     cursor: default;
     margin: 0;
     height: 100%;
+}
+/* FLEX */
+.d-flex {
+    display: flex;
+}
+
+.flex-align-center {
+    align-items: center;
+}
+
+.flex-grow-1 {
+    flex-grow: 1;
+}
+
+/* Margins */
+
+.ml-15 {
+    margin-left: 15px;
+}
+
+/* Icons */
+.icon {
+
+}
+
+.icon svg {
+    fill: #fff;
+}
+
+/* Header */
+.header {
+    background-color: #ee1a46;
+    height: 55px;
+    color: #fff;
+}
+
+.header .container-fluid {
+    height: 100%;
+}
+
+.header .flex-col {
+    height: 100%;
+}
+
+.header .logo {
+    margin: 0 80px 0 0;
+}
+
+.header .date-picker-wrapper {
+    position: relative;
+}
+
+.header .date-picker-wrapper .date-picker {
+    position: absolute;
+    height: 270px;
+    left: auto;
+    z-index: 19999;
+    background: white;
+    border: 1px solid #a4a4a4;
+    padding: 4px;
+    right: 0;
+    top: 24px;
 }
 
 .settings {
@@ -124,16 +185,8 @@ label {
     margin: 3px;
 }
 
-nav {
-    width: 231px;
-    background: rgb(245, 245, 245);
-    color: rgb(40, 40, 40);
-    height: 100%;
-    border-right: 1px solid rgb(200, 200, 200);
-}
-
 nav button:hover {
-    background-color: hsla(0, 0%, 0%, .1);
+    background-color:   hsla(0, 0%, 0%, .1);
 }
 
 nav .active button {
@@ -177,12 +230,14 @@ form {
     height: 3px;
 }
 
+/*
 span#js-add-task {
     position: absolute;
     right: 25px;
     top: 8px;
     z-index: 1000;
 }
+*/
 
 .filter {
     padding-top: 4px;
@@ -212,30 +267,12 @@ label.pull-left {
     min-width: 345px;
 }
 
-/*
-.dropdown-menu {
-    max-height: 200px;
-    overflow-y: scroll;
-    width: 393px;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-}
-*/
-
 .modal-footer {
     position: fixed;
     right: 0px;
     bottom: 0px;
     width: 65%;
 }
-
-/*
-.dropdown-menu > .active > a:hover,
-.dropdown-menu > .active > a {
-    background-color: rgb(84, 59, 181);
-    background-image: none;
-}
-*/
 
 .worklog-datepicker {
     position: fixed;
