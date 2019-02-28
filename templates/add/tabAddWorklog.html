@@ -22,10 +22,8 @@
     <input type="text" placeholder="" value="{{datepicker.formatted}}" ng-click="datepicker.show = !datepicker.show"
            class="form-control"/>
     <div ng-show="datepicker.show" ng-click="updateCreated()" class="well well-sm worklog-datepicker">
-      <uib-datepicker style="float: left; margin-right: 10px;" ng-model="datepicker.start_date"
-                      show-weeks="true"></uib-datepicker>
-      <uib-timepicker ng-model="datepicker.start_date" ng-change="changed()" hour-step="1" minute-step="1"
-                      show-meridian="false"></uib-timepicker>
+      <div uib-datepicker style="float: left; margin-right: 10px;" ng-model="datepicker.start_date"
+                      show-weeks="true"></div>
       <br/>
       <div style="text-align: center">
         <span class="btn btn-sm btn-default" ng-click="datepicker.setYesterday()">Yesterday</span>
