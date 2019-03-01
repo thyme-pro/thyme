@@ -1,7 +1,7 @@
-angular.module('thyme').controller('CustomerCtrl', function($scope, $log) {
-    const ipc = require('electron').ipcRenderer;
+angular.module('thyme').controller('CustomerCtrl', function($scope, $controller) {
+    $controller('InfoCtrl', {$scope: $scope});
 
-    $log.log('CustomerCtrl loaded');
+    const ipc = require('electron').ipcRenderer;
 
     $scope.apiToken = localStorage['internalApiToken'];
     $scope.url = localStorage['dashboardUrl'];
@@ -32,7 +32,6 @@ angular.module('thyme').controller('CustomerCtrl', function($scope, $log) {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 $scope.customerInfo = data
             })
     }

@@ -6,7 +6,7 @@
         <div class="flex-col d-flex flex-align-center flex-grow-1">
             <strong>
                 <span ng-if="infoData.need_attention && infoData.need_attention.length">
-                    <b>Sager der mangler svar </b>
+                    <b>Sager der mangler svar: </b>
                     <span ng-repeat="ticket in infoData.need_attention">
                         <b>#{{ticket.id}}</b>
                     </span>

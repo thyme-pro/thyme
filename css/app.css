@@ -33,6 +33,10 @@ body {
     align-items: center;
 }
 
+.flex-align-center > * {
+    vertical-align: middle;
+}
+
 .flex-grow-1 {
     flex-grow: 1 !important;
 }
@@ -41,8 +45,13 @@ body {
     flex-grow: 0 !important;
 }
 
+.flex-flow-row-wrap {
+    flex-flow: row wrap;
+}
 /* Flex table */
-.flex-table {}
+.flex-table {
+    margin-top: 20px;
+}
 
 .flex-row {
     display: flex;
@@ -50,6 +59,10 @@ body {
     flex-grow: 1;
     border-bottom: 1px solid #e2e2e2;
     width: 100%;
+}
+
+.flex-table-head .flex-row {
+    padding: 0 0 5px 0;
 }
 
 .flex-wrapper {
@@ -61,6 +74,16 @@ body {
 .flex-col {
     flex-grow: 1;
     padding: 5px;
+}
+
+.flex-group {
+    width: 50%;
+    border-bottom: 1px solid #e2e2e2;
+    padding: 2px;
+}
+
+.flex-group:nth-child(odd) {
+    border-right: 1px solid #e2e2e2;
 }
 
 /* Actions */
@@ -75,6 +98,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.action.action-button.action-button-danger {
+    background-color: #ee1a46;
+    fill: #fff;
+    color: #fff;
 }
 
 .action.action-button.action-button-disabled svg {
@@ -204,6 +233,10 @@ body {
 
 .task-table .flex-col.text {
     width: 200px;
+}
+
+.task-table .flex-col.text-small {
+    width: 100px;
 }
 
 

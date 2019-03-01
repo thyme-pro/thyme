@@ -10,7 +10,7 @@
             <div class="flex-col text">
                 <span><strong>Opgave</strong></span>
             </div>
-            <div class="flex-col text">
+            <div class="flex-col text-small">
                 <span><strong>Kommentar</strong></span>
             </div>
             <div class="flex-col flex-grow-0 remove-action d-flex">
@@ -57,11 +57,11 @@
                     <b>Resterende:</b> {{time.remaining}}
                 </span>
             </div>
-            <div class="flex-col text">
+            <div class="flex-col text-small">
                 <span>{{worklog.description}}</span>
             </div>
             <div class="flex-col flex-grow-0 d-flex remove-action">
-                <span class="action action-button"
+                <span class="action action-button action-button-danger"
                         ng-if="worklog.delete"
                         ng-click="deleteWorklog(worklog.id)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"/></svg>
