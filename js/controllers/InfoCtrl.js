@@ -43,23 +43,6 @@ angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout,
     open(ticketUrl);
   }
 
-
-  ipc.on('save-worklog', (event, data) => {
-    let worklog = data.obj;
-    if ($scope.taskId != worklog.task_id) {
-      $scope.fetchCustomerInfo(worklog.task_id)
-      $scope.taskId = worklog.task_id;
-    }
-  })
-
-  ipc.on('start-worklog', (event, data) => {
-    let worklog = data.obj;
-    if ($scope.taskId != worklog.task_id) {
-      $scope.fetchCustomerInfo(worklog.task_id)
-      $scope.taskId = worklog.task_id;
-    }
-  })
-
   const {clipboard} = require('electron')
 
   $scope.copyClipboard = (text) => {
@@ -68,18 +51,6 @@ angular.module('thyme').controller('InfoCtrl', function ($scope, $log, $timeout,
 
   $scope.ftpOpen = (hostname, user, password) => {
     console.log(open(`ftp://${user}:${password}@${hostname}`, {app: localStorage['ftpProgram']}))
-  }
-
-  $scope.fetchCustomerInfo = (taskId) => {
-    $scope.customerInfo = {}
-
-    fetch(`${$scope.url}api/tracker/customer/info/${taskId}?api_token=${$scope.apiToken}`, {
-      headers: helper.basicAuthHeaders
-    })
-      .then(res => res.json())
-      .then(data => {
-        $scope.customerInfo = data
-      })
   }
 
   $scope.openURL = (url) => {

@@ -22,6 +22,9 @@
         <div ng-controller="TaskListCtrl" class="task-block">
           <div ng-include src="'./templates/list/pageTaskList.html'"></div>
         </div>
+        <div ng-controller="CustomerCtrl">
+          <div ng-include src="'./templates/list/customerList.html'"></div>
+        </div>
       </div>
       <div class="col-md-12 col-lg-6">
         <div ng-controller="InfoCtrl" class="info-block">
@@ -45,6 +48,7 @@ require('./js/controllers/CalendarCtrl.js')
 require('./js/controllers/SettingsCtrl.js')
 require('./js/controllers/InfoCtrl.js')
 require('./js/controllers/TopCtrl.js')
+require('./js/controllers/CustomerCtrl.js')
 require('./js/services/worklogs.js')
 require('./js/services/dbService.js')
 require('./js/services/gapiService.js')
