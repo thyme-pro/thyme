@@ -8,7 +8,7 @@
                 <span ng-if="infoData.need_attention && infoData.need_attention.length">
                     <b>Sager der mangler svar </b>
                     <span ng-repeat="ticket in infoData.need_attention">
-                        <b>#{{ticket.id}} {{ticket.subject}}</b>
+                        <b>#{{ticket.id}}</b>
                     </span>
                 </span>
                 <span ng-if="infoData.need_attention && !infoData.need_attention.length">Alt er godt!</span>
