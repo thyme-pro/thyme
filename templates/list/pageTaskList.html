@@ -21,7 +21,7 @@
     <div class="flex-table-body" >
         <div class="flex-row" ng-repeat-start="(key, worklog) in worklogs | object2Array | orderBy:'id':true">
             <div class="flex-col flex-grow-0 time">
-                {{worklogTotal(worklog)}}
+                <span class="font-md">{{worklogTotal(worklog)}}</span>
             </div>
             <div class="flex-col flex-grow-0 actions d-flex">
                 <!-- Start/Pause -->

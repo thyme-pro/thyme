@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-12 col-lg-6" ng-if="myTickets && myTickets.length > 0">
-        <div class="flex-table">
+        <div class="flex-table my-tasks-table">
             <div class="flex-table-head">
                 <div class="flex-row">
                     <div class="flex-col d-flex">
@@ -10,7 +10,7 @@
             </div>
             <div class="flex-table-body">
                 <div class="flex-row" ng-repeat="ticket in myTickets">
-                    <div class="flex-col flex-grow-0">
+                    <div class="flex-col flex-grow-0 status">
                         <span
                             class="badge text-uppercase"
                             ng-class="{
@@ -20,19 +20,19 @@
                             <span class="text-shadow">{{ticket.status.key}}</span>
                         </span>
                     </div>
-                    <div class="flex-col flex-grow-0">
+                    <div class="flex-col flex-grow-0 task-id">
                         <span><strong>#{{ticket.id}}</strong></span>
                     </div>
-                    <div class="flex-col flex-grow-0">
-                        <span ng-if="ticket.week" class="badge rounded-0">Uge: {{ticket.week.value}}</span>
+                    <div class="flex-col flex-grow-0 week">
+                        <span ng-if="ticket.week.value" class="badge rounded-0">Uge: {{ticket.week.value.padStart(2, '0')}}</span>
                     </div>
-                    <div class="flex-col">
-                        <div class="client">
+                    <div class="flex-col client">
+                        <div class="client-name">
                             <strong>Apuls.dk</strong>
                         </div>
                         <span>{{ticket.subject}}</span>
                     </div>
-                    <div class="flex-col flex-grow-0 d-flex">
+                    <div class="flex-col flex-grow-0 d-flex buttons">
                         <span class="action mr-5" ng-click="startTrackerForTicket(ticket.id, ticket.subject)">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M3 22v-20l18 10-18 10z"/></svg>
                         </span>

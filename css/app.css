@@ -24,6 +24,50 @@ body {
     display: block;
 }
 
+.font-sm {
+    font-size: 12px !important;
+}
+
+.font-md {
+    font-size: 14px !important;
+}
+
+.font-lg {
+    font-size: 16px !important;
+}
+
+.ml-auto {
+    margin-left: auto;
+}
+
+.ml-15 {
+    margin-left: 15px;
+}
+
+.mr-10 {
+    margin-right: 10px;
+}
+
+.mr-5 {
+    margin-right: 5px;
+}
+
+.mt-5 {
+    margin-top: 5px;
+}
+
+.mb-5 {
+    margin-bottom: 5px;
+}
+
+.text-shadow {
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.rounded-0 {
+    border-radius: 0 !important;
+}
+
 /* FLEX */
 .d-flex {
     display: flex;
@@ -73,7 +117,7 @@ body {
 
 .flex-col {
     flex-grow: 1;
-    padding: 5px;
+    padding: 7px 5px;
 }
 
 .flex-group {
@@ -113,45 +157,10 @@ body {
     background-color: #f4f637;
 }
 
-/* Margins */
-.ml-auto {
-    margin-left: auto;
-}
-
-.ml-15 {
-    margin-left: 15px;
-}
-
-.mr-10 {
-    margin-right: 10px;
-}
-
-.mr-5 {
-    margin-right: 5px;
-}
-
-.mt-5 {
-    margin-top: 5px;
-}
-
-.mb-5 {
-    margin-bottom: 5px;
-}
-
 /* Icons */
 
 .icon svg {
     fill: #fff;
-}
-
-/* Shadows */
-.text-shadow {
-    text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
-}
-
-/* Rounded */
-.rounded-0 {
-    border-radius: 0 !important;
 }
 
 /* Badges */
@@ -215,12 +224,10 @@ body {
 }
 
 /* Task table */
-.task-table {
-
-}
+.task-table {}
 
 .task-table .flex-col.time {
-    width: 45px;
+    width: 55px;
 }
 
 .task-table .flex-col.actions {
@@ -238,6 +245,30 @@ body {
 .task-table .flex-col.text-small {
     width: 100px;
 }
+
+/* My Cases table */
+.my-tasks-table {}
+
+.my-tasks-table .flex-col.status {
+    width: 26px;
+}
+
+.my-tasks-table .flex-col.task-id {
+    width: 52px;
+}
+
+.my-tasks-table .flex-col.week {
+    width: 65px;
+}
+
+.my-tasks-table .flex-col.client {
+    width: 60px;
+}
+
+.my-tasks-table .flex-col.buttons {
+    width: 45px;
+}
+
 
 
 
@@ -381,15 +412,6 @@ form {
     border-bottom: 1px solid rgb(200, 200, 200);
     height: 3px;
 }
-
-/*
-span#js-add-task {
-    position: absolute;
-    right: 25px;
-    top: 8px;
-    z-index: 1000;
-}
-*/
 
 .filter {
     padding-top: 4px;
