@@ -1,53 +1,70 @@
-<div class="row">
-    <!--<div class="col-lg-12">
-        <h5>Kundeinfo</h5>
-        <p><b>Sites</b></p>
-        <ul class="list-group">
-            <li class="list-group-item" ng-repeat="site in customerInfo.sites">
-        <span class="pull-right">
-          <span class="btn btn-xs btn-default"
-                ng-click="openURL(customerInfo.customer_url + '/sites/' + site.id + '/edit')">More info
-          </span>
-        </span>
-                <b><a ng-click="openURL(site.url)">{{site.url}}</a></b>
-                <ul>
-                    <li ng-repeat="extraUrl in site.extra_url"><a ng-click="openURL(extraUrl)">{{extraUrl}}</a></li>
-                </ul>
-                <a ng-click="openURL(site.admin_url)">{{site.admin_url}}</a><br>
-                <b>Database</b><br>
-                <span ng-if="site.db_user" ng-click="copyClipboard(site.db_user)"
-                      class="btn btn-default btn-sm"><span
-                        class="glyphicon glyphicon-copy"></span> User</span>
-                <span ng-if="site.db_password" ng-click="copyClipboard(site.db_password)"
-                      class="btn btn-default btn-sm"><span
-                        class="glyphicon glyphicon-copy"></span> Password</span><br>
-                <b>FTP</b><br>
-                <span ng-if="site.hostname" ng-click="copyClipboard(site.hostname)"
-                      class="btn btn-default btn-sm"><span
-                        class="glyphicon glyphicon-copy"></span> Hostname</span>
-                <span ng-if="site.ftp_user" ng-click="copyClipboard(site.ftp_user)"
-                      class="btn btn-default btn-sm"><span
-                        class="glyphicon glyphicon-copy"></span> User</span>
-                <span ng-if="site.ftp_password" ng-click="copyClipboard(site.ftp_password)"
-                      class="btn btn-default btn-sm"><span
-                        class="glyphicon glyphicon-copy"></span> Password</span>
+<div class="row" ng-if="customerInfo.sites.length > 0">
+    <div class="col-lg-12">
+        <div class="tabs">
+            <div class="tabs-header clearfix">
+                <span class="tabs-header-item title"><strong>Kundeinformation</strong></span>
+                <span class="tabs-header-item" ng:click="selected=1" ng-init="selected=1" ng-class="{active: selected == 1}">Generel</span>
+                <span class="tabs-header-item" ng:click="selected=2" ng-class="{active: selected == 2}">Sites</span>
+                <span class="tabs-header-item" ng:click="selected=3" ng-class="{active: selected == 3}">FTP</span>
+                <span class="tabs-header-item" ng:click="selected=4" ng-class="{active: selected == 4}">Database</span>
+                <span class="tabs-header-item" ng:click="selected=5" ng-class="{active: selected == 5}">Gateway</span>
+            </div>
+            <div class="tabs-body">
+                <div class="tab" ng:show="selected == 1"></div>
+                <div class="tab" ng:show="selected == 2">
+                    <div ng-repeat="site in customerInfo.sites">
+                        <span class="pull-right">
+                          <span class="btn btn-xs btn-default" ng-click="openURL(customerInfo.customer_url + '/sites/' + site.id + '/edit')">More info
+                          </span>
+                        </span>
+                        <b><a ng-click="openURL(site.url)">{{site.url}}</a></b>
+                        <ul>
+                            <li ng-repeat="extraUrl in site.extra_url"><a ng-click="openURL(extraUrl)">{{extraUrl}}</a></li>
+                        </ul>
+                        <a ng-click="openURL(site.admin_url)">{{site.admin_url}}</a>
+                    </div>
+                </div>
+                <div class="tab" ng:show="selected == 3">
+                    <div ng-repeat="site in customerInfo.sites">
+                        <span ng-if="site.hostname" ng-click="copyClipboard(site.hostname)"
+                              class="btn btn-default btn-sm"><span
+                                class="glyphicon glyphicon-copy"></span> Hostname</span>
+                        <span ng-if="site.ftp_user" ng-click="copyClipboard(site.ftp_user)"
+                              class="btn btn-default btn-sm"><span
+                                class="glyphicon glyphicon-copy"></span> User</span>
+                        <span ng-if="site.ftp_password" ng-click="copyClipboard(site.ftp_password)"
+                              class="btn btn-default btn-sm"><span
+                                class="glyphicon glyphicon-copy"></span> Password</span>
 
-                <span ng-if="ftpProgram" ng-click="ftpOpen(site.hostname, site.ftp_user, site.ftp_password)"
-                      class="btn btn-default btn-sm">Open in external program</span><br>
-                <b>Backup</b><br>
-                <span ng-if="site.backup_user" ng-click="copyClipboard(site.backup_user)"
-                      class="btn btn-default btn-sm"><span
-                        class="glyphicon glyphicon-copy"></span> User</span>
-                <span ng-if="site.backup_password" ng-click="copyClipboard(site.backup_password)"
-                      class="btn btn-default btn-sm"><span
-                        class="glyphicon glyphicon-copy"></span> Password</span>
+                        <span ng-if="ftpProgram" ng-click="ftpOpen(site.hostname, site.ftp_user, site.ftp_password)"
+                              class="btn btn-default btn-sm">Open in external program</span><br>
+                        <b>Backup</b><br>
+                        <span ng-if="site.backup_user" ng-click="copyClipboard(site.backup_user)"
+                              class="btn btn-default btn-sm"><span
+                                class="glyphicon glyphicon-copy"></span> User</span>
+                        <span ng-if="site.backup_password" ng-click="copyClipboard(site.backup_password)"
+                              class="btn btn-default btn-sm"><span
+                                class="glyphicon glyphicon-copy"></span> Password</span>
 
-                <span ng-if="ftpProgram"
-                      ng-click="ftpOpen('backup1.powerhosting.dk', site.backup_user, site.backup_password)"
-                      class="btn btn-default btn-sm">Open in external program</span><br>
-            </li>
-        </ul>
-    </div>-->
+                        <span ng-if="ftpProgram"
+                              ng-click="ftpOpen('backup1.powerhosting.dk', site.backup_user, site.backup_password)"
+                              class="btn btn-default btn-sm">Open in external program</span>
+                    </div>
+                </div>
+                <div class="tab" ng:show="selected == 4">
+                    <div ng-repeat="site in customerInfo.sites">
+                        <span ng-if="site.db_user" ng-click="copyClipboard(site.db_user)"
+                              class="btn btn-default btn-sm"><span
+                                class="glyphicon glyphicon-copy"></span> User</span>
+                        <span ng-if="site.db_password" ng-click="copyClipboard(site.db_password)"
+                              class="btn btn-default btn-sm"><span
+                                class="glyphicon glyphicon-copy"></span> Password</span>
+                    </div>
+                </div>
+                <div class="tab" ng:show="selected == 5"></div>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="row" ng-if="customerInfo.last_tickets">
     <div class="col-lg-12">
@@ -78,21 +95,5 @@
                 </div>
             </div>
         </div>
-        <!--<ul class="list-group">
-            <li class="list-group-item" ng-class="{
-                'disabled': ticket.status == 'hold',
-                'list-group-item-warning': ticket.status == 'open',
-                'list-group-item-success': ticket.status == 'solved',
-                'list-group-item-info': ticket.status == 'pending',
-            }"
-                ng-repeat="ticket in customerInfo.last_tickets">
-        <span class="pull-right">
-          <span class="btn btn-xs btn-default" ng-click="openBrowserWithTicket(ticket.id)">Open in browser</span>
-          <span class="btn btn-xs btn-default"
-                ng-click="startTrackerForTicket(ticket.id, ticket.subject)">Start tracker</span>
-          </span>
-                <b>#{{ticket.id}}</b><br>
-            </li>
-        </ul>-->
     </div>
 </div>

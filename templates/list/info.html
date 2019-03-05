@@ -45,7 +45,7 @@
         </div>
     </div>
     <div class="col-md-12 col-lg-6" ng-if="infoData.rp_tasks">
-        <div class="flex-table">
+        <div class="flex-table my-tasks-table">
             <div class="flex-table-head">
                 <div class="flex-row">
                     <div class="flex-col d-flex">
@@ -55,24 +55,24 @@
             </div>
             <div class="flex-table-body">
                 <div class="flex-row" ng-repeat="task in infoData.rp_tasks">
-                    <div class="flex-col flex-grow-0">
+                    <div class="flex-col flex-grow-0 status">
                         <span class="badge text-uppercase" ng-class="{
                                   'badge-open': !task.is_done,
                                   'badge-hold': task.is_done}">
                             <span class="text-shadow">{{ task.statusKey }}</span>
                         </span>
                     </div>
-                    <div class="flex-col flex-grow-0">
+                    <div class="flex-col flex-grow-0 task-id">
                         <span ng-if="task.id"><strong>{{ task.id }}</strong></span>
                     </div>
-                    <div class="flex-col">
+                    <div class="flex-col client">
                         <div class="client">
                             <strong>{{ task.customer }}</strong>
                             <span class="badge badge-time rounded-0 float-right d-block week">{{task.time}} t.</span>
                         </div>
                         <span>{{ task.desc || task.task }}</span>
                     </div>
-                    <div class="flex-col flex-grow-0 d-flex">
+                    <div class="flex-col flex-grow-0 d-flex buttons">
                         <span class="action play mr-5" ng-click="startTrackerForTask(task)">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M3 22v-20l18 10-18 10z"/></svg>
                         </span>

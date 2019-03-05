@@ -269,8 +269,37 @@ body {
     width: 45px;
 }
 
+/** Tabs **/
+.tabs {
+    margin-top: 20px;
+}
 
+.tabs .tabs-header {}
 
+.tabs .tabs-header .tabs-header-item {
+    display: block;
+    background-color: #2a2e31;
+    color: #fff;
+    line-height: 25px;
+    float: left;
+    padding: 0 7px;
+    margin: 0 3px 0 0;
+}
+
+.tabs .tabs-header .tabs-header-item.title {
+    background-color: #fff;
+    color: #2a2e31;
+}
+
+.tabs .tabs-header .tabs-header-item.active {
+    background-color: #ececec;
+    color: #2a2e31;
+}
+
+.tabs .tab {
+    padding: 25px 12px;
+    background-color: #ececec;
+}
 
 /** OLD **/
 .settings {
