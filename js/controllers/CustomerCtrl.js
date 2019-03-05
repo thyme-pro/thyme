@@ -32,6 +32,7 @@ angular.module('thyme').controller('CustomerCtrl', function($scope, $controller)
         })
             .then(res => res.json())
             .then(data => {
+                console.log(data);
                 $scope.customerInfo = data
             })
     }

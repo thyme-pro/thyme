@@ -68,6 +68,10 @@ body {
     border-radius: 0 !important;
 }
 
+.white-space-pre-wrap {
+    white-space: pre-wrap;
+}
+
 /* FLEX */
 .d-flex {
     display: flex;
