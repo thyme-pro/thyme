@@ -19,7 +19,8 @@
         </div>
     </div>
     <div class="flex-table-body" >
-        <div class="flex-row" ng-repeat-start="(key, worklog) in worklogs | object2Array | orderBy:'id':true">
+        <div class="flex-row" ng-repeat="(key, worklog) in worklogs | object2Array | orderBy:'id':true">
+            <div ng-if="showDate(worklog)"></div>
             <div class="flex-col flex-grow-0 time">
                 <span class="font-md">{{worklogTotal(worklog)}}</span>
             </div>
@@ -72,7 +73,7 @@
                 </span>
             </div>
         </div>
-        <div class="flex-row" ng-repeat-end ng-if="key == dateIndex[rowDate]">
+        <div class="flex-row {{key}}">
             <div class="flex-col" >
                 <strong>{{formatMinutesToTime(totals[rowDate])}}</strong>
             </div>
