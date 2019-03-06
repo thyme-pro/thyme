@@ -3,7 +3,6 @@ html {
     height: 100%;
     font-family: 'BlinkMacSystemFont', 'Lucida Grande', 'Segoe UI', Ubuntu, Cantarell, sans-serif;
     line-height: 1.5;
-    overflow: hidden; /* Prevents rubber-band scrolling of the whole "page" */
     background-color: #fff; /* To cover OSes with no default background color */
 }
 
@@ -70,6 +69,20 @@ body {
 
 .white-space-pre-wrap {
     white-space: pre-wrap;
+}
+
+/* Layout */
+.header {
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+}
+.page-container {
+    padding-bottom: 20px;
+}
+
+.page-container > .container-fluid {
+    padding-top: 55px;
 }
 
 /* FLEX */
