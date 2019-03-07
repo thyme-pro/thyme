@@ -1,0 +1,206 @@
+<div class="row" ng-repeat="site in customerInfo.sites">
+    <div class="col-lg-12">
+        <div class="tabs">
+            <div class="tabs-header clearfix">
+                <span class="tabs-header-item title"><strong>Kundeinformation</strong></span>
+                <span class="tabs-header-item" ng:click="selected=1" ng-init="selected=1" ng-class="{active: selected == 1}">Generel</span>
+                <span class="tabs-header-item" ng:click="selected=2" ng-class="{active: selected == 2}">Sites</span>
+                <span class="tabs-header-item" ng:click="selected=3" ng-class="{active: selected == 3}">FTP</span>
+                <span class="tabs-header-item" ng:click="selected=4" ng-class="{active: selected == 4}">Database</span>
+                <span class="tabs-header-item" ng-show="site.payment_gateway" ng:click="selected=5" ng-class="{active: selected == 5}">Gateway</span>
+                <span class="tabs-header-item" ng-show="site.misc" ng:click="selected=6" ng-class="{active: selected == 6}">Misc</span>
+                <span class="tabs-header-item" ng-show="site.dns" ng:click="selected=7" ng-class="{active: selected == 7}">DNS</span>
+                <span class="tabs-header-item" ng-show="site.dns" ng:click="selected=8" ng-class="{active: selected == 8}">Licenser</span>
+            </div>
+            <div class="tabs-body">
+                <div class="tab" ng:show="selected == 1">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td><strong>System</strong></td>
+                                        <td>{{site.system}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Version</strong></td>
+                                        <td>{{site.version}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Patcher</strong></td>
+                                        <td>{{site.patcher}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab" ng:show="selected == 2">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td><strong>Main</strong></td>
+                                <td><a ng-click="openURL(site.url)">{{site.url}}</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Extra</strong></td>
+                                <td>
+                                    <span class="d-block" ng-repeat="extraUrl in site.extra_url"><a ng-click="openURL(extraUrl)">{{extraUrl}}</a></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Admin</strong></td>
+                                <td><a ng-click="openURL(site.admin_url)">{{site.admin_url}}</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab" ng:show="selected == 3">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr ng-if="site.hostname">
+                                <td><strong>Host</strong></td>
+                                <td>{{site.hostname}}</td>
+                                <td>
+                                    <span ng-click="copyClipboard(site.hostname)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path d="M22 2v22h-20v-22h3c1.23 0 2.181-1.084 3-2h8c.82.916 1.771 2 3 2h3zm-11 1c0 .552.448 1 1 1 .553 0 1-.448 1-1s-.447-1-1-1c-.552 0-1 .448-1 1zm9 1h-4l-2 2h-3.897l-2.103-2h-4v18h16v-18zm-13 9.729l.855-.791c1 .484 1.635.852 2.76 1.654 2.113-2.399 3.511-3.616 6.106-5.231l.279.64c-2.141 1.869-3.709 3.949-5.967 7.999-1.393-1.64-2.322-2.686-4.033-4.271z"/></svg>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr ng-if="site.ftp_user" >
+                                <td><strong>User</strong></td>
+                                <td>{{site.ftp_user}}</td>
+                                <td>
+                                    <span ng-click="copyClipboard(site.ftp_user)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path d="M22 2v22h-20v-22h3c1.23 0 2.181-1.084 3-2h8c.82.916 1.771 2 3 2h3zm-11 1c0 .552.448 1 1 1 .553 0 1-.448 1-1s-.447-1-1-1c-.552 0-1 .448-1 1zm9 1h-4l-2 2h-3.897l-2.103-2h-4v18h16v-18zm-13 9.729l.855-.791c1 .484 1.635.852 2.76 1.654 2.113-2.399 3.511-3.616 6.106-5.231l.279.64c-2.141 1.869-3.709 3.949-5.967 7.999-1.393-1.64-2.322-2.686-4.033-4.271z"/></svg>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr ng-if="site.ftp_password">
+                                <td><strong>Password</strong></td>
+                                <td>{{site.ftp_password}}</td>
+                                <td>
+                                    <span ng-click="copyClipboard(site.ftp_password)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path d="M22 2v22h-20v-22h3c1.23 0 2.181-1.084 3-2h8c.82.916 1.771 2 3 2h3zm-11 1c0 .552.448 1 1 1 .553 0 1-.448 1-1s-.447-1-1-1c-.552 0-1 .448-1 1zm9 1h-4l-2 2h-3.897l-2.103-2h-4v18h16v-18zm-13 9.729l.855-.791c1 .484 1.635.852 2.76 1.654 2.113-2.399 3.511-3.616 6.106-5.231l.279.64c-2.141 1.869-3.709 3.949-5.967 7.999-1.393-1.64-2.322-2.686-4.033-4.271z"/></svg>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr ng-if="ftpProgram">
+                                <td><strong>Open external</strong></td>
+                                <td></td>
+                                <td>
+                                    <span ng-click="ftpOpen(site.hostname, site.ftp_user, site.ftp_password)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered" ng-if="site.backup_user || site.backup_password">
+                        <thead>
+                            <tr>
+                                <td><strong>Backup</strong></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-if="site.backup_user">
+                                <td><strong>User</strong></td>
+                                <td></td>
+                                <td>
+                                    <span ng-click="copyClipboard(site.backup_user)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path d="M22 2v22h-20v-22h3c1.23 0 2.181-1.084 3-2h8c.82.916 1.771 2 3 2h3zm-11 1c0 .552.448 1 1 1 .553 0 1-.448 1-1s-.447-1-1-1c-.552 0-1 .448-1 1zm9 1h-4l-2 2h-3.897l-2.103-2h-4v18h16v-18zm-13 9.729l.855-.791c1 .484 1.635.852 2.76 1.654 2.113-2.399 3.511-3.616 6.106-5.231l.279.64c-2.141 1.869-3.709 3.949-5.967 7.999-1.393-1.64-2.322-2.686-4.033-4.271z"/></svg>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr ng-if="site.backup_password">
+                                <td><strong>Password</strong></td>
+                                <td></td>
+                                <td>
+                                    <span ng-click="copyClipboard(site.backup_password)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path d="M22 2v22h-20v-22h3c1.23 0 2.181-1.084 3-2h8c.82.916 1.771 2 3 2h3zm-11 1c0 .552.448 1 1 1 .553 0 1-.448 1-1s-.447-1-1-1c-.552 0-1 .448-1 1zm9 1h-4l-2 2h-3.897l-2.103-2h-4v18h16v-18zm-13 9.729l.855-.791c1 .484 1.635.852 2.76 1.654 2.113-2.399 3.511-3.616 6.106-5.231l.279.64c-2.141 1.869-3.709 3.949-5.967 7.999-1.393-1.64-2.322-2.686-4.033-4.271z"/></svg>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr ng-if="ftpProgram">
+                                <td><strong>Open external</strong></td>
+                                <td></td>
+                                <td>
+                                    <span ng-click="ftpOpen('backup1.powerhosting.dk', site.backup_user, site.backup_password)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab" ng:show="selected == 4">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr ng-if="site.db_user">
+                                <td><strong>User</strong></td>
+                                <td>{{site.db_user}}</td>
+                                <td>
+                                    <span ng-click="copyClipboard(site.db_user)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path d="M22 2v22h-20v-22h3c1.23 0 2.181-1.084 3-2h8c.82.916 1.771 2 3 2h3zm-11 1c0 .552.448 1 1 1 .553 0 1-.448 1-1s-.447-1-1-1c-.552 0-1 .448-1 1zm9 1h-4l-2 2h-3.897l-2.103-2h-4v18h16v-18zm-13 9.729l.855-.791c1 .484 1.635.852 2.76 1.654 2.113-2.399 3.511-3.616 6.106-5.231l.279.64c-2.141 1.869-3.709 3.949-5.967 7.999-1.393-1.64-2.322-2.686-4.033-4.271z"/></svg>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr ng-if="site.db_password">
+                                <td><strong>Password</strong></td>
+                                <td>{{site.db_password}}</td>
+                                <td>
+                                    <span ng-click="copyClipboard(site.db_password)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path d="M22 2v22h-20v-22h3c1.23 0 2.181-1.084 3-2h8c.82.916 1.771 2 3 2h3zm-11 1c0 .552.448 1 1 1 .553 0 1-.448 1-1s-.447-1-1-1c-.552 0-1 .448-1 1zm9 1h-4l-2 2h-3.897l-2.103-2h-4v18h16v-18zm-13 9.729l.855-.791c1 .484 1.635.852 2.76 1.654 2.113-2.399 3.511-3.616 6.106-5.231l.279.64c-2.141 1.869-3.709 3.949-5.967 7.999-1.393-1.64-2.322-2.686-4.033-4.271z"/></svg>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab" ng:show="selected == 5">
+                    <span class="white-space-pre-wrap">{{site.payment_gateway}}</span>
+                </div>
+                <div class="tab" ng:show="selected == 6">
+                    <span class="white-space-pre-wrap">{{site.misc}}</span>
+                </div>
+                <div class="tab" ng:show="selected == 7">
+                    <span class="white-space-pre-wrap">{{site.dns}}</span>
+                </div>
+                <div class="tab" ng:show="selected == 8">
+                    <span class="white-space-pre-wrap">{{site.licenses}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" ng-if="customerInfo.last_tickets">
+    <div class="col-lg-12">
+        <div class="flex-table">
+            <div class="flex-table-head">
+                <div class="flex-row">
+                    <div class="flex-col d-flex">
+                        <span><strong>Kundens seneste tickets</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-table-body d-flex flex-flow-row-wrap">
+                <div class="flex-group d-flex" ng-repeat="ticket in customerInfo.last_tickets">
+                    <div class="flex-col flex-grow-0" >
+                        <span><strong>#{{ticket.id}}</strong></span>
+                    </div>
+                    <div class="flex-col">
+                        <span>{{ticket.subject}}</span>
+                    </div>
+                    <div class="flex-col flex-grow-0 d-flex">
+                        <span class="action mr-5 flex-align-center" ng-click="startTrackerForTicket(ticket.id, ticket.subject)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M3 22v-20l18 10-18 10z"/></svg>
+                        </span>
+                        <span class="action flex-align-center" ng-click="openBrowserWithTicket(ticket.id)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,95 +1,82 @@
-<div class="tracker">
-  <div class="head">
-  </div>
-</div>
-
-<div class="task-container">
-  <table class="worklogs table table-condensed">
-    <thead>
-    <th>Tid</th>
-    <th></th>
-    <th>Kunde - Opgave</th>
-    <th>Kommentar</th>
-    <th></th>
-    </thead>
-    <tr ng-repeat-start="(key, worklog) in worklogs | object2Array | orderBy:'id':true" class="active date-row">
-      <td colspan="5" ng-if="showDate(worklog)">
-        <i>{{rowDate}}</i>
-      </td>
-    </tr>
-    <tr ng-class="worklog.active ? 'success' : '';">
-      <td>
-        {{worklogTotal(worklog)}}
-      </td>
-      <td class="col-actions">
-        <div class="">
-          <!-- start -->
-          <span ng-if="worklog.register_info" class="btn btn-disabled btn-xs">
-          <span class="glyphicon glyphicon-time"></span>
-        </span>
-          <span ng-show="worklog.active" class="btn btn-warning btn-xs" ng-click="stopTask(worklog.id)">
-          <span class="glyphicon glyphicon-pause"></span>
-        </span>
-          <span ng-hide="worklog.active || worklog.register_info"
-                class="btn btn-success btn-start-task btn-xs"
-                ng-click="startTask(worklog.id)">
-          <span class="glyphicon glyphicon-play"></span>
-        </span>
-          <!-- /start -->
-
-          <!-- edit -->
-          <span class="btn btn-default btn-xs" ng-click="editTask(worklog)">
-          <span class="glyphicon glyphicon-edit"></span>
-        </span>
-          <!-- /edit -->
-
-          <!-- register -->
-          <span ng-hide="worklog.active || worklog.register_info || worklog.saving_log"
-                class="btn btn-primary btn-xs" ng-click="registerTask(worklog)">
-          <span class="glyphicon glyphicon-floppy-disk"></span>
-        </span>
-          <span ng-show="worklog.active" class="btn btn-disabled btn-xs">
-          <span class="glyphicon glyphicon-floppy-disk"></span>
-        </span>
-          <span ng-show="worklog.register_info" class="btn btn-success btn-xs" ng-click="editTask(worklog)">
-          <span class="glyphicon glyphicon-floppy-saved"></span>
-        </span>
-
-          <span ng-show="worklog.saving_log" class="btn btn-xs"><span
-            class="glyphicon glyphicon-cloud-upload"></span></span>
-          <!-- /register -->
+<div class="flex-table task-table">
+    <div class="flex-table-head">
+        <div class="flex-row">
+            <div class="flex-col flex-grow-0 time">
+                <span><strong>Tid</strong></span>
+            </div>
+            <div class="flex-col flex-grow-0 actions">
+                <span></span>
+            </div>
+            <div class="flex-col text">
+                <span><strong>Opgave</strong></span>
+            </div>
+            <div class="flex-col text-small">
+                <span><strong>Kommentar</strong></span>
+            </div>
+            <div class="flex-col flex-grow-0 remove-action d-flex">
+                <span></span>
+            </div>
         </div>
-      </td>
-      <td>
-        <p>
-          <i>{{worklog.task}} ({{worklog.task_id}})</i>
-        </p>
-        <span ng-if="worklog.active && !time.loading">
-          <b>Budget:</b> {{time.budget}}
-          <b>Samlet:</b> {{time.spent}}
-          <b>Resterende:</b> {{time.remaining}}
-        </span>
-        <span ng-if="worklog.active && time.loading">
-          <span class="glyphicon glyphicon-refresh"></span> Loading
-        </span>
-      </td>
-      <td>
-        {{worklog.description}}
-      </td>
-      <td>
-        <!-- delete buttons -->
-        <span class="btn btn-default btn-xs" ng-click="worklog.delete = !worklog.delete">
-          <span class="glyphicon glyphicon-trash"></span>
-        </span>
-        <span ng-if="worklog.delete" class="btn btn-danger btn-xs" ng-click="deleteWorklog(worklog.id)">
-          <span class="glyphicon glyphicon-ok"></span>
-        </span>
-        <!-- /delete -->
-      </td>
-    </tr>
-    <tr ng-repeat-end>
-      <td colspan="5" ng-if="key == dateIndex[rowDate]">{{formatMinutesToTime(totals[rowDate])}}
-      </td>
-    </tr>
-  </table>
+    </div>
+    <div class="flex-table-body" >
+        <div class="flex-row" ng-repeat="(key, worklog) in worklogs | object2Array | orderBy:'id':true">
+            <div ng-if="showDate(worklog)"></div>
+            <div class="flex-col flex-grow-0 time">
+                <span class="font-md">{{worklogTotal(worklog)}}</span>
+            </div>
+            <div class="flex-col flex-grow-0 actions d-flex">
+                <!-- Start/Pause -->
+                <span class="action action-button action-button-disabled mr-5" ng-if="worklog.register_info">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm1 12v-6h-2v8h7v-2h-5z"/></svg>
+                </span>
+                <span class="action action-button mr-5" ng-show="worklog.active" ng-click="stopTask(worklog.id)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M11 22h-4v-20h4v20zm6-20h-4v20h4v-20z"/></svg>
+                </span>
+                <span class="action action-button mr-5" ng-hide="worklog.active  || worklog.register_info" ng-click="startTask(worklog.id)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M3 22v-20l18 10-18 10z"/></svg>
+                </span>
+                <!-- !Start/Pause -->
+                <!-- Save -->
+                <span class="action action-button action-button-warning" ng-hide="worklog.active || worklog.register_info || worklog.saving_log" ng-click="registerTask(worklog)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M13 3h2.996v5h-2.996v-5zm11 1v20h-24v-24h20l4 4zm-17 5h10v-7h-10v7zm15-4.171l-2.828-2.829h-.172v9h-14v-9h-3v20h20v-17.171z"/></svg>
+                </span>
+                <span class="action action-button action-button-disabled" ng-show="worklog.active">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M13 3h2.996v5h-2.996v-5zm11 1v20h-24v-24h20l4 4zm-17 5h10v-7h-10v7zm15-4.171l-2.828-2.829h-.172v9h-14v-9h-3v20h20v-17.171z"/></svg>
+                </span>
+                <span class="action action-button" ng-show="worklog.register_info">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M13 3h2.996v5h-2.996v-5zm11 1v20h-24v-24h20l4 4zm-17 5h10v-7h-10v7zm15-4.171l-2.828-2.829h-.172v9h-14v-9h-3v20h20v-17.171z"/></svg>
+                </span>
+                <!-- /Save -->
+            </div>
+            <div class="flex-col text">
+                <div class="client">
+                    <span>{{worklog.task}}</span>
+                </div>
+                <span class="mt-5 mb-5 d-block" ng-if="worklog.active && !time.loading">
+                    <b>Budget:</b> {{time.budget}}
+                    <b>Samlet:</b> {{time.spent}}
+                    <b>Resterende:</b> {{time.remaining}}
+                </span>
+            </div>
+            <div class="flex-col text-small">
+                <span>{{worklog.description}}</span>
+            </div>
+            <div class="flex-col flex-grow-0 d-flex remove-action">
+                <span class="action action-button action-button-danger"
+                        ng-if="worklog.delete"
+                        ng-click="deleteWorklog(worklog.id)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"/></svg>
+                </span>
+                <span class="action action-button ml-auto"
+                      ng-click="worklog.delete = !worklog.delete">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z"/></svg>
+                </span>
+            </div>
+        </div>
+        <div class="flex-row {{key}}">
+            <div class="flex-col" >
+                <strong>{{formatMinutesToTime(totals[rowDate])}}</strong>
+            </div>
+        </div>
+    </div>
 </div>

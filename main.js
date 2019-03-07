@@ -28,6 +28,8 @@ function createWindow () {
   mainWindow.loadFile(config.WINDOW_MAIN);
 
   if (config.IS_DEV) {
+    const contextMenu = require('electron-context-menu');
+    contextMenu();
     mainWindow.webContents.openDevTools();
   }
 

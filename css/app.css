@@ -1,24 +1,8 @@
-.form-control,
-.dropdown-menu,
-.btn,
-body {
-    font-size: 11px;
-    line-height: 1.42857143;
-}
-
-body {
-    color: #333333;
-    background-color: #ffffff;
-}
-
 html body,
 html {
     height: 100%;
     font-family: 'BlinkMacSystemFont', 'Lucida Grande', 'Segoe UI', Ubuntu, Cantarell, sans-serif;
-    font-size: 11px;
     line-height: 1.5;
-    overflow: hidden; /* Prevents rubber-band scrolling of the whole "page" */
-    color: var(--color);
     background-color: #fff; /* To cover OSes with no default background color */
 }
 
@@ -26,9 +10,315 @@ body {
     user-select: none;
     cursor: default;
     margin: 0;
+    font-size: 12px;
+    color: #2a2e31;
+}
+
+/* Modifiers */
+.float-right {
+    float: right;
+}
+
+.d-block {
+    display: block;
+}
+
+.font-sm {
+    font-size: 12px !important;
+}
+
+.font-md {
+    font-size: 14px !important;
+}
+
+.font-lg {
+    font-size: 16px !important;
+}
+
+.ml-auto {
+    margin-left: auto;
+}
+
+.ml-15 {
+    margin-left: 15px;
+}
+
+.mr-10 {
+    margin-right: 10px;
+}
+
+.mr-5 {
+    margin-right: 5px;
+}
+
+.mt-5 {
+    margin-top: 5px;
+}
+
+.mb-5 {
+    margin-bottom: 5px;
+}
+
+.text-shadow {
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.rounded-0 {
+    border-radius: 0 !important;
+}
+
+.white-space-pre-wrap {
+    white-space: pre-wrap;
+}
+
+/* Layout */
+.header {
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+}
+.page-container {
+    padding-bottom: 20px;
+}
+
+.page-container > .container-fluid {
+    padding-top: 55px;
+}
+
+/* FLEX */
+.d-flex {
+    display: flex;
+}
+
+.flex-align-center {
+    align-items: center;
+}
+
+.flex-align-center > * {
+    vertical-align: middle;
+}
+
+.flex-grow-1 {
+    flex-grow: 1 !important;
+}
+
+.flex-grow-0 {
+    flex-grow: 0 !important;
+}
+
+.flex-flow-row-wrap {
+    flex-flow: row wrap;
+}
+/* Flex table */
+.flex-table {
+    margin-top: 20px;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    border-bottom: 1px solid #e2e2e2;
+    width: 100%;
+}
+
+.flex-table-head .flex-row {
+    padding: 0 0 5px 0;
+}
+
+.flex-wrapper {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+}
+
+.flex-col {
+    flex-grow: 1;
+    padding: 7px 5px;
+}
+
+.flex-group {
+    width: 50%;
+    border-bottom: 1px solid #e2e2e2;
+    padding: 2px;
+}
+
+.flex-group:nth-child(odd) {
+    border-right: 1px solid #e2e2e2;
+}
+
+/* Actions */
+.action {
+    display: block;
+}
+
+.action.action-button {
+    background-color: #e2e2e2;
+    height: 25px;
+    width: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action.action-button.action-button-danger {
+    background-color: #ee1a46;
+    fill: #fff;
+    color: #fff;
+}
+
+.action.action-button.action-button-disabled svg {
+    fill: gray;
+}
+.action.action-button.action-button-warning {
+    background-color: #f4f637;
+}
+
+/* Icons */
+
+.icon svg {
+    fill: #fff;
+}
+
+/* Badges */
+.badge {
+    padding: 4px;
+    font-size: 90%;
+    border-radius: 3px;
+    background-color: #efefef;
+    color: #2a2e31;
+}
+
+.badge.badge-open {
+    background-color: #e52d32;
+    color: #fff;
+}
+
+.badge.badge-hold,
+.badge.badge-pending {
+    background-color: #2f9fc9;
+    color: #fff;
+}
+
+.badge.badge-time {
+    color: #fff;
+    background-color: #ee1a46;
+}
+
+/* Header */
+.header {
+    background-color: #ee1a46;
+    height: 55px;
+    color: #fff;
+}
+
+.header .container-fluid {
     height: 100%;
 }
 
+.header .flex-col {
+    height: 100%;
+}
+
+.header .logo {
+    margin: 0 80px 0 0;
+}
+
+.header .date-picker-wrapper {
+    position: relative;
+}
+
+.header .date-picker-wrapper .date-picker {
+    position: absolute;
+    height: 270px;
+    left: auto;
+    z-index: 19999;
+    background: white;
+    border: 1px solid #a4a4a4;
+    padding: 4px;
+    right: 0;
+    top: 24px;
+}
+
+/* Task table */
+.task-table {}
+
+.task-table .flex-col.time {
+    width: 55px;
+}
+
+.task-table .flex-col.actions {
+    width: 75px;
+}
+
+.task-table .flex-col.remove-action {
+    width: 65px;
+}
+
+.task-table .flex-col.text {
+    width: 200px;
+}
+
+.task-table .flex-col.text-small {
+    width: 100px;
+}
+
+/* My Cases table */
+.my-tasks-table {}
+
+.my-tasks-table .flex-col.status {
+    width: 26px;
+}
+
+.my-tasks-table .flex-col.task-id {
+    width: 52px;
+}
+
+.my-tasks-table .flex-col.week {
+    width: 65px;
+}
+
+.my-tasks-table .flex-col.client {
+    width: 60px;
+}
+
+.my-tasks-table .flex-col.buttons {
+    width: 45px;
+}
+
+/** Tabs **/
+.tabs {
+    margin-top: 20px;
+}
+
+.tabs .tabs-header {}
+
+.tabs .tabs-header .tabs-header-item {
+    display: block;
+    background-color: #2a2e31;
+    color: #fff;
+    line-height: 25px;
+    float: left;
+    padding: 0 7px;
+    margin: 0 3px 0 0;
+}
+
+.tabs .tabs-header .tabs-header-item.title {
+    background-color: #fff;
+    color: #2a2e31;
+}
+
+.tabs .tabs-header .tabs-header-item.active {
+    background-color: #ececec;
+    color: #2a2e31;
+}
+
+.tabs .tab {
+    padding: 25px 12px;
+    background-color: #ececec;
+}
+
+/** OLD **/
 .settings {
     display: flex;
 }
@@ -124,16 +414,8 @@ label {
     margin: 3px;
 }
 
-nav {
-    width: 231px;
-    background: rgb(245, 245, 245);
-    color: rgb(40, 40, 40);
-    height: 100%;
-    border-right: 1px solid rgb(200, 200, 200);
-}
-
 nav button:hover {
-    background-color: hsla(0, 0%, 0%, .1);
+    background-color:   hsla(0, 0%, 0%, .1);
 }
 
 nav .active button {
@@ -177,13 +459,6 @@ form {
     height: 3px;
 }
 
-span#js-add-task {
-    position: absolute;
-    right: 25px;
-    top: 8px;
-    z-index: 1000;
-}
-
 .filter {
     padding-top: 4px;
     background: rgb(245, 245, 245);
@@ -212,30 +487,12 @@ label.pull-left {
     min-width: 345px;
 }
 
-/*
-.dropdown-menu {
-    max-height: 200px;
-    overflow-y: scroll;
-    width: 393px;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-}
-*/
-
 .modal-footer {
     position: fixed;
     right: 0px;
     bottom: 0px;
     width: 65%;
 }
-
-/*
-.dropdown-menu > .active > a:hover,
-.dropdown-menu > .active > a {
-    background-color: rgb(84, 59, 181);
-    background-image: none;
-}
-*/
 
 .worklog-datepicker {
     position: fixed;
@@ -268,5 +525,4 @@ label.pull-left {
 
 .task-container {
     height: 400px;
-    overflow-y: scroll;
 }

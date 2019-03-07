@@ -1,117 +1,87 @@
-<div class="row" ng-if="customerInfo">
-  <div class="col-sm-6">
-    <h5>Kundeinfo</h5>
-    <p><b>Sites</b></p>
-    <ul class="list-group">
-      <li class="list-group-item" ng-repeat="site in customerInfo.sites">
-        <span class="pull-right">
-          <span class="btn btn-xs btn-default"
-                ng-click="openURL(customerInfo.customer_url + '/sites/' + site.id + '/edit')">More info
-          </span>
-        </span>
-        <b><a ng-click="openURL(site.url)">{{site.url}}</a></b>
-        <ul>
-          <li ng-repeat="extraUrl in site.extra_url"><a ng-click="openURL(extraUrl)">{{extraUrl}}</a></li>
-        </ul>
-        <a ng-click="openURL(site.admin_url)">{{site.admin_url}}</a><br>
-        <b>Database</b><br>
-        <span ng-if="site.db_user" ng-click="copyClipboard(site.db_user)"
-              class="btn btn-default btn-sm"><span
-          class="glyphicon glyphicon-copy"></span> User</span>
-        <span ng-if="site.db_password" ng-click="copyClipboard(site.db_password)"
-              class="btn btn-default btn-sm"><span
-          class="glyphicon glyphicon-copy"></span> Password</span><br>
-        <b>FTP</b><br>
-        <span ng-if="site.hostname" ng-click="copyClipboard(site.hostname)"
-              class="btn btn-default btn-sm"><span
-          class="glyphicon glyphicon-copy"></span> Hostname</span>
-        <span ng-if="site.ftp_user" ng-click="copyClipboard(site.ftp_user)"
-              class="btn btn-default btn-sm"><span
-          class="glyphicon glyphicon-copy"></span> User</span>
-        <span ng-if="site.ftp_password" ng-click="copyClipboard(site.ftp_password)"
-              class="btn btn-default btn-sm"><span
-          class="glyphicon glyphicon-copy"></span> Password</span>
-
-        <span ng-if="ftpProgram" ng-click="ftpOpen(site.hostname, site.ftp_user, site.ftp_password)"
-              class="btn btn-default btn-sm">Open in external program</span><br>
-        <b>Backup</b><br>
-        <span ng-if="site.backup_user" ng-click="copyClipboard(site.backup_user)"
-              class="btn btn-default btn-sm"><span
-          class="glyphicon glyphicon-copy"></span> User</span>
-        <span ng-if="site.backup_password" ng-click="copyClipboard(site.backup_password)"
-              class="btn btn-default btn-sm"><span
-          class="glyphicon glyphicon-copy"></span> Password</span>
-
-        <span ng-if="ftpProgram"
-              ng-click="ftpOpen('backup1.powerhosting.dk', site.backup_user, site.backup_password)"
-              class="btn btn-default btn-sm">Open in external program</span><br>
-      </li>
-    </ul>
-  </div>
-  <div class="col-sm-6">
-    <h5>Kundens seneste tickets</h5>
-    <ul class="list-group">
-      <li class="list-group-item" ng-class="{
-                'disabled': ticket.status == 'hold',
-                'list-group-item-warning': ticket.status == 'open',
-                'list-group-item-success': ticket.status == 'solved',
-                'list-group-item-info': ticket.status == 'pending',
-            }"
-          ng-repeat="ticket in customerInfo.last_tickets">
-        <span class="pull-right">
-          <span class="btn btn-xs btn-default" ng-click="openBrowserWithTicket(ticket.id)">Open in browser</span>
-          <span class="btn btn-xs btn-default"
-                ng-click="startTrackerForTicket(ticket.id, ticket.subject)">Start tracker</span>
-          </span>
-        <b>#{{ticket.id}}</b><br>{{ticket.subject}}
-      </li>
-    </ul>
-  </div>
-</div>
-
 <div class="row">
-  <div ng-if="myTickets" class="col-sm-4">
-    <h5>Mine sager<span ng-click="openZendesk()"
-                        class="glyphicon glyphicon-new-window btn btn-default btn-xs"></span>
-    </h5>
-    <ul class="list-group">
-      <li class="list-group-item" ng-class="{
-                'disabled': ticket.status == 'hold',
-                'list-group-item-warning': ticket.status == 'open',
-                'list-group-item-info': ticket.status == 'pending',
-            }"
-          ng-repeat="ticket in myTickets">
-        <span class="pull-right">
-                <span class="btn btn-xs btn-default" ng-click="openBrowserWithTicket(ticket.id)">Open in browser</span>
-                <span class="btn btn-xs btn-default"
-                      ng-click="startTrackerForTicket(ticket.id, ticket.subject)">Start tracker</span>
-        </span>
-        <b>#{{ticket.id}}</b><br>
-        <span ng-repeat="field in ticket.fields">
-                    <span ng-if="field.id == 44228089 && field.value"
-                          class="label label-default">Uge: {{field.value}}
-<br>
-                    </span>
-                </span>
-        {{ticket.subject}}
-      </li>
-    </ul>
-  </div>
-  <div ng-if="infoData.rp_tasks" class="col-sm-4">
-    <h5>Ressourceplan <span
-      ng-click="openURL('https://docs.google.com/spreadsheets/d/1eRvXCFW_hsCnxrq8h_MAZKKI1WrufphjRUnkpw7FKHU/')"
-      class="glyphicon glyphicon-new-window btn btn-default btn-xs"></span>
-    </h5>
-    <ul class="list-group">
-      <li class="list-group-item" ng-class="{'list-group-item-success': task.is_done}"
-          ng-repeat="task in infoData.rp_tasks">
-        <span class="pull-right">
-                <span class="btn btn-xs btn-default" ng-if="(task.task.indexOf('#') !== -1)"
-                      ng-click="openBrowserWithTask(task.task)">Open in browser</span>
-                <span class="btn btn-xs btn-default" ng-click="startTrackerForTask(task)">Start tracker</span>
-        </span>
-        <b>{{ task.customer }}</b> <span ng-if="task.task"> <br> {{ task.task }} <span class="label label-success">{{task.time}}</span></span>
-      </li>
-    </ul>
-  </div>
+    <div class="col-md-12 col-lg-6" ng-if="myTickets && myTickets.length > 0">
+        <div class="flex-table my-tasks-table">
+            <div class="flex-table-head">
+                <div class="flex-row">
+                    <div class="flex-col d-flex">
+                        <span><strong>Mine sager</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-table-body">
+                <div class="flex-row" ng-repeat="ticket in myTickets">
+                    <div class="flex-col flex-grow-0 status">
+                        <span
+                            class="badge text-uppercase"
+                            ng-class="{
+                            'badge-hold': ticket.status.string == 'hold',
+                            'badge-open': ticket.status.string == 'open',
+                            'badge-pending': ticket.status.string == 'pending'}">
+                            <span class="text-shadow">{{ticket.status.key}}</span>
+                        </span>
+                    </div>
+                    <div class="flex-col flex-grow-0 task-id">
+                        <span><strong>#{{ticket.id}}</strong></span>
+                    </div>
+                    <div class="flex-col flex-grow-0 week">
+                        <span ng-if="ticket.week.value" class="badge rounded-0">Uge: {{ticket.week.value.padStart(2, '0')}}</span>
+                    </div>
+                    <div class="flex-col client">
+                        <div class="client-name">
+                            <strong>Dynamisk kundenavn mangler</strong>
+                        </div>
+                        <span>{{ticket.subject}}</span>
+                    </div>
+                    <div class="flex-col flex-grow-0 d-flex buttons">
+                        <span class="action mr-5" ng-click="startTrackerForTicket(ticket.id, ticket.subject)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M3 22v-20l18 10-18 10z"/></svg>
+                        </span>
+                        <span class="action" ng-click="openBrowserWithTicket(ticket.id)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-lg-6" ng-if="infoData.rp_tasks">
+        <div class="flex-table my-tasks-table">
+            <div class="flex-table-head">
+                <div class="flex-row">
+                    <div class="flex-col d-flex">
+                        <span><strong>Ressourceplan</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-table-body">
+                <div class="flex-row" ng-repeat="task in infoData.rp_tasks">
+                    <div class="flex-col flex-grow-0 status">
+                        <span class="badge text-uppercase" ng-class="{
+                                  'badge-open': !task.is_done,
+                                  'badge-hold': task.is_done}">
+                            <span class="text-shadow">{{ task.statusKey }}</span>
+                        </span>
+                    </div>
+                    <div class="flex-col flex-grow-0 task-id">
+                        <span ng-if="task.id"><strong>{{ task.id }}</strong></span>
+                    </div>
+                    <div class="flex-col client">
+                        <div class="client">
+                            <strong>{{ task.customer }}</strong>
+                            <span class="badge badge-time rounded-0 float-right d-block week">{{task.time}} t.</span>
+                        </div>
+                        <span>{{ task.desc || task.task }}</span>
+                    </div>
+                    <div class="flex-col flex-grow-0 d-flex buttons">
+                        <span class="action play mr-5" ng-click="startTrackerForTask(task)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M3 22v-20l18 10-18 10z"/></svg>
+                        </span>
+                        <span class="action open" ng-class="{'disabled': (task.task.indexOf('#') === -1)}" ng-click="openBrowserWithTask(task.task)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
