@@ -7,9 +7,6 @@ const {dialog} = electron;
 const {ipcMain} = electron;
 const {session} = electron;
 
-const contextMenu = require('electron-context-menu');
-contextMenu();
-
 const path = require('path');
 const fs = require('fs');
 
@@ -31,6 +28,8 @@ function createWindow () {
   mainWindow.loadFile(config.WINDOW_MAIN);
 
   if (config.IS_DEV) {
+    const contextMenu = require('electron-context-menu');
+    contextMenu();
     mainWindow.webContents.openDevTools();
   }
 
