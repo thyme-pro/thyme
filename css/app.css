@@ -161,10 +161,22 @@ body {
     justify-content: center;
 }
 
+.action.action-button:hover {
+    background-color: #d7d7d7;
+}
+
 .action.action-button.action-button-danger {
     background-color: #ee1a46;
     fill: #fff;
     color: #fff;
+}
+
+.action.action-button.action-button-danger:hover {
+    background-color: #db1841;
+}
+
+.action.action-button.action-button-disabled:hover {
+    background-color: #e2e2e2;
 }
 
 .action.action-button.action-button-disabled svg {
@@ -174,10 +186,18 @@ body {
     background-color: #f4f637;
 }
 
+.action:not(.action-button):hover svg {
+    fill: #db1841;
+}
+
 /* Icons */
 
 .icon svg {
     fill: #fff;
+}
+
+.icon:hover svg {
+    fill: #eaeaea;
 }
 
 /* Badges */
