@@ -182,8 +182,13 @@ body {
 .action.action-button.action-button-disabled svg {
     fill: gray;
 }
+
 .action.action-button.action-button-warning {
     background-color: #f4f637;
+}
+
+.action.action-button.action-button-warning:hover {
+    background-color: #eaec34;
 }
 
 .action:not(.action-button):hover svg {
