@@ -191,6 +191,46 @@ body {
     background-color: #eaec34;
 }
 
+.action.action-button.action-button-success {
+    background-color: #5cb85c;
+}
+
+.action.action-button.action-button-success:hover {
+    background-color: #54a854;
+}
+
+.action.action-button.action-button-primary {
+    background-color: #337ab7;
+}
+
+.action.action-button.action-button-primary:hover {
+    background-color: #2e6fa7;
+}
+
+.action.action-button.action-button-warning {
+    background-color: #f0ad4e;
+}
+
+.action.action-button.action-button-warning:hover {
+    background-color: #e0a249;
+}
+
+.action.action-button.action-button-info {
+    background-color: #5bc0de;
+}
+
+.action.action-button.action-button-info:hover {
+    background-color: #54b1cd;
+}
+
+.action.action-button.action-button-success svg,
+.action.action-button.action-button-primary svg,
+.action.action-button.action-button-warning svg,
+.action.action-button.action-button-info svg {
+    color: #fff;
+    fill: #fff;
+}
+
 .action:not(.action-button):hover svg {
     fill: #db1841;
 }

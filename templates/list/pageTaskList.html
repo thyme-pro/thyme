@@ -25,28 +25,28 @@
                 <span class="font-md">{{worklogTotal(worklog)}}</span>
             </div>
             <div class="flex-col flex-grow-0 actions d-flex">
-                <!-- Start/Pause -->
-                <span class="action action-button action-button-disabled mr-5" ng-if="worklog.register_info">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm1 12v-6h-2v8h7v-2h-5z"/></svg>
-                </span>
-                <span class="action action-button mr-5" ng-show="worklog.active" ng-click="stopTask(worklog.id)">
+                <!-- start -->
+                <span ng-show="worklog.active" class="action action-button action-button-warning mr-5" ng-click="stopTask(worklog.id)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M11 22h-4v-20h4v20zm6-20h-4v20h4v-20z"/></svg>
                 </span>
-                <span class="action action-button mr-5" ng-hide="worklog.active  || worklog.register_info" ng-click="startTask(worklog.id)">
+                <span ng-hide="worklog.active || worklog.register_info"
+                      class="action action-button action-button-success mr-5"
+                      ng-click="startTask(worklog.id)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M3 22v-20l18 10-18 10z"/></svg>
                 </span>
-                <!-- !Start/Pause -->
-                <!-- Save -->
-                <span class="action action-button action-button-warning" ng-hide="worklog.active || worklog.register_info || worklog.saving_log" ng-click="registerTask(worklog)">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M13 3h2.996v5h-2.996v-5zm11 1v20h-24v-24h20l4 4zm-17 5h10v-7h-10v7zm15-4.171l-2.828-2.829h-.172v9h-14v-9h-3v20h20v-17.171z"/></svg>
+                <!-- /start -->
+                <!-- register -->
+                <span ng-hide="worklog.active || worklog.register_info || worklog.saving_log"
+                      class="action action-button action-button-primary" ng-click="registerTask(worklog)">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M13 3h2.996v5h-2.996v-5zm11 1v20h-24v-24h20l4 4zm-17 5h10v-7h-10v7zm15-4.171l-2.828-2.829h-.172v9h-14v-9h-3v20h20v-17.171z"/></svg>
                 </span>
-                <span class="action action-button action-button-disabled" ng-show="worklog.active">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M13 3h2.996v5h-2.996v-5zm11 1v20h-24v-24h20l4 4zm-17 5h10v-7h-10v7zm15-4.171l-2.828-2.829h-.172v9h-14v-9h-3v20h20v-17.171z"/></svg>
+                <span ng-show="worklog.register_info" class="action action-button action-button-success" ng-click="editTask(worklog)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"/></svg>
                 </span>
-                <span class="action action-button" ng-show="worklog.register_info">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M13 3h2.996v5h-2.996v-5zm11 1v20h-24v-24h20l4 4zm-17 5h10v-7h-10v7zm15-4.171l-2.828-2.829h-.172v9h-14v-9h-3v20h20v-17.171z"/></svg>
+                <span ng-show="worklog.saving_log" class="action action-button action-button-info">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M7 11h-6l11-11 11 11h-6v13h-10z"/></svg>
                 </span>
-                <!-- /Save -->
+                <!-- /register -->
             </div>
             <div class="flex-col text">
                 <div class="client">
