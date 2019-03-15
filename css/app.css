@@ -255,7 +255,7 @@ body {
 
 .header .date-picker-wrapper .date-picker {
     position: absolute;
-    height: 270px;
+    height: 280px;
     left: auto;
     z-index: 19999;
     background: white;
@@ -263,6 +263,17 @@ body {
     padding: 4px;
     right: 0;
     top: 24px;
+}
+
+.header .date-picker-wrapper .date-picker .form-control {
+    height: 240px;
+    border: none;
+}
+
+.header .date-picker-wrapper .date-picker > .btn {
+    display: block;
+    width: 299px;
+    margin-left: 5px;
 }
 
 /* Task table */
