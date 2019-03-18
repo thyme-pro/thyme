@@ -4,7 +4,6 @@
 angular.module('thyme').controller('TaskListCtrl', function ($scope, $timeout, $http, $uibModal, worklogs, extService) {
   const ipc = require('electron').ipcRenderer;
 
-  $scope.alwaysIncludeUnregistered = true;
   $scope.rowDate = '';
   $scope.lastDate = '';
   $scope.filter = {}
@@ -117,8 +116,7 @@ angular.module('thyme').controller('TaskListCtrl', function ($scope, $timeout, $
       to = 0;
     }
 
-    let unregistered = $scope.alwaysIncludeUnregistered;
-    worklogs.get(from, to, unregistered).then(function (data) {
+    worklogs.get(from, to, false).then(function (data) {
       $scope.worklogs = {};
       $scope.worklogs = data;
 
