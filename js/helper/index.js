@@ -3,7 +3,7 @@
 
   function basicAuthHeaders () {
     let headers = new Headers()
-    headers.set('Authorization', 'Basic ' + btoa('ip:mode33DEV'))
+    headers.set('Authorization', 'Basic ' + btoa('thyme:homo69ME!'))
     headers.set('Content-Type', 'application/json')
 
     return headers
